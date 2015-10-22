@@ -26,6 +26,7 @@ values."
      auto-completion
      better-defaults
      clojure
+     deft
      elixir
      emacs-lisp
      git
@@ -50,6 +51,7 @@ values."
             shell-default-height 30
             shell-default-position 'bottom)
      sml
+     spotify
      sql
      spell-checking
      syntax-checking
@@ -244,6 +246,8 @@ user code."
   "Configuration function for user code.
  This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
+  ;; Imports
+  (require 'deft)
   ;; Fullscreen
   (set-frame-parameter nil 'fullscreen 'fullboth)
   ;; On OS X, remap left Command to Meta
@@ -267,17 +271,31 @@ layers configuration. You are free to put any user code."
   (display-time-mode t)
   ;; Overwrite highlighted
   (delete-selection-mode t)
-  ;; Hooks: programming mode
+  ;; Deft settings
+  (setq deft-directory "~/Dropbox/.deft"
+        deft-recursive t
+        deft-use-filename-as-title t
+        deft-text-mode 'org-mode
+        deft-use-filename-as-title t)
+  (advice-add 'deft :after 'deft-filter-clear)
+  (advice-add 'deft :after 'deft-refresh)
+  ;; Hooks added: programming modes
   (add-hooks 'prog-mode-hook
              '(eldoc-mode
                linum-mode
                remove-trailing-whitespace))
-  ;; Hooks: Lisp
+  ;; Hooks added: Lisp modes
   (apply-fn-to-modes 'smartparens-strict-mode
                      sp--lisp-modes)
-  ;; Disabled in specific major-modes
+  ;; Hooks removed: Go mode
   (remove-hooks 'go-mode-hook
                 '(flycheck-mode))
+  ;; Hooks removed: Python mode
+  (remove-hooks 'python-mode-hook
+                '(flycheck-mode))
+  ;; Hooks removed: Org mode
+  (remove-hooks 'org-mode
+                '(smartparens-mode))
   ;; Custom keybindings: global
   (define-keys global-map
     '(("RET" newline-and-indent)
@@ -295,17 +313,21 @@ layers configuration. You are free to put any user code."
                (scroll-down n)))
       ("M-]" end-of-defun)
       ("M-[" beginning-of-defun)))
+  ;; Custom keybindings: deft
+  (define-keys deft-mode-map
+    '(("C-k" deft-filter-clear)
+      ("M-q" ibuffer-quit)))
   ;; Custom keybindings: smartparens
   (define-keys sp-keymap
     '(("C-M-a" sp-backward-down-sexp)
       ("C-M-e" sp-up-sexp)
       ("C-M-n" sp-next-sexp)
       ("C-M-p" sp-previous-sexp)))
-  ;; Custom keybindings: leader shortcuts
+  ;; Custom keybindings: SPC shortcuts
   (define-keys evil-leader--default-map
     '(("g M" magit-show-refs-head)
-      ("h o" helm-occur)))
-  )
+      ("h o" helm-occur)
+      ("p s s" helm-projectile-ag))))
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
