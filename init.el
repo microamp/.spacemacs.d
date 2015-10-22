@@ -339,7 +339,9 @@ layers configuration. You are free to put any user code."
   (define-keys evil-leader--default-map
     '(("g M" magit-show-refs-head)
       ("h o" helm-occur)
-      ("p s s" helm-projectile-ag))))
+      ("p s s" helm-projectile-ag)
+      ("p P" projectile-test-project)
+      ("p u" projectile-run-project))))
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
