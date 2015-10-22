@@ -25,14 +25,32 @@ values."
      ;; ----------------------------------------------------------------
      auto-completion
      better-defaults
+     clojure
+     elixir
      emacs-lisp
      git
+     go
+     haskell
+     html
+     ipython-notebook
+     jabber
+     javascript
+     lua
      markdown
+     ocaml
      org
      osx
+     python
+     racket
+     rcirc
+     restclient
+     rust
+     scala
      (shell :variables
             shell-default-height 30
             shell-default-position 'bottom)
+     sml
+     sql
      spell-checking
      syntax-checking
      version-control
@@ -148,7 +166,7 @@ values."
    dotspacemacs-loading-progress-bar t
    ;; If non nil the frame is fullscreen when Emacs starts up. (default nil)
    ;; (Emacs 24.4+ only)
-   dotspacemacs-fullscreen-at-startup t
+   dotspacemacs-fullscreen-at-startup nil
    ;; If non nil `spacemacs/toggle-fullscreen' will not use native fullscreen.
    ;; Use to disable fullscreen animations in OSX. (default nil)
    dotspacemacs-fullscreen-use-non-native nil
@@ -190,6 +208,32 @@ values."
    dotspacemacs-default-package-repository nil
    ))
 
+(defun define-keys (mode-map key-fn-pairs)
+  (mapc (lambda (key-fn)
+          (let ((key (kbd (car key-fn)))
+                (function (car (cdr key-fn))))
+            (define-key mode-map key function)))
+        key-fn-pairs))
+
+(defun apply-fn-to-modes (fn modes)
+  (mapc (lambda (mode)
+          (add-hook (intern (format "%s-hook" (symbol-name mode)))
+                    fn))
+        modes))
+
+(defun add-hooks (mode-hook functions)
+  (mapc (lambda (function)
+          (add-hook mode-hook function))
+        functions))
+
+(defun remove-hooks (mode-hook functions)
+  (mapc (lambda (function)
+          (remove-hook mode-hook function))
+        functions))
+
+(defun remove-trailing-whitespace ()
+  (add-to-list 'write-file-functions 'delete-trailing-whitespace))
+
 (defun dotspacemacs/user-init ()
   "Initialization function for user code.
 It is called immediately after `dotspacemacs/init'.  You are free to put any
@@ -200,14 +244,15 @@ user code."
   "Configuration function for user code.
  This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
+  ;; Fullscreen
+  (set-frame-parameter nil 'fullscreen 'fullboth)
   ;; On OS X, remap left Command to Meta
   (setq mac-option-modifier 'meta
         mac-command-modifier 'meta
         mac-right-command-modifier 'super
         mac-function-modifier 'hyper)
-  ;; Remove trailing whitespaces
-  (add-hook 'prog-mode-hook
-            (lambda () (add-to-list 'write-file-functions 'delete-trailing-whitespace)))
+  ;; Display battery life
+  (fancy-battery-mode t)
   ;; Display current time
   (setq display-time-string-forms
         '((substring year -4)
@@ -220,24 +265,61 @@ layers configuration. You are free to put any user code."
           ":"
           minutes))
   (display-time-mode t)
-  ;; Activate Beacon
-  (beacon-mode t)
   ;; Overwrite highlighted
   (delete-selection-mode t)
-  ;; Custom keybindings
-  (define-key global-map (kbd "RET") 'newline-and-indent)
-  (define-key global-map (kbd "C-x l") 'delete-other-windows)
-  (define-key global-map (kbd "C-x q") 'delete-window)
-  (define-key global-map (kbd "C-x -") 'split-window-below-and-focus)
-  (define-key global-map (kbd "C-x |") 'split-window-right-and-focus)
-  (define-key global-map (kbd "M-SPC") 'shell-pop-eshell)
-  (define-key global-map (kbd "M-N") (lambda (n)
-                                       (interactive "p")
-                                       (scroll-up n)))
-  (define-key global-map (kbd "M-P") (lambda (n)
-                                       (interactive "p")
-                                       (scroll-down n)))
+  ;; Hooks: programming mode
+  (add-hooks 'prog-mode-hook
+             '(eldoc-mode
+               linum-mode
+               remove-trailing-whitespace))
+  ;; Hooks: Lisp
+  (apply-fn-to-modes 'smartparens-strict-mode
+                     sp--lisp-modes)
+  ;; Disabled in specific major-modes
+  (remove-hooks 'go-mode-hook
+                '(flycheck-mode))
+  ;; Custom keybindings: global
+  (define-keys global-map
+    '(("RET" newline-and-indent)
+      ("C-x l" delete-other-windows)
+      ("C-x q" delete-window)
+      ("C-x -" split-window-below-and-focus)
+      ("C-x |" split-window-right-and-focus)
+      ("C-x \\" split-window-right-and-focus)
+      ("M-SPC" shell-pop-eshell)
+      ("M-n" (lambda (n)
+               (interactive "p")
+               (scroll-up n)))
+      ("M-p" (lambda (n)
+               (interactive "p")
+               (scroll-down n)))
+      ("M-]" end-of-defun)
+      ("M-[" beginning-of-defun)))
+  ;; Custom keybindings: smartparens
+  (define-keys sp-keymap
+    '(("C-M-a" sp-backward-down-sexp)
+      ("C-M-e" sp-up-sexp)
+      ("C-M-n" sp-next-sexp)
+      ("C-M-p" sp-previous-sexp)))
+  ;; Custom keybindings: leader shortcuts
+  (define-keys evil-leader--default-map
+    '(("g M" magit-show-refs-head)
+      ("h o" helm-occur)))
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(neo-theme (quote ascii)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(default ((t (:foreground "#DCDCCC" :background "#3F3F3F"))))
+ '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
+ '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))
