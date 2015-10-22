@@ -278,8 +278,7 @@ layers configuration. You are free to put any user code."
   ;; Overwrite highlighted
   (delete-selection-mode t)
   ;; Deft settings
-  (setq deft-directory "~/Dropbox/.deft"
-        deft-recursive t
+  (setq deft-recursive t
         deft-use-filename-as-title t
         deft-text-mode 'org-mode)
   (advice-add 'deft :after 'deft-filter-clear)
@@ -304,7 +303,8 @@ layers configuration. You are free to put any user code."
                 '(flycheck-mode))
   ;; Hooks removed: Org mode
   (remove-hooks 'org-mode
-                '(smartparens-mode))
+                '(smartparens-mode
+                  ispell-minor-mode))
   ;; Custom keybindings: global
   (define-keys global-map
     '(("RET" newline-and-indent)
@@ -335,6 +335,14 @@ layers configuration. You are free to put any user code."
       ("C-M-e" sp-up-sexp)
       ("C-M-n" sp-next-sexp)
       ("C-M-p" sp-previous-sexp)))
+  ;; Custom keybindings: Go mode
+  (define-keys go-mode-map
+    '(("M-." godef-jump)
+      ("M-," pop-tag-mark)))
+  ;; Custom keybindings: Python mode
+  (define-keys python-mode-map
+    '(("M-." anaconda-mode-find-definitions)
+      ("M-," anaconda-mode-go-back)))
   ;; Custom keybindings: SPC shortcuts
   (define-keys evil-leader--default-map
     '(("g M" magit-show-refs-head)
@@ -350,6 +358,9 @@ layers configuration. You are free to put any user code."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(deft-auto-save-interval 0.0)
+ '(deft-directory "~/Dropbox/.deft")
+ '(magit-log-arguments (quote ("-n256" "--graph" "--decorate" "--color")))
  '(neo-theme (quote ascii)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
