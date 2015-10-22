@@ -26,6 +26,7 @@ values."
      auto-completion
      better-defaults
      clojure
+     colors
      deft
      elixir
      emacs-lisp
@@ -248,6 +249,7 @@ user code."
 layers configuration. You are free to put any user code."
   ;; Imports
   (require 'deft)
+  (require 'neotree)
   ;; Fullscreen
   (set-frame-parameter nil 'fullscreen 'fullboth)
   ;; On OS X, remap left Command to Meta
@@ -255,6 +257,8 @@ layers configuration. You are free to put any user code."
         mac-command-modifier 'meta
         mac-right-command-modifier 'super
         mac-function-modifier 'hyper)
+  ;; Anzu mode activated globally
+  (global-anzu-mode t)
   ;; Display battery life
   (fancy-battery-mode t)
   ;; Display current time
@@ -269,24 +273,29 @@ layers configuration. You are free to put any user code."
           ":"
           minutes))
   (display-time-mode t)
+  ;; Powerline
+  (setq powerline-default-separator 'arrow)
   ;; Overwrite highlighted
   (delete-selection-mode t)
   ;; Deft settings
   (setq deft-directory "~/Dropbox/.deft"
         deft-recursive t
         deft-use-filename-as-title t
-        deft-text-mode 'org-mode
-        deft-use-filename-as-title t)
+        deft-text-mode 'org-mode)
   (advice-add 'deft :after 'deft-filter-clear)
   (advice-add 'deft :after 'deft-refresh)
   ;; Hooks added: programming modes
   (add-hooks 'prog-mode-hook
              '(eldoc-mode
                linum-mode
+               rainbow-delimiters-mode
                remove-trailing-whitespace))
   ;; Hooks added: Lisp modes
   (apply-fn-to-modes 'smartparens-strict-mode
                      sp--lisp-modes)
+  ;; Hooks removed: programming modes
+  (remove-hooks 'prog-mode-hook
+                '(ispell-minor-mode))
   ;; Hooks removed: Go mode
   (remove-hooks 'go-mode-hook
                 '(flycheck-mode))
@@ -317,6 +326,9 @@ layers configuration. You are free to put any user code."
   (define-keys deft-mode-map
     '(("C-k" deft-filter-clear)
       ("M-q" ibuffer-quit)))
+  ;; Custom keybindings: neotree
+  (define-keys neotree-mode-map
+    '(("o" neotree-enter)))
   ;; Custom keybindings: smartparens
   (define-keys sp-keymap
     '(("C-M-a" sp-backward-down-sexp)
