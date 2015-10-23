@@ -60,6 +60,8 @@ values."
    ;; configuration in `dotspacemacs/config'.
    dotspacemacs-additional-packages '(beacon
                                       emms
+                                      go-direx
+                                      go-errcheck
                                       helm-emms
                                       hl-todo
                                       howdoi)
@@ -303,9 +305,21 @@ layers configuration. You are free to put any user code."
   (use-package go-mode
     :defer t
     :config
-    (define-keys go-mode-map
-      '(("M-." godef-jump)
-        ("M-," pop-tag-mark))))
+    (progn
+      (push '("^\*go-direx:"
+              :regexp t
+              :position right
+              :width 0.5
+              :dedicated t
+              :stick t)
+            popwin:special-display-config)
+      (define-keys go-mode-map
+        '(("M-." godef-jump)
+          ("M-," pop-tag-mark)))
+      (evil-leader/set-key-for-mode 'go-mode
+        "mjp" 'go-direx-pop-to-buffer
+        "mjs" 'go-direx-switch-to-buffer
+        "mE" 'go-errcheck-pkg)))
   ;; Package settings: smartparens
   (use-package smartparens
     :defer t
