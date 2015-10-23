@@ -17,8 +17,7 @@ values."
    ;; List of configuration layers to load. If it is the symbol `all' instead
    ;; of a list then all discovered layers will be installed.
    dotspacemacs-configuration-layers
-   '(
-     ;; ----------------------------------------------------------------
+   '(;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
      ;; <M-m f e R> (Emacs style) to install them.
@@ -52,17 +51,18 @@ values."
             shell-default-height 30
             shell-default-position 'bottom)
      sml
-     spotify
      sql
-     spell-checking
      syntax-checking
-     version-control
-     )
+     version-control)
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages then consider to create a layer, you can also put the
    ;; configuration in `dotspacemacs/config'.
-   dotspacemacs-additional-packages '()
+   dotspacemacs-additional-packages '(beacon
+                                      emms
+                                      helm-emms
+                                      hl-todo
+                                      howdoi)
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '()
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
@@ -208,8 +208,7 @@ values."
    ;; The default package repository used if no explicit repository has been
    ;; specified with an installed package.
    ;; Not used for now. (default nil)
-   dotspacemacs-default-package-repository nil
-   ))
+   dotspacemacs-default-package-repository nil))
 
 (defun define-keys (mode-map key-fn-pairs)
   (mapc (lambda (key-fn)
@@ -247,21 +246,20 @@ user code."
   "Configuration function for user code.
  This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
-  ;; Imports
-  (require 'deft)
-  (require 'neotree)
-  ;; Fullscreen
-  (set-frame-parameter nil 'fullscreen 'fullboth)
   ;; On OS X, remap left Command to Meta
   (setq mac-option-modifier 'meta
         mac-command-modifier 'meta
         mac-right-command-modifier 'super
         mac-function-modifier 'hyper)
-  ;; Anzu mode activated globally
-  (global-anzu-mode t)
-  ;; Display battery life
-  (fancy-battery-mode t)
-  ;; Display current time
+  ;; Fullscreen
+  (set-frame-parameter nil 'fullscreen 'fullboth)
+  ;; Overwrite highlighted
+  (delete-selection-mode t)
+  ;; Web browser
+  (setq browse-url-browser-function 'browse-url-generic
+        engine/browser-function 'browse-url-generic
+        browse-url-generic-program "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
+  ;; Powerline: current time
   (setq display-time-string-forms
         '((substring year -4)
           "-"
@@ -273,28 +271,62 @@ layers configuration. You are free to put any user code."
           ":"
           minutes))
   (display-time-mode t)
-  ;; Powerline
+  ;; Powerline: battery life
+  (fancy-battery-mode t)
+  ;; Powerline: separator style
   (setq powerline-default-separator 'arrow)
-  ;; Overwrite highlighted
-  (delete-selection-mode t)
-  ;; Deft settings
-  (setq deft-recursive t
-        deft-use-filename-as-title t
-        deft-text-mode 'org-mode)
+
+  ;; Package settings: anzu
+  (use-package anzu
+    :defer t
+    :config
+    (global-anzu-mode t))
+  ;; Package settings: deft
+  (use-package deft
+    :defer t
+    :init
+    (setq deft-recursive t
+          deft-use-filename-as-title t)
+    :config
+    (define-keys deft-mode-map
+      '(("C-k" deft-filter-clear)
+        ("M-q" ibuffer-quit))))
   (advice-add 'deft :after 'deft-filter-clear)
   (advice-add 'deft :after 'deft-refresh)
+  ;; Package settings: neotree
+  (use-package neotree
+    :defer t
+    :config
+    (define-keys neotree-mode-map
+      '(("o" neotree-enter))))
+  ;; Package settings: go-mode
+  (use-package go-mode
+    :defer t
+    :config
+    (define-keys go-mode-map
+      '(("M-." godef-jump)
+        ("M-," pop-tag-mark))))
+  ;; Package settings: smartparens
+  (use-package smartparens
+    :defer t
+    :config
+    (define-keys sp-keymap
+      '(("C-M-a" sp-backward-down-sexp)
+        ("C-M-e" sp-up-sexp)
+        ("C-M-n" sp-next-sexp)
+        ("C-M-p" sp-previous-sexp))))
+
   ;; Hooks added: programming modes
   (add-hooks 'prog-mode-hook
-             '(eldoc-mode
+             '(beacon-mode
+               eldoc-mode
+               hl-todo-mode
                linum-mode
                rainbow-delimiters-mode
                remove-trailing-whitespace))
   ;; Hooks added: Lisp modes
   (apply-fn-to-modes 'smartparens-strict-mode
                      sp--lisp-modes)
-  ;; Hooks removed: programming modes
-  (remove-hooks 'prog-mode-hook
-                '(ispell-minor-mode))
   ;; Hooks removed: Go mode
   (remove-hooks 'go-mode-hook
                 '(flycheck-mode))
@@ -303,53 +335,29 @@ layers configuration. You are free to put any user code."
                 '(flycheck-mode))
   ;; Hooks removed: Org mode
   (remove-hooks 'org-mode
-                '(smartparens-mode
-                  ispell-minor-mode))
-  ;; Custom keybindings: global
+                '(smartparens-mode))
+
+  ;; Custom key bindings: global
   (define-keys global-map
-    '(("RET" newline-and-indent)
+    '(("C-x -" split-window-below-and-focus)
+      ("C-x \\" split-window-right-and-focus)
       ("C-x l" delete-other-windows)
       ("C-x q" delete-window)
-      ("C-x -" split-window-below-and-focus)
       ("C-x |" split-window-right-and-focus)
-      ("C-x \\" split-window-right-and-focus)
       ("M-SPC" shell-pop-eshell)
-      ("M-n" (lambda (n)
-               (interactive "p")
-               (scroll-up n)))
-      ("M-p" (lambda (n)
-               (interactive "p")
-               (scroll-down n)))
+      ("M-[" beginning-of-defun)
       ("M-]" end-of-defun)
-      ("M-[" beginning-of-defun)))
-  ;; Custom keybindings: deft
-  (define-keys deft-mode-map
-    '(("C-k" deft-filter-clear)
-      ("M-q" ibuffer-quit)))
-  ;; Custom keybindings: neotree
-  (define-keys neotree-mode-map
-    '(("o" neotree-enter)))
-  ;; Custom keybindings: smartparens
-  (define-keys sp-keymap
-    '(("C-M-a" sp-backward-down-sexp)
-      ("C-M-e" sp-up-sexp)
-      ("C-M-n" sp-next-sexp)
-      ("C-M-p" sp-previous-sexp)))
-  ;; Custom keybindings: Go mode
-  (define-keys go-mode-map
-    '(("M-." godef-jump)
-      ("M-," pop-tag-mark)))
-  ;; Custom keybindings: Python mode
-  (define-keys python-mode-map
-    '(("M-." anaconda-mode-find-definitions)
-      ("M-," anaconda-mode-go-back)))
-  ;; Custom keybindings: SPC shortcuts
+      ("M-n" (lambda (n) (interactive "p") (scroll-up n)))
+      ("M-p" (lambda (n) (interactive "p") (scroll-down n)))
+      ("RET" newline-and-indent)))
+  ;; Custom key bindings: SPC shortcuts
   (define-keys evil-leader--default-map
     '(("g M" magit-show-refs-head)
       ("h o" helm-occur)
-      ("p s s" helm-projectile-ag)
       ("p P" projectile-test-project)
-      ("p u" projectile-run-project))))
+      ("p s s" helm-projectile-ag)
+      ("p u" projectile-run-project)
+      ("s q" howdoi-query))))
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
