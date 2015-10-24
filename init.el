@@ -63,6 +63,7 @@ values."
                                       go-direx
                                       go-errcheck
                                       helm-emms
+                                      helm-pt
                                       hl-todo
                                       howdoi)
    ;; A list of packages and/or extensions that will not be install and loaded.
@@ -370,6 +371,7 @@ layers configuration. You are free to put any user code."
       ("h o" helm-occur)
       ("p P" projectile-test-project)
       ("p s s" helm-projectile-ag)
+      ("p s p" helm-projectile-pt)
       ("p u" projectile-run-project)
       ("s q" howdoi-query))))
 
