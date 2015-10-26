@@ -300,6 +300,8 @@ layers configuration. You are free to put any user code."
   ;; Package settings: neotree
   (use-package neotree
     :defer t
+    :init
+    (setq neo-show-hidden-files nil)
     :config
     (define-keys neotree-mode-map
       '(("o" neotree-enter))))
