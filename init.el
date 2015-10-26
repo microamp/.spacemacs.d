@@ -308,6 +308,10 @@ layers configuration. You are free to put any user code."
   ;; Package settings: go-mode
   (use-package go-mode
     :defer t
+    :bind
+    (("M-." . godef-jump)
+     ("M-," . pop-tag-mark)
+     ("C-c C-j" . go-direx-switch-to-buffer))
     :config
     (progn
       (push '("^\*go-direx:"
@@ -317,9 +321,6 @@ layers configuration. You are free to put any user code."
               :dedicated t
               :stick t)
             popwin:special-display-config)
-      (define-keys go-mode-map
-        '(("M-." godef-jump)
-          ("M-," pop-tag-mark)))
       (evil-leader/set-key-for-mode 'go-mode
         "mjp" 'go-direx-pop-to-buffer
         "mjs" 'go-direx-switch-to-buffer
@@ -333,6 +334,15 @@ layers configuration. You are free to put any user code."
         ("C-M-e" sp-up-sexp)
         ("C-M-n" sp-next-sexp)
         ("C-M-p" sp-previous-sexp))))
+  ;; Package settings: emms
+  (use-package emms
+    :defer t
+    :config
+    (progn
+      (require 'emms-setup)
+      (emms-all)
+      (emms-default-players)
+      (emms-mode-line-enable)))
 
   ;; Hooks added: programming modes
   (add-hooks 'prog-mode-hook
@@ -357,7 +367,8 @@ layers configuration. You are free to put any user code."
 
   ;; Custom key bindings: global
   (define-keys global-map
-    '(("C-x -" split-window-below-and-focus)
+    '(("C-c C-j" helm-imenu)
+      ("C-x -" split-window-below-and-focus)
       ("C-x \\" split-window-right-and-focus)
       ("C-x l" delete-other-windows)
       ("C-x q" delete-window)
@@ -370,13 +381,17 @@ layers configuration. You are free to put any user code."
       ("RET" newline-and-indent)))
   ;; Custom key bindings: SPC shortcuts
   (define-keys evil-leader--default-map
-    '(("g M" magit-show-refs-head)
+    '(("a m e h" helm-emms)
+      ("a m e p" emms-play)
+      ("a m e s" emms-stop)
+      ("g M" magit-show-refs-head)
       ("h o" helm-occur)
       ("p P" projectile-test-project)
       ("p s s" helm-projectile-ag)
       ("p s p" helm-projectile-pt)
       ("p u" projectile-run-project)
-      ("s q" howdoi-query))))
+      ("s q" howdoi-query)
+      ("x c m" mc/mark-all-like-this))))
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
