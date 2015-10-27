@@ -61,6 +61,7 @@ values."
    ;; configuration in `dotspacemacs/config'.
    dotspacemacs-additional-packages '(beacon
                                       emms
+                                      emms-mode-line-cycle
                                       go-direx
                                       go-errcheck
                                       helm-emms
@@ -340,9 +341,13 @@ layers configuration. You are free to put any user code."
     :config
     (progn
       (require 'emms-setup)
+      (require 'emms-mode-line-cycle)
+      (require 'emms-mode-line-icon)
       (emms-all)
       (emms-default-players)
-      (emms-mode-line-enable)))
+      (emms-mode-line-enable)
+      (emms-playing-time-disable-display)
+      (emms-mode-line-cycle 1)))
 
   ;; Hooks added: programming modes
   (add-hooks 'prog-mode-hook
@@ -382,7 +387,7 @@ layers configuration. You are free to put any user code."
   ;; Custom key bindings: SPC shortcuts
   (define-keys evil-leader--default-map
     '(("a m e h" helm-emms)
-      ("a m e p" emms-play)
+      ("a m e p" emms-start)
       ("a m e s" emms-stop)
       ("g M" magit-show-refs-head)
       ("h o" helm-occur)
@@ -402,6 +407,8 @@ layers configuration. You are free to put any user code."
  ;; If there is more than one, they won't work right.
  '(deft-auto-save-interval 0.0)
  '(deft-directory "~/Dropbox/.deft")
+ '(emms-mode-line-cycle-max-width 13)
+ '(emms-mode-line-cycle-use-icon-p t)
  '(magit-log-arguments (quote ("-n256" "--graph" "--decorate" "--color")))
  '(neo-theme (quote ascii)))
 (custom-set-faces
