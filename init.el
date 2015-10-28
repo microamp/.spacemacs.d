@@ -302,7 +302,8 @@ layers configuration. You are free to put any user code."
   (use-package neotree
     :defer t
     :init
-    (setq neo-show-hidden-files nil)
+    (setq neo-show-hidden-files nil
+          projectile-switch-project-action 'neotree-projectile-action)
     :config
     (define-keys neotree-mode-map
       '(("o" neotree-enter))))
@@ -311,8 +312,7 @@ layers configuration. You are free to put any user code."
     :defer t
     :bind
     (("M-." . godef-jump)
-     ("M-," . pop-tag-mark)
-     ("C-c C-j" . go-direx-switch-to-buffer))
+     ("M-," . pop-tag-mark))
     :config
     (progn
       (push '("^\*go-direx:"
@@ -334,7 +334,9 @@ layers configuration. You are free to put any user code."
       '(("C-M-a" sp-backward-down-sexp)
         ("C-M-e" sp-up-sexp)
         ("C-M-n" sp-next-sexp)
-        ("C-M-p" sp-previous-sexp))))
+        ("C-M-p" sp-previous-sexp)
+        ("C-]" sp-select-next-thing-exchange)
+        ("C-M-]" sp-select-next-thing))))
   ;; Package settings: emms
   (use-package emms
     :defer t
@@ -370,6 +372,11 @@ layers configuration. You are free to put any user code."
   (remove-hooks 'org-mode
                 '(smartparens-mode))
 
+  ;; Occupy entire frame
+  (advice-add 'magit-log-all :after 'delete-other-windows)
+  (advice-add 'magit-show-refs-head :after 'delete-other-windows)
+  (advice-add 'magit-status :after 'delete-other-windows)
+
   ;; Custom key bindings: global
   (define-keys global-map
     '(("C-c C-j" helm-imenu)
@@ -378,11 +385,13 @@ layers configuration. You are free to put any user code."
       ("C-x l" delete-other-windows)
       ("C-x q" delete-window)
       ("C-x |" split-window-right-and-focus)
+      ("C-x n" other-window)
+      ("C-x p" previous-multiframe-window)
       ("M-SPC" shell-pop-eshell)
       ("M-[" beginning-of-defun)
       ("M-]" end-of-defun)
-      ("M-n" (lambda (n) (interactive "p") (scroll-up n)))
-      ("M-p" (lambda (n) (interactive "p") (scroll-down n)))
+      ("M-n" (lambda (n) (interactive "p") (scroll-up n))) ;; vi-style C-e
+      ("M-p" (lambda (n) (interactive "p") (scroll-down n))) ;; vi-style C-y
       ("RET" newline-and-indent)))
   ;; Custom key bindings: SPC shortcuts
   (define-keys evil-leader--default-map
@@ -410,6 +419,7 @@ layers configuration. You are free to put any user code."
  '(emms-mode-line-cycle-max-width 13)
  '(emms-mode-line-cycle-use-icon-p t)
  '(magit-log-arguments (quote ("-n256" "--graph" "--decorate" "--color")))
+ '(neo-persist-show t)
  '(neo-theme (quote ascii)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
