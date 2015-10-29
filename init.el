@@ -303,6 +303,7 @@ layers configuration. You are free to put any user code."
     :defer t
     :init
     (setq neo-show-hidden-files nil
+          neo-persist-show t
           projectile-switch-project-action 'neotree-projectile-action)
     :config
     (define-keys neotree-mode-map
@@ -315,6 +316,7 @@ layers configuration. You are free to put any user code."
      ("M-," . pop-tag-mark))
     :config
     (progn
+      (require 'go-errcheck)
       (push '("^\*go-direx:"
               :regexp t
               :position right
