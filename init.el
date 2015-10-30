@@ -67,7 +67,8 @@ values."
                                       helm-emms
                                       helm-pt
                                       hl-todo
-                                      howdoi)
+                                      howdoi
+                                      w3m)
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '()
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
