@@ -328,6 +328,11 @@ layers configuration. You are free to put any user code."
         "mjp" 'go-direx-pop-to-buffer
         "mjs" 'go-direx-switch-to-buffer
         "mE" 'go-errcheck-pkg)))
+  ;; Package settings: python-mode
+  (use-package python-mode
+    :defer t
+    :init
+    (setq fci-rule-column 99))
   ;; Package settings: smartparens
   (use-package smartparens
     :defer t
@@ -361,6 +366,9 @@ layers configuration. You are free to put any user code."
                linum-mode
                rainbow-delimiters-mode
                remove-trailing-whitespace))
+  ;; Hooks added: Python mode
+  (add-hooks 'python-mode-hook
+             '(fci-mode))
   ;; Hooks added: Lisp modes
   (apply-fn-to-modes 'smartparens-strict-mode
                      sp--lisp-modes)
