@@ -294,6 +294,7 @@ layers configuration. You are free to put any user code."
     (setq deft-recursive t
           deft-use-filename-as-title t)
     :config
+    (unbind-key (kbd "f") deft-mode-map)
     (define-keys deft-mode-map
       '(("C-k" deft-filter-clear)
         ("M-q" ibuffer-quit))))
