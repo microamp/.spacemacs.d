@@ -239,6 +239,14 @@ values."
           (remove-hook mode-hook function))
         functions))
 
+(defun vi-style-c-e (n)
+  (interactive "p")
+  (scroll-up n))
+
+(defun vi-style-c-y (n)
+  (interactive "p")
+  (scroll-down n))
+
 (defun remove-trailing-whitespace ()
   (add-to-list 'write-file-functions 'delete-trailing-whitespace))
 
@@ -300,17 +308,19 @@ layers configuration. You are free to put any user code."
         ("M-q" ibuffer-quit))))
   (advice-add 'deft :after 'deft-filter-clear)
   (advice-add 'deft :after 'deft-refresh)
-  ;; Package settings: neotree
-  (use-package neotree
+  ;; Package settings: emms
+  (use-package emms
     :defer t
-    :init
-    (setq neo-show-hidden-files nil
-          neo-persist-show t
-          projectile-switch-project-action 'neotree-projectile-action)
     :config
-    (define-keys neotree-mode-map
-      '(("o" neotree-enter)))
-    (global-set-key [f8] 'neotree-find))
+    (progn
+      (require 'emms-setup)
+      (require 'emms-mode-line-cycle)
+      (require 'emms-mode-line-icon)
+      (emms-all)
+      (emms-default-players)
+      (emms-mode-line-enable)
+      (emms-playing-time-disable-display)
+      (emms-mode-line-cycle 1)))
   ;; Package settings: go-mode
   (use-package go-mode
     :defer t
@@ -331,6 +341,18 @@ layers configuration. You are free to put any user code."
         "mjp" 'go-direx-pop-to-buffer
         "mjs" 'go-direx-switch-to-buffer
         "mE" 'go-errcheck-pkg)))
+
+  ;; Package settings: neotree
+  (use-package neotree
+    :defer t
+    :init
+    (setq neo-show-hidden-files nil
+          neo-persist-show t
+          projectile-switch-project-action 'neotree-projectile-action)
+    :config
+    (define-keys neotree-mode-map
+      '(("o" neotree-enter)))
+    (global-set-key [f8] 'neotree-find))
   ;; Package settings: python-mode
   (use-package python-mode
     :defer t
@@ -347,19 +369,6 @@ layers configuration. You are free to put any user code."
         ("C-M-p" sp-previous-sexp)
         ("C-]" sp-select-next-thing-exchange)
         ("C-M-]" sp-select-next-thing))))
-  ;; Package settings: emms
-  (use-package emms
-    :defer t
-    :config
-    (progn
-      (require 'emms-setup)
-      (require 'emms-mode-line-cycle)
-      (require 'emms-mode-line-icon)
-      (emms-all)
-      (emms-default-players)
-      (emms-mode-line-enable)
-      (emms-playing-time-disable-display)
-      (emms-mode-line-cycle 1)))
 
   ;; Hooks added: programming modes
   (add-hooks 'prog-mode-hook
@@ -390,6 +399,7 @@ layers configuration. You are free to put any user code."
 
   ;; Occupy entire frame
   (advice-add 'magit-log-all :after 'delete-other-windows)
+  (advice-add 'magit-log-head :after 'delete-other-windows)
   (advice-add 'magit-show-refs-head :after 'delete-other-windows)
   (advice-add 'magit-status :after 'delete-other-windows)
 
@@ -406,8 +416,8 @@ layers configuration. You are free to put any user code."
       ("M-SPC" shell-pop-eshell)
       ("M-[" beginning-of-defun)
       ("M-]" end-of-defun)
-      ("M-n" (lambda (n) (interactive "p") (scroll-up n))) ;; vi-style C-e
-      ("M-p" (lambda (n) (interactive "p") (scroll-down n))) ;; vi-style C-y
+      ("M-n" vi-style-c-e)
+      ("M-p" vi-style-c-y)
       ("RET" newline-and-indent)))
   ;; Custom key bindings: SPC shortcuts
   (define-keys evil-leader--default-map
@@ -416,6 +426,7 @@ layers configuration. You are free to put any user code."
       ("a m e p" emms-start)
       ("a m e s" emms-stop)
       ("g M" magit-show-refs-head)
+      ("g l" magit-log-head)
       ("h o" helm-occur)
       ("p P" projectile-test-project)
       ("p s s" helm-projectile-ag)
