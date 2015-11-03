@@ -309,7 +309,8 @@ layers configuration. You are free to put any user code."
           projectile-switch-project-action 'neotree-projectile-action)
     :config
     (define-keys neotree-mode-map
-      '(("o" neotree-enter))))
+      '(("o" neotree-enter)))
+    (global-set-key [f8] 'neotree-find))
   ;; Package settings: go-mode
   (use-package go-mode
     :defer t
@@ -407,7 +408,8 @@ layers configuration. You are free to put any user code."
       ("RET" newline-and-indent)))
   ;; Custom key bindings: SPC shortcuts
   (define-keys evil-leader--default-map
-    '(("a m e h" helm-emms)
+    '(("M-m" avy-goto-word-or-subword-1)
+      ("a m e h" helm-emms)
       ("a m e p" emms-start)
       ("a m e s" emms-stop)
       ("g M" magit-show-refs-head)
