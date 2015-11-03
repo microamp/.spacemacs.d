@@ -240,15 +240,25 @@ values."
         functions))
 
 (defun vi-style-c-e (n)
+  "Emulate vi's CTRL-E (show one more line at bottom of window)."
   (interactive "p")
   (scroll-up n))
 
 (defun vi-style-c-y (n)
+  "Emulate vi's CTRL-Y (show one more line at top of window.)"
   (interactive "p")
   (scroll-down n))
 
 (defun remove-trailing-whitespace ()
+  "Remove all trailing whitespaces on save."
   (add-to-list 'write-file-functions 'delete-trailing-whitespace))
+
+(defun focus-then-maximise (buf-name)
+  "Focus the buffer specified then maximise."
+  (interactive)
+  (progn
+    (switch-to-buffer buf-name)
+    (delete-other-windows)))
 
 (defun dotspacemacs/user-init ()
   "Initialization function for user code.
@@ -398,6 +408,7 @@ layers configuration. You are free to put any user code."
                 '(smartparens-mode))
 
   ;; Occupy entire frame
+  (advice-add 'gh-md-render-buffer :after (apply-partially 'focus-then-maximise "*gh-md*"))
   (advice-add 'magit-log-all :after 'delete-other-windows)
   (advice-add 'magit-log-head :after 'delete-other-windows)
   (advice-add 'magit-show-refs-head :after 'delete-other-windows)
