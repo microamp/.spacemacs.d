@@ -249,6 +249,10 @@ values."
   (interactive "p")
   (scroll-down n))
 
+(defun vc-annotate-current-buffer-head ()
+  "Run vc-annotate on the current buffer."
+  (vc-annotate (buffer-file-name) "HEAD"))
+
 (defun remove-trailing-whitespace ()
   "Remove all trailing whitespaces on save."
   (add-to-list 'write-file-functions 'delete-trailing-whitespace))
@@ -413,6 +417,7 @@ layers configuration. You are free to put any user code."
   (advice-add 'magit-log-head :after 'delete-other-windows)
   (advice-add 'magit-show-refs-head :after 'delete-other-windows)
   (advice-add 'magit-status :after 'delete-other-windows)
+  (advice-add 'vc-annotate-current-buffer-head :after 'delete-other-windows)
 
   ;; Custom key bindings: global
   (define-keys global-map
@@ -436,6 +441,7 @@ layers configuration. You are free to put any user code."
       ("a m e h" helm-emms)
       ("a m e p" emms-start)
       ("a m e s" emms-stop)
+      ("g a" vc-annotate-current-buffer-head)
       ("g M" magit-show-refs-head)
       ("g l" magit-log-head)
       ("h o" helm-occur)
