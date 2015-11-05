@@ -355,7 +355,6 @@ layers configuration. You are free to put any user code."
         "mjp" 'go-direx-pop-to-buffer
         "mjs" 'go-direx-switch-to-buffer
         "mE" 'go-errcheck-pkg)))
-
   ;; Package settings: neotree
   (use-package neotree
     :defer t
@@ -465,6 +464,7 @@ layers configuration. You are free to put any user code."
  '(emms-mode-line-cycle-use-icon-p t)
  '(magit-log-arguments (quote ("-n256" "--graph" "--decorate" "--color")))
  '(neo-persist-show t)
+ '(neo-show-hidden-files nil)
  '(neo-theme (quote ascii)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
