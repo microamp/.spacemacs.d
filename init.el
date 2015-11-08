@@ -367,10 +367,14 @@ layers configuration. You are free to put any user code."
         '(("o" neotree-enter)))
       (global-set-key [f8] 'neotree-find)))
   ;; Package settings: python-mode
-  (use-package python-mode
+  (use-package python
     :defer t
     :init
-    (setq fci-rule-column 99))
+    (setq fci-rule-column 99)
+    :config
+    (progn
+      (evil-leader/set-key-for-mode 'python-mode
+        "mf" 'py-yapf-buffer)))
 
   ;; Package settings: smartparens
   (use-package smartparens
