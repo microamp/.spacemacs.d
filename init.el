@@ -253,10 +253,6 @@ values."
   "Run vc-annotate on the current buffer."
   (vc-annotate (buffer-file-name) "HEAD"))
 
-(defun remove-trailing-whitespace ()
-  "Remove all trailing whitespaces on save."
-  (add-to-list 'write-file-functions 'delete-trailing-whitespace))
-
 (defun focus-then-maximise (buf-name)
   "Focus the buffer specified then maximise."
   (interactive)
@@ -283,6 +279,8 @@ layers configuration. You are free to put any user code."
   (set-frame-parameter nil 'fullscreen 'fullboth)
   ;; Overwrite highlighted
   (delete-selection-mode t)
+  ;; Remove trailing whitespace on save
+  (add-to-list 'write-file-functions 'delete-trailing-whitespace)
   ;; Web browser
   (setq browse-url-browser-function 'browse-url-generic
         engine/browser-function 'browse-url-generic
@@ -316,10 +314,11 @@ layers configuration. You are free to put any user code."
     (setq deft-recursive t
           deft-use-filename-as-title t)
     :config
-    (unbind-key (kbd "f") deft-mode-map)
-    (define-keys deft-mode-map
-      '(("C-k" deft-filter-clear)
-        ("M-q" ibuffer-quit))))
+    (progn
+      (unbind-key (kbd "f") deft-mode-map)
+      (define-keys deft-mode-map
+        '(("C-k" deft-filter-clear)
+          ("M-q" ibuffer-quit)))))
   (advice-add 'deft :after 'deft-filter-clear)
   (advice-add 'deft :after 'deft-refresh)
   ;; Package settings: emms
@@ -363,14 +362,16 @@ layers configuration. You are free to put any user code."
           neo-persist-show t
           projectile-switch-project-action 'neotree-projectile-action)
     :config
-    (define-keys neotree-mode-map
-      '(("o" neotree-enter)))
-    (global-set-key [f8] 'neotree-find))
+    (progn
+      (define-keys neotree-mode-map
+        '(("o" neotree-enter)))
+      (global-set-key [f8] 'neotree-find)))
   ;; Package settings: python-mode
   (use-package python-mode
     :defer t
     :init
     (setq fci-rule-column 99))
+
   ;; Package settings: smartparens
   (use-package smartparens
     :defer t
@@ -389,22 +390,15 @@ layers configuration. You are free to put any user code."
                eldoc-mode
                hl-todo-mode
                linum-mode
-               rainbow-delimiters-mode
-               remove-trailing-whitespace))
+               rainbow-delimiters-mode))
   ;; Hooks added: Python mode
   (add-hooks 'python-mode-hook
              '(fci-mode))
-  ;; Hooks added: Org mode
-  (add-hooks 'org-mode
-             '(turn-on-smartparens-mode))
   ;; Hooks added: Lisp modes
   (apply-fn-to-modes 'smartparens-strict-mode
                      sp--lisp-modes)
   ;; Hooks removed: Go mode
   (remove-hooks 'go-mode-hook
-                '(flycheck-mode))
-  ;; Hooks removed: Python mode
-  (remove-hooks 'python-mode-hook
                 '(flycheck-mode))
   ;; Hooks removed: Org mode
   (remove-hooks 'org-mode
