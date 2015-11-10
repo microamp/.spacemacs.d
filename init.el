@@ -343,6 +343,8 @@ layers configuration. You are free to put any user code."
   ;; Package settings: go-mode
   (use-package go-mode
     :defer t
+    :init
+    (setq gofmt-command "goimports")
     :bind
     (("M-." . godef-jump)
      ("M-," . pop-tag-mark)
