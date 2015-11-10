@@ -64,6 +64,7 @@ values."
                                       emms-mode-line-cycle
                                       go-direx
                                       go-errcheck
+                                      go-playground
                                       helm-emms
                                       helm-pt
                                       hl-todo
@@ -260,6 +261,11 @@ values."
     (switch-to-buffer buf-name)
     (delete-other-windows)))
 
+(defun unbind-rebind-key (mode-map key new-func)
+  "Unbinding and rebind the key with the given function."
+  (define-key mode-map key nil)
+  (define-key mode-map key new-func))
+
 (defun dotspacemacs/user-init ()
   "Initialization function for user code.
 It is called immediately after `dotspacemacs/init'.  You are free to put any
@@ -339,7 +345,9 @@ layers configuration. You are free to put any user code."
     :defer t
     :bind
     (("M-." . godef-jump)
-     ("M-," . pop-tag-mark))
+     ("M-," . pop-tag-mark)
+     ("C-c C-e" . go-errcheck-pkg)
+     ("C-c C-p" . go-playground))
     :config
     (progn
       (require 'go-errcheck)
@@ -350,6 +358,7 @@ layers configuration. You are free to put any user code."
               :dedicated t
               :stick t)
             popwin:special-display-config)
+      (unbind-rebind-key go-mode-map (kbd "C-c C-j") 'go-direx-switch-to-buffer)
       (evil-leader/set-key-for-mode 'go-mode
         "mjp" 'go-direx-pop-to-buffer
         "mjs" 'go-direx-switch-to-buffer
