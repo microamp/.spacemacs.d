@@ -69,6 +69,7 @@ values."
                                       helm-pt
                                       hl-todo
                                       howdoi
+                                      jdee
                                       w3m)
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '()
@@ -389,6 +390,15 @@ layers configuration. You are free to put any user code."
         "mjp" 'go-direx-pop-to-buffer
         "mjs" 'go-direx-switch-to-buffer
         "mE" 'go-errcheck-project)))
+  ;; Package settings: jdee
+  (use-package jdee
+    :defer t
+    :init
+    (setq jdee-server-dir "~/devel/projs/jdee-server/target")
+    :bind
+    (("M-." . jdee-open-class-at-point))
+    :config
+    (add-to-list 'load-path "~/devel/projs/jdee-server/target"))
   ;; Package settings: neotree
   (use-package neotree
     :defer t
