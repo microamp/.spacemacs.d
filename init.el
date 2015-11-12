@@ -250,12 +250,12 @@ values."
   (interactive "p")
   (scroll-down n))
 
-(defun go-get-project-root (go-path-src project-root)
+(defun go-get-project-root (go-path-src go-project-root)
   "Return the name of the Go project. e.g. github.com/gorilla/context"
-  (if (string-prefix-p go-path-src project-root)
-      (let* ((project-root-no-trailing-slash (s-chop-suffix "/" project-root))
-             (project-root-short (s-chop-prefix go-path-src project-root-no-trailing-slash)))
-        project-root-short)))
+  (if (string-prefix-p go-path-src go-project-root)
+      (let* ((no-trailing-slash (s-chop-suffix "/" go-project-root))
+             (go-project-root-short (s-chop-prefix go-path-src no-trailing-slash)))
+        go-project-root-short)))
 
 (defun go-set-oracle-scope ()
   "Update Go Oracle scope if the current project is a Go project."
@@ -266,6 +266,13 @@ values."
         (progn
           (setq go-oracle-scope go-project-root)
           (message (concat "Go Oracle scope set to " go-project-root))))))
+
+(defun go-errcheck-project ()
+  "Run errcheck recursively from the current project directory."
+  (interactive)
+  (let* ((go-path-src (concat (getenv "GOPATH") "/src/"))
+         (go-project-root (go-get-project-root go-path-src (projectile-project-root))))
+    (go-errcheck-pkg (concat go-project-root "/...") nil nil nil)))
 
 (defun vc-annotate-current-buffer-head ()
   "Run vc-annotate on the current buffer."
@@ -365,7 +372,7 @@ layers configuration. You are free to put any user code."
     :bind
     (("M-." . godef-jump)
      ("M-," . pop-tag-mark)
-     ("C-c C-e" . go-errcheck-pkg)
+     ("C-c C-e" . go-errcheck-project)
      ("C-c C-p" . go-playground))
     :config
     (progn
@@ -381,7 +388,7 @@ layers configuration. You are free to put any user code."
       (evil-leader/set-key-for-mode 'go-mode
         "mjp" 'go-direx-pop-to-buffer
         "mjs" 'go-direx-switch-to-buffer
-        "mE" 'go-errcheck-pkg)))
+        "mE" 'go-errcheck-project)))
   ;; Package settings: neotree
   (use-package neotree
     :defer t
