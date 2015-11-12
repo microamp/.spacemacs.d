@@ -370,11 +370,6 @@ layers configuration. You are free to put any user code."
     :defer t
     :init
     (setq gofmt-command "goimports")
-    :bind
-    (("M-." . godef-jump)
-     ("M-," . pop-tag-mark)
-     ("C-c C-e" . go-errcheck-project)
-     ("C-c C-p" . go-playground))
     :config
     (progn
       (require 'go-errcheck)
@@ -386,6 +381,11 @@ layers configuration. You are free to put any user code."
               :stick t)
             popwin:special-display-config)
       (unbind-rebind-key go-mode-map (kbd "C-c C-j") 'go-direx-switch-to-buffer)
+      (define-keys go-mode-map
+        '(("M-." godef-jump)
+          ("M-," pop-tag-mark)
+          ("C-c C-e" go-errcheck-project)
+          ("C-c C-p" go-playground)))
       (evil-leader/set-key-for-mode 'go-mode
         "mjp" 'go-direx-pop-to-buffer
         "mjs" 'go-direx-switch-to-buffer
@@ -395,10 +395,12 @@ layers configuration. You are free to put any user code."
     :defer t
     :init
     (setq jdee-server-dir "~/devel/projs/jdee-server/target")
-    :bind
-    (("M-." . jdee-open-class-at-point))
     :config
-    (add-to-list 'load-path "~/devel/projs/jdee-server/target"))
+    (progn
+      (add-to-list 'load-path "~/devel/projs/jdee-server/target")
+      (define-keys jdee-mode-map
+        '(("M-." jdee-open-class-at-point)
+          ("M-," pop-tag-mark)))))
   ;; Package settings: neotree
   (use-package neotree
     :defer t
@@ -420,7 +422,6 @@ layers configuration. You are free to put any user code."
     (progn
       (evil-leader/set-key-for-mode 'python-mode
         "mf" 'py-yapf-buffer)))
-
   ;; Package settings: smartparens
   (use-package smartparens
     :defer t
