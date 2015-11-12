@@ -70,7 +70,8 @@ values."
                                       hl-todo
                                       howdoi
                                       jdee
-                                      w3m)
+                                      w3m
+                                      yaml-mode)
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '()
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
@@ -433,6 +434,11 @@ layers configuration. You are free to put any user code."
         ("C-M-p" sp-previous-sexp)
         ("C-]" sp-select-next-thing-exchange)
         ("C-M-]" sp-select-next-thing))))
+  ;; Package settings: yaml-mode
+  (use-package yaml-mode
+    :defer t
+    :config
+    (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode)))
 
   ;; Hooks added: programming modes
   (add-hooks 'prog-mode-hook
