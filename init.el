@@ -250,6 +250,23 @@ values."
   (interactive "p")
   (scroll-down n))
 
+(defun go-get-project-root (go-path-src project-root)
+  "Return the name of the Go project. e.g. github.com/gorilla/context"
+  (if (string-prefix-p go-path-src project-root)
+      (let* ((project-root-no-trailing-slash (s-chop-suffix "/" project-root))
+             (project-root-short (s-chop-prefix go-path-src project-root-no-trailing-slash)))
+        project-root-short)))
+
+(defun go-set-oracle-scope ()
+  "Update Go Oracle scope if the current project is a Go project."
+  (interactive)
+  (let* ((go-path-src (concat (getenv "GOPATH") "/src/"))
+         (go-project-root (go-get-project-root go-path-src (projectile-project-root))))
+    (if go-project-root
+        (progn
+          (setq go-oracle-scope go-project-root)
+          (message (concat "Go Oracle scope set to " go-project-root))))))
+
 (defun vc-annotate-current-buffer-head ()
   "Run vc-annotate on the current buffer."
   (vc-annotate (buffer-file-name) "HEAD"))
@@ -421,6 +438,7 @@ layers configuration. You are free to put any user code."
 
   ;; Occupy entire frame
   (advice-add 'gh-md-render-buffer :after (apply-partially 'focus-then-maximise "*gh-md*"))
+  (advice-add 'helm-projectile-switch-project :after 'go-set-oracle-scope)
   (advice-add 'magit-log-all :after 'delete-other-windows)
   (advice-add 'magit-log-head :after 'delete-other-windows)
   (advice-add 'magit-show-refs-head :after 'delete-other-windows)
