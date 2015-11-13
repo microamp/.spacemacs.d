@@ -396,9 +396,9 @@ layers configuration. You are free to put any user code."
     :defer t
     :init
     (setq jdee-server-dir "~/devel/projs/jdee-server/target")
+    :load-path "~/devel/projs/jdee-server/target"
     :config
     (progn
-      (add-to-list 'load-path "~/devel/projs/jdee-server/target")
       (define-keys jdee-mode-map
         '(("M-." jdee-open-class-at-point)
           ("M-," pop-tag-mark)))))
