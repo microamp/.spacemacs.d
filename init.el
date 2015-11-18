@@ -292,6 +292,17 @@ values."
   (define-key mode-map key nil)
   (define-key mode-map key new-func))
 
+(defun eshell-clear-buffer ()
+  "Emulate clear inside eshell."
+  (interactive)
+  (let ((inhibit-read-only t))
+    (erase-buffer)
+    (eshell-send-input)))
+
+;; Package settings: eshell-mode
+(defun bind-eshell-clear-buffer ()
+  (local-set-key (kbd "C-l") 'eshell-clear-buffer))
+
 (defun dotspacemacs/user-init ()
   "Initialization function for user code.
 It is called immediately after `dotspacemacs/init'.  You are free to put any
@@ -447,6 +458,9 @@ layers configuration. You are free to put any user code."
                hl-todo-mode
                linum-mode
                rainbow-delimiters-mode))
+  ;; Hooks added: Eshell mode
+  (add-hooks 'eshell-mode-hook
+             '(bind-eshell-clear-buffer))
   ;; Hooks added: Python mode
   (add-hooks 'python-mode-hook
              '(fci-mode))
