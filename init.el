@@ -303,6 +303,11 @@ values."
 (defun bind-eshell-clear-buffer ()
   (local-set-key (kbd "C-l") 'eshell-clear-buffer))
 
+(defun switch-to-previous-buffer ()
+  "Switch to the previous buffer."
+  (interactive)
+  (switch-to-buffer (other-buffer (current-buffer) 1)))
+
 (defun dotspacemacs/user-init ()
   "Initialization function for user code.
 It is called immediately after `dotspacemacs/init'.  You are free to put any
@@ -486,13 +491,14 @@ layers configuration. You are free to put any user code."
   ;; Custom key bindings: global
   (define-keys global-map
     '(("C-c C-j" helm-imenu)
+      ("C-x '" switch-to-previous-buffer)
       ("C-x -" split-window-below-and-focus)
       ("C-x \\" split-window-right-and-focus)
       ("C-x l" delete-other-windows)
-      ("C-x q" delete-window)
-      ("C-x |" split-window-right-and-focus)
       ("C-x n" other-window)
       ("C-x p" previous-multiframe-window)
+      ("C-x q" delete-window)
+      ("C-x |" split-window-right-and-focus)
       ("M-SPC" shell-pop-eshell)
       ("M-[" beginning-of-defun)
       ("M-]" end-of-defun)
