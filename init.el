@@ -423,8 +423,7 @@ layers configuration. You are free to put any user code."
     :defer t
     :init
     (setq neo-show-hidden-files nil
-          neo-persist-show t
-          projectile-switch-project-action 'neotree-projectile-action)
+          neo-persist-show t)
     :config
     (progn
       (define-keys neotree-mode-map
