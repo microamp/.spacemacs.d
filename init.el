@@ -411,8 +411,8 @@ layers configuration. You are free to put any user code."
   (use-package jdee
     :defer t
     :init
-    (setq jdee-server-dir "~/devel/projs/jdee-server/target")
-    :load-path "~/devel/projs/jdee-server/target"
+    (setq jdee-server-dir "~/src/jdee-server/target")
+    :load-path "~/src/jdee-server/target"
     :config
     (progn
       (define-keys jdee-mode-map
