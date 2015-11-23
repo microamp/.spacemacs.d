@@ -442,6 +442,8 @@ layers configuration. You are free to put any user code."
   (use-package smartparens
     :defer t
     :config
+    (apply-fn-to-modes 'smartparens-strict-mode
+                       sp--lisp-modes)
     (define-keys sp-keymap
       '(("C-M-a" sp-backward-down-sexp)
         ("C-M-e" sp-up-sexp)
@@ -468,9 +470,6 @@ layers configuration. You are free to put any user code."
   ;; Hooks added: Python mode
   (add-hooks 'python-mode-hook
              '(fci-mode))
-  ;; Hooks added: Lisp modes
-  (apply-fn-to-modes 'smartparens-strict-mode
-                     sp--lisp-modes)
   ;; Hooks removed: Go mode
   (remove-hooks 'go-mode-hook
                 '(flycheck-mode))
