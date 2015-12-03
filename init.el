@@ -70,6 +70,8 @@ values."
                                       hl-todo
                                       howdoi
                                       jdee
+                                      julia-mode
+                                      julia-shell
                                       w3m
                                       yaml-mode)
    ;; A list of packages and/or extensions that will not be install and loaded.
@@ -418,6 +420,16 @@ layers configuration. You are free to put any user code."
       (define-keys jdee-mode-map
         '(("M-." jdee-open-class-at-point)
           ("M-," pop-tag-mark)))))
+  ;; Package settings: julia-mode
+  (use-package julia-mode
+    :defer t
+    :config
+    (progn
+      (require 'julia-shell)
+      (define-keys julia-mode-map
+        '(("C-c C-z" run-julia)
+          ("C-c C-c" julia-shell-run-region-or-line)
+          ("C-c C-s" julia-shell-save-and-go)))))
   ;; Package settings: neotree
   (use-package neotree
     :defer t
