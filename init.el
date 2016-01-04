@@ -516,21 +516,21 @@ layers configuration. You are free to put any user code."
       ("M-p" vi-style-c-y)
       ("RET" newline-and-indent)))
   ;; Custom key bindings: SPC shortcuts
-  (define-keys evil-leader--default-map
-    '(("M-m" avy-goto-word-or-subword-1)
-      ("a m e h" helm-emms)
-      ("a m e p" emms-start)
-      ("a m e s" emms-stop)
-      ("g a" vc-annotate-current-buffer-head)
-      ("g M" magit-show-refs-head)
-      ("g l" magit-log-head)
-      ("h o" helm-occur)
-      ("p P" projectile-test-project)
-      ("p s s" helm-projectile-ag)
-      ("p s p" helm-projectile-pt)
-      ("p u" projectile-run-project)
-      ("s q" howdoi-query)
-      ("x c m" mc/mark-all-like-this))))
+  (spacemacs/set-leader-keys
+    "M-m" 'avy-goto-word-or-subword-1
+    "ameh" 'helm-emms
+    "amep" 'emms-start
+    "ames" 'emms-stop
+    "ga" 'vc-annotate-current-buffer-head
+    "gM" 'magit-show-refs-head
+    "gl" 'magit-log-head
+    "ho" 'helm-occur
+    "pP" 'projectile-test-project
+    "pss" 'helm-projectile-ag
+    "psp" 'helm-projectile-pt
+    "pu" 'projectile-run-project
+    "sq" 'howdoi-query
+    ",cm" 'mc/mark-all-like-this))
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
@@ -544,8 +544,8 @@ layers configuration. You are free to put any user code."
  '(emms-mode-line-cycle-max-width 13)
  '(emms-mode-line-cycle-use-icon-p t)
  '(magit-log-arguments (quote ("-n256" "--graph" "--decorate" "--color")))
- '(neo-persist-show t)
- '(neo-show-hidden-files nil)
+ '(neo-persist-show t t)
+ '(neo-show-hidden-files nil t)
  '(neo-theme (quote ascii)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
