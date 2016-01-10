@@ -420,6 +420,12 @@ layers configuration. You are free to put any user code."
       (define-keys jdee-mode-map
         '(("M-." jdee-open-class-at-point)
           ("M-," pop-tag-mark)))))
+  ;; Package settings: js2-mode
+  (use-package js2-mode
+    :defer t
+    :config
+    (progn
+      (setq-default js2-basic-offset 2)))
   ;; Package settings: julia-mode
   (use-package julia-mode
     :defer t
