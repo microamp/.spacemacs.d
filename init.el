@@ -26,7 +26,6 @@ values."
      better-defaults
      clojure
      colors
-     deft
      elixir
      emacs-lisp
      git
@@ -60,6 +59,7 @@ values."
    ;; packages then consider to create a layer, you can also put the
    ;; configuration in `dotspacemacs/config'.
    dotspacemacs-additional-packages '(beacon
+                                      deft
                                       emms
                                       emms-mode-line-cycle
                                       go-direx
@@ -527,6 +527,7 @@ layers configuration. You are free to put any user code."
     "ameh" 'helm-emms
     "amep" 'emms-start
     "ames" 'emms-stop
+    "an" 'deft
     "ga" 'vc-annotate-current-buffer-head
     "gM" 'magit-show-refs-head
     "gl" 'magit-log-head
