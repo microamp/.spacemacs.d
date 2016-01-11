@@ -455,7 +455,8 @@ layers configuration. You are free to put any user code."
     :config
     (progn
       (evil-leader/set-key-for-mode 'python-mode
-        "mf" 'py-yapf-buffer)))
+        "mf" 'py-yapf-buffer)
+      (unbind-rebind-key python-mode-map (kbd "C-c C-j") 'helm-semantic-or-imenu)))
   ;; Package settings: smartparens
   (use-package smartparens
     :defer t
@@ -506,7 +507,7 @@ layers configuration. You are free to put any user code."
 
   ;; Custom key bindings: global
   (define-keys global-map
-    '(("C-c C-j" helm-imenu)
+    '(("C-c C-j" helm-semantic-or-imenu)
       ("C-x '" switch-to-previous-buffer)
       ("C-x -" split-window-below-and-focus)
       ("C-x \\" split-window-right-and-focus)
