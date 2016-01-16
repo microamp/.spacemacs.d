@@ -354,9 +354,10 @@ layers configuration. You are free to put any user code."
           deft-use-filename-as-title t)
     :config
     (progn
-      (unbind-key (kbd "f") deft-mode-map)
+      (unbind-rebind-key deft-mode-map (kbd "f") 'deft-filter-increment)
       (define-keys deft-mode-map
-        '(("C-k" deft-filter-clear)
+        '(("C-g" ibuffer-quit)
+          ("C-k" deft-filter-clear)
           ("M-q" ibuffer-quit)))))
   (advice-add 'deft :after 'deft-filter-clear)
   (advice-add 'deft :after 'deft-refresh)
