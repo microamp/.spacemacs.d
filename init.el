@@ -294,17 +294,6 @@ values."
   (define-key mode-map key nil)
   (define-key mode-map key new-func))
 
-(defun eshell-clear-buffer ()
-  "Emulate clear inside eshell."
-  (interactive)
-  (let ((inhibit-read-only t))
-    (erase-buffer)
-    (eshell-send-input)))
-
-;; Package settings: eshell-mode
-(defun bind-eshell-clear-buffer ()
-  (local-set-key (kbd "C-l") 'eshell-clear-buffer))
-
 (defun switch-to-previous-buffer ()
   "Switch to the previous buffer."
   (interactive)
@@ -483,9 +472,6 @@ layers configuration. You are free to put any user code."
                hl-todo-mode
                linum-mode
                rainbow-delimiters-mode))
-  ;; Hooks added: Eshell mode
-  (add-hooks 'eshell-mode-hook
-             '(bind-eshell-clear-buffer))
   ;; Hooks added: Python mode
   (add-hooks 'python-mode-hook
              '(fci-mode))
@@ -554,7 +540,8 @@ layers configuration. You are free to put any user code."
  '(magit-log-arguments (quote ("-n256" "--graph" "--decorate" "--color")))
  '(neo-persist-show t t)
  '(neo-show-hidden-files nil t)
- '(neo-theme (quote ascii)))
+ '(neo-theme (quote ascii))
+ '(paradox-github-token t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
