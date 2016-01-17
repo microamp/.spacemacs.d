@@ -49,7 +49,7 @@ values."
             scala-enable-eldoc-mode t
             scala-auto-insert-asterisk-in-comments t)
      (shell :variables
-            shell-default-height 30
+            shell-default-height 45
             shell-default-position 'bottom)
      shell-scripts
      sml
