@@ -45,7 +45,9 @@ values."
      rcirc
      restclient
      rust
-     scala
+     (scala :variables
+            scala-enable-eldoc-mode t
+            scala-auto-insert-asterisk-in-comments t)
      (shell :variables
             shell-default-height 30
             shell-default-position 'bottom)
@@ -374,6 +376,13 @@ layers configuration. You are free to put any user code."
       (emms-mode-line-enable)
       (emms-playing-time-disable-display)
       (emms-mode-line-cycle 1)))
+  ;; Package settings: eww
+  (use-package eww
+    :defer t
+    :config
+    (define-keys eww-mode-map
+      '(("M-n" vi-style-c-e)
+        ("M-p" vi-style-c-y))))
   ;; Package settings: go-mode
   (use-package go-mode
     :defer t
@@ -413,9 +422,8 @@ layers configuration. You are free to put any user code."
   ;; Package settings: js2-mode
   (use-package js2-mode
     :defer t
-    :config
-    (progn
-      (setq-default js2-basic-offset 2)))
+    :init
+    (setq-default js2-basic-offset 2))
   ;; Package settings: julia-mode
   (use-package julia-mode
     :defer t
@@ -437,6 +445,11 @@ layers configuration. You are free to put any user code."
       (define-keys neotree-mode-map
         '(("o" neotree-enter)))
       (global-set-key [f8] 'neotree-find)))
+  ;; Package settings: projectile
+  (use-package projectile
+    :defer t
+    :init
+    (setq projectile-switch-project-action 'magit-show-refs-head))
   ;; Package settings: python-mode
   (use-package python
     :defer t
@@ -491,6 +504,9 @@ layers configuration. You are free to put any user code."
   (advice-add 'magit-show-refs-head :after 'delete-other-windows)
   (advice-add 'magit-status :after 'delete-other-windows)
   (advice-add 'vc-annotate-current-buffer-head :after 'delete-other-windows)
+
+  ;; Show under which function the point currently is
+  (which-function-mode)
 
   ;; Custom key bindings: global
   (define-keys global-map
