@@ -508,6 +508,9 @@ layers configuration. You are free to put any user code."
   ;; Show under which function the point currently is
   (which-function-mode)
 
+  ;; DocView for PDF files
+  (add-to-list 'auto-mode-alist '("\\.pdf\\'" . doc-view-mode))
+
   ;; Custom key bindings: global
   (define-keys global-map
     '(("C-c C-j" helm-semantic-or-imenu)
