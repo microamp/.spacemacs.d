@@ -37,6 +37,8 @@ values."
      javascript
      lua
      markdown
+     (mu4e :variables
+           mu4e-installation-path "/usr/local/Cellar/mu/HEAD/share/emacs/site-lisp/mu/mu4e")
      ocaml
      org
      osx
@@ -478,6 +480,56 @@ layers configuration. You are free to put any user code."
     :defer t
     :config
     (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode)))
+  ;; Package settings: mu4e
+  (use-package mu4e
+    :defer t
+    :init
+    (progn
+      (setq
+       ;; Path to Maildir directory
+       mu4e-maildir "~/Maildir"
+
+       mu4e-sent-folder   "/[Gmail].Sent Mail"
+       mu4e-drafts-folder "/[Gmail].Drafts"
+       mu4e-trash-folder "/[Gmail].Trash"
+
+       ;; Maildirs you use frequently; access them with 'j' (jump)
+       mu4e-maildir-shortcuts
+       '(("/[Gmail].All Mail"  . ?i)
+         ("/[Gmail].Sent Mail" . ?s)
+         ("/[Gmail].Drafts"    . ?d)
+         ("/[Gmail].Trash"     . ?t))
+
+       ;; List of email addresses
+       mu4e-user-mail-address-list '("microamplifier@gmail.com")
+
+       mu4e-headers-fields
+       '((:date    . 25) ;; Alternatively, use :human-date
+         (:flags   .  6)
+         (:from    . 22)
+         (:subject . nil))
+
+       ;; Program to fetch mail (offlineimap)
+       mu4e-get-mail-command "offlineimap"
+
+       ;; Update every 5 minutes
+       mu4e-update-interval (* 60 5)
+
+       mu4e-reply-to-address "microamplifier@gmail.com"
+       user-mail-address     "microamplifier@gmail.com"
+       user-full-name        "SH N"
+
+       ;; SMTP settings
+       message-send-mail-function   'smtpmail-send-it
+       smtpmail-default-smtp-server "smtp.gmail.com"
+       smtpmail-smtp-server         "smtp.gmail.com"
+       smtpmail-local-domain        "gmail.com"
+
+       ;; Don't keep message buffers around
+       message-kill-buffer-on-exit t
+
+       ;; View content using w3m
+       mu4e-html2text-command "w3m -dump -T text/html")))
 
   ;; Hooks added: programming modes
   (add-hooks 'prog-mode-hook
@@ -489,6 +541,11 @@ layers configuration. You are free to put any user code."
   ;; Hooks added: Python mode
   (add-hooks 'python-mode-hook
              '(fci-mode))
+  ;; Hooks added: mu4e with gpg
+  (add-hooks 'mu4e-compose-mode-hook
+             '(epa-mail-mode))
+  (add-hooks 'mu4e-view-mode-hook
+             '(epa-mail-mode))
   ;; Hooks removed: Go mode
   (remove-hooks 'go-mode-hook
                 '(flycheck-mode))
