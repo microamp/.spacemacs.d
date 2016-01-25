@@ -51,7 +51,7 @@ values."
             scala-enable-eldoc-mode t
             scala-auto-insert-asterisk-in-comments t)
      (shell :variables
-            shell-default-height 45
+            shell-pop-window-size 40
             shell-default-position 'bottom)
      shell-scripts
      sml
@@ -436,50 +436,6 @@ layers configuration. You are free to put any user code."
         '(("C-c C-z" run-julia)
           ("C-c C-c" julia-shell-run-region-or-line)
           ("C-c C-s" julia-shell-save-and-go)))))
-  ;; Package settings: neotree
-  (use-package neotree
-    :defer t
-    :init
-    (setq neo-show-hidden-files nil
-          neo-persist-show t)
-    :config
-    (progn
-      (define-keys neotree-mode-map
-        '(("o" neotree-enter)))
-      (global-set-key [f8] 'neotree-find)))
-  ;; Package settings: projectile
-  (use-package projectile
-    :defer t
-    :init
-    (setq projectile-switch-project-action 'magit-show-refs-head))
-  ;; Package settings: python-mode
-  (use-package python
-    :defer t
-    :init
-    (setq fci-rule-column 99)
-    :config
-    (progn
-      (evil-leader/set-key-for-mode 'python-mode
-        "mf" 'py-yapf-buffer)
-      (unbind-rebind-key python-mode-map (kbd "C-c C-j") 'helm-semantic-or-imenu)))
-  ;; Package settings: smartparens
-  (use-package smartparens
-    :defer t
-    :config
-    (apply-fn-to-modes 'smartparens-strict-mode
-                       sp--lisp-modes)
-    (define-keys sp-keymap
-      '(("C-M-a" sp-backward-down-sexp)
-        ("C-M-e" sp-up-sexp)
-        ("C-M-n" sp-next-sexp)
-        ("C-M-p" sp-previous-sexp)
-        ("C-]" sp-select-next-thing-exchange)
-        ("C-M-]" sp-select-next-thing))))
-  ;; Package settings: yaml-mode
-  (use-package yaml-mode
-    :defer t
-    :config
-    (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode)))
   ;; Package settings: mu4e
   (use-package mu4e
     :defer t
@@ -530,6 +486,50 @@ layers configuration. You are free to put any user code."
 
        ;; View content using w3m
        mu4e-html2text-command "w3m -dump -T text/html")))
+  ;; Package settings: neotree
+  (use-package neotree
+    :defer t
+    :init
+    (setq neo-show-hidden-files nil
+          neo-persist-show t)
+    :config
+    (progn
+      (define-keys neotree-mode-map
+        '(("o" neotree-enter)))
+      (global-set-key [f8] 'neotree-find)))
+  ;; Package settings: projectile
+  (use-package projectile
+    :defer t
+    :init
+    (setq projectile-switch-project-action 'magit-show-refs-head))
+  ;; Package settings: python-mode
+  (use-package python
+    :defer t
+    :init
+    (setq fci-rule-column 99)
+    :config
+    (progn
+      (evil-leader/set-key-for-mode 'python-mode
+        "mf" 'py-yapf-buffer)
+      (unbind-rebind-key python-mode-map (kbd "C-c C-j") 'helm-semantic-or-imenu)))
+  ;; Package settings: smartparens
+  (use-package smartparens
+    :defer t
+    :config
+    (apply-fn-to-modes 'smartparens-strict-mode
+                       sp--lisp-modes)
+    (define-keys sp-keymap
+      '(("C-M-a" sp-backward-down-sexp)
+        ("C-M-e" sp-up-sexp)
+        ("C-M-n" sp-next-sexp)
+        ("C-M-p" sp-previous-sexp)
+        ("C-]" sp-select-next-thing-exchange)
+        ("C-M-]" sp-select-next-thing))))
+  ;; Package settings: yaml-mode
+  (use-package yaml-mode
+    :defer t
+    :config
+    (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode)))
 
   ;; Hooks added: programming modes
   (add-hooks 'prog-mode-hook
@@ -610,6 +610,7 @@ layers configuration. You are free to put any user code."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(auth-source-save-behavior nil)
  '(deft-auto-save-interval 0.0)
  '(deft-directory "~/Dropbox/.deft")
  '(emms-mode-line-cycle-max-width 13)
