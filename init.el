@@ -76,6 +76,7 @@ values."
                                       jdee
                                       julia-mode
                                       julia-shell
+                                      twittering-mode
                                       w3m
                                       yaml-mode)
    ;; A list of packages and/or extensions that will not be install and loaded.
@@ -447,7 +448,7 @@ layers configuration. You are free to put any user code."
 
        mu4e-sent-folder   "/[Gmail].Sent Mail"
        mu4e-drafts-folder "/[Gmail].Drafts"
-       mu4e-trash-folder "/[Gmail].Trash"
+       mu4e-trash-folder  "/[Gmail].Trash"
 
        ;; Maildirs you use frequently; access them with 'j' (jump)
        mu4e-maildir-shortcuts
@@ -592,6 +593,7 @@ layers configuration. You are free to put any user code."
     "amep" 'emms-start
     "ames" 'emms-stop
     "an" 'deft
+    "at" 'twit
     "ga" 'vc-annotate-current-buffer-head
     "gM" 'magit-show-refs-head
     "gl" 'magit-log-head
@@ -616,8 +618,8 @@ layers configuration. You are free to put any user code."
  '(emms-mode-line-cycle-max-width 13)
  '(emms-mode-line-cycle-use-icon-p t)
  '(magit-log-arguments (quote ("-n256" "--graph" "--decorate" "--color")))
- '(neo-persist-show t t)
- '(neo-show-hidden-files nil t)
+ '(neo-persist-show t)
+ '(neo-show-hidden-files nil)
  '(neo-theme (quote ascii))
  '(paradox-github-token t))
 (custom-set-faces
