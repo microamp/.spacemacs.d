@@ -30,7 +30,6 @@ values."
      emacs-lisp
      git
      go
-     haskell
      html
      ipython-notebook
      jabber
@@ -43,10 +42,8 @@ values."
      org
      osx
      python
-     racket
      rcirc
      restclient
-     rust
      (scala :variables
             scala-enable-eldoc-mode t
             scala-auto-insert-asterisk-in-comments t)
