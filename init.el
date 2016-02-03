@@ -48,7 +48,7 @@ values."
             scala-enable-eldoc-mode t
             scala-auto-insert-asterisk-in-comments t)
      (shell :variables
-            shell-pop-window-size 40
+            shell-default-height 40
             shell-default-position 'bottom)
      shell-scripts
      sml
@@ -75,7 +75,8 @@ values."
                                       julia-shell
                                       twittering-mode
                                       w3m
-                                      yaml-mode)
+                                      yaml-mode
+                                      ztree)
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '()
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
@@ -528,6 +529,15 @@ layers configuration. You are free to put any user code."
     :defer t
     :config
     (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode)))
+  ;; Package settings: ztree
+  (use-package ztree
+    :defer t
+    :init
+    (progn
+      (require 'ztree-dir)
+      (bind-key "n" 'next-line ztreedir-mode-map)
+      (bind-key "p" 'previous-line ztreedir-mode-map)
+      (bind-key "o" 'ztree-perform-action ztreedir-mode-map)))
 
   ;; Hooks added: programming modes
   (add-hooks 'prog-mode-hook
@@ -569,6 +579,7 @@ layers configuration. You are free to put any user code."
   ;; Custom key bindings: global
   (define-keys global-map
     '(("C-c C-j" helm-semantic-or-imenu)
+      ("C-x M-d" ztree-dir)
       ("C-x '" switch-to-previous-buffer)
       ("C-x -" split-window-below-and-focus)
       ("C-x \\" split-window-right-and-focus)
