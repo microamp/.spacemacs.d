@@ -59,7 +59,8 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages then consider to create a layer, you can also put the
    ;; configuration in `dotspacemacs/config'.
-   dotspacemacs-additional-packages '(beacon
+   dotspacemacs-additional-packages '(base16-theme
+                                      beacon
                                       deft
                                       emms
                                       emms-mode-line-cycle
@@ -114,7 +115,8 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(zenburn
+   dotspacemacs-themes '(base16-ashes-dark
+                         zenburn
                          darktooth
                          spacemacs-dark
                          spacemacs-light
@@ -283,6 +285,7 @@ values."
 
 (defun vc-annotate-current-buffer-head ()
   "Run vc-annotate on the current buffer."
+  (interactive)
   (vc-annotate (buffer-file-name) "HEAD"))
 
 (defun focus-then-maximise (buf-name)
@@ -342,7 +345,7 @@ layers configuration. You are free to put any user code."
   ;; Powerline: battery life
   (fancy-battery-mode t)
   ;; Powerline: separator style
-  (setq powerline-default-separator 'arrow)
+  (setq powerline-default-separator 'zigzag)
 
   ;; Package settings: anzu
   (use-package anzu
@@ -565,10 +568,10 @@ layers configuration. You are free to put any user code."
   (advice-add 'gh-md-render-buffer :after (apply-partially 'focus-then-maximise "*gh-md*"))
   (advice-add 'helm-projectile-switch-project :after 'go-set-oracle-scope)
   (advice-add 'magit-log-all :after 'delete-other-windows)
+  (advice-add 'magit-log-buffer-file :after 'delete-other-windows)
   (advice-add 'magit-log-head :after 'delete-other-windows)
   (advice-add 'magit-show-refs-head :after 'delete-other-windows)
   (advice-add 'magit-status :after 'delete-other-windows)
-  (advice-add 'vc-annotate-current-buffer-head :after 'delete-other-windows)
 
   ;; Show under which function the point currently is
   (which-function-mode)
