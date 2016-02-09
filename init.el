@@ -343,6 +343,9 @@ layers configuration. You are free to put any user code."
   ;; Powerline: separator style
   (setq powerline-default-separator 'zigzag)
 
+  ;; Set auto-save timeout
+  (setq auto-save-timeout 10)
+
   ;; Package settings: anzu
   (use-package anzu
     :defer t
@@ -545,6 +548,9 @@ layers configuration. You are free to put any user code."
                hl-todo-mode
                linum-mode
                rainbow-delimiters-mode))
+  ;; Hooks added: auto-save
+  (add-hooks 'auto-save-hook
+             '(delete-trailing-whitespace))
   ;; Hooks added: Python mode
   (add-hooks 'python-mode-hook
              '(fci-mode))
