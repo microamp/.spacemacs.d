@@ -620,13 +620,21 @@ layers configuration. You are free to put any user code."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(auth-source-save-behavior nil)
+ '(beacon-blink-delay 0.2)
+ '(beacon-blink-duration 0.4)
+ '(beacon-blink-when-focused t)
+ '(beacon-color "#BBAA97")
+ '(beacon-dont-blink-major-modes
+   (quote
+    (t magit-status-mode magit-popup-mode inf-ruby-mode gnus-summary-mode gnus-group-mode eshell-mode)))
+ '(beacon-size 15)
  '(deft-auto-save-interval 0.0)
  '(deft-directory "~/Dropbox/.deft")
  '(emms-mode-line-cycle-max-width 13)
  '(emms-mode-line-cycle-use-icon-p t)
  '(magit-log-arguments (quote ("-n256" "--graph" "--decorate" "--color")))
- '(neo-persist-show t)
- '(neo-show-hidden-files nil)
+ '(neo-persist-show t t)
+ '(neo-show-hidden-files nil t)
  '(neo-theme (quote ascii))
  '(paradox-github-token t))
 (custom-set-faces
