@@ -572,6 +572,9 @@ layers configuration. You are free to put any user code."
   ;; Show under which function the point currently is
   (which-function-mode)
 
+  ;; Set cursor colour
+  (set-cursor-color "#66999D")
+
   ;; DocView for PDF files
   (add-to-list 'auto-mode-alist '("\\.pdf\\'" . doc-view-mode))
 
@@ -645,4 +648,7 @@ layers configuration. You are free to put any user code."
  '(default ((t (:foreground "#DCDCCC" :background "#3F3F3F"))))
  '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
  '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil))))
+ '(face-of-god ((t (:background "#66999D" :foreground "#504945" :box nil :inherit (quote mode-line)))))
+ '(spacemacs-emacs-face ((t (:background "#66999D" :foreground "#504945" :box nil :inherit (quote mode-line)))))
+ '(spacemacs-hybrid-face ((t (:background "#66999D" :foreground "#504945" :box nil :inherit (quote mode-line)))))
  '(which-func ((t (:foreground "#87AFAF")))))
