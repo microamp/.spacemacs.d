@@ -67,6 +67,7 @@ values."
                                       go-direx
                                       go-errcheck
                                       go-playground
+                                      gruvbox-theme
                                       helm-emms
                                       helm-pt
                                       hl-todo
@@ -115,15 +116,10 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(base16-ashes-dark
+   dotspacemacs-themes '(gruvbox
+                         base16-ashes-dark
                          zenburn
-                         darktooth
-                         spacemacs-dark
-                         spacemacs-light
-                         solarized-light
-                         solarized-dark
-                         leuven
-                         monokai)
+                         darktooth)
    ;; If non nil the cursor color matches the state color.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
@@ -640,4 +636,5 @@ layers configuration. You are free to put any user code."
  ;; If there is more than one, they won't work right.
  '(default ((t (:foreground "#DCDCCC" :background "#3F3F3F"))))
  '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
- '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))
+ '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil))))
+ '(which-func ((t (:foreground "#87AFAF")))))
