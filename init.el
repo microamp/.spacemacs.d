@@ -33,7 +33,9 @@ values."
      html
      ipython-notebook
      jabber
-     javascript
+     (javascript :variables
+                 js2-basic-offset 2
+                 js-indent-level 2)
      lua
      markdown
      (mu4e :variables
