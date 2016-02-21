@@ -26,6 +26,7 @@ values."
      better-defaults
      clojure
      colors
+     elfeed
      elixir
      emacs-lisp
      git
@@ -381,6 +382,20 @@ layers configuration. You are free to put any user code."
       (emms-mode-line-enable)
       (emms-playing-time-disable-display)
       (emms-mode-line-cycle 1)))
+  ;; Package settings: elfeed
+  (use-package elfeed
+    :defer t
+    :init
+    (setq elfeed-feeds
+          '(("http://blog.empathybox.com/rss" blog programming)
+            ("http://endlessparentheses.com/atom.xml" blog emacs programming)
+            ("http://feeds.feedburner.com/martinkl?format=xml" blog programming)
+            ("http://iamprogrammer.io/" korean podcast programming)
+            ("http://nedroid.com/feed/" webcomic)
+            ("http://xkcd.com/rss.xml" webcomic)
+            ("https://medium.com/feed/@unbalancedparen" blog programming)
+            ("https://www.functionalgeekery.com/feed/" podcast programming)
+            ("http://emacshorrors.com/feed.atom" blog emacs programming))))
   ;; Package settings: eww
   (use-package eww
     :defer t
@@ -656,6 +671,8 @@ layers configuration. You are free to put any user code."
  '(default ((t (:foreground "#DCDCCC" :background "#3F3F3F"))))
  '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
  '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil))))
+ '(elfeed-search-feed-face ((t (:foreground "#fabd2f"))))
+ '(elfeed-search-tag-face ((t (:foreground "#8ec07c"))))
  '(face-of-god ((t (:background "#66999D" :foreground "#504945" :box nil :inherit (quote mode-line)))))
  '(spacemacs-emacs-face ((t (:background "#66999D" :foreground "#504945" :box nil :inherit (quote mode-line)))))
  '(spacemacs-hybrid-face ((t (:background "#66999D" :foreground "#504945" :box nil :inherit (quote mode-line)))))
