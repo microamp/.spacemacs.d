@@ -388,14 +388,15 @@ layers configuration. You are free to put any user code."
     :init
     (setq elfeed-feeds
           '(("http://blog.empathybox.com/rss" blog programming)
+            ("http://emacshorrors.com/feed.atom" blog emacs programming)
             ("http://endlessparentheses.com/atom.xml" blog emacs programming)
+            ("http://feeds.feedburner.com/HighScalability" blog distributed-computing programming)
             ("http://feeds.feedburner.com/martinkl?format=xml" blog programming)
             ("http://iamprogrammer.io/" korean podcast programming)
             ("http://nedroid.com/feed/" webcomic)
             ("http://xkcd.com/rss.xml" webcomic)
             ("https://medium.com/feed/@unbalancedparen" blog programming)
-            ("https://www.functionalgeekery.com/feed/" podcast programming)
-            ("http://emacshorrors.com/feed.atom" blog emacs programming))))
+            ("https://www.functionalgeekery.com/feed/" podcast programming))))
   ;; Package settings: eww
   (use-package eww
     :defer t
