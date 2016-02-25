@@ -659,9 +659,10 @@ layers configuration. You are free to put any user code."
  '(deft-directory "~/Dropbox/.deft")
  '(emms-mode-line-cycle-max-width 13)
  '(emms-mode-line-cycle-use-icon-p t)
+ '(flycheck-javascript-standard-executable "semistandard")
  '(magit-log-arguments (quote ("-n256" "--graph" "--decorate" "--color")))
- '(neo-persist-show t t)
- '(neo-show-hidden-files nil t)
+ '(neo-persist-show t)
+ '(neo-show-hidden-files nil)
  '(neo-theme (quote ascii))
  '(paradox-github-token t))
 (custom-set-faces
