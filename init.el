@@ -304,6 +304,32 @@ values."
   (interactive)
   (switch-to-buffer (other-buffer (current-buffer) 1)))
 
+(defun open-line-and-indent-next ()
+  (progn
+    (open-line 1)
+    (spacemacs/evil-goto-next-line-and-indent)))
+
+(defun open-line-with-indentation ()
+  "Implement `open-line' with indentation support."
+  (interactive)
+  (progn
+    ;; If EOL
+    (if (eolp)
+        (open-line 1)
+      (progn
+        ;; If BOL
+        (skip-chars-backward " ")
+        (if (bolp)
+            (progn
+              (open-line-and-indent-next)
+              (previous-line)
+              (indent-for-tab-command))
+          ;; Otherwise
+          (let ((pos (point-marker)))
+            (progn
+              (open-line-and-indent-next)
+              (goto-char pos))))))))
+
 (defun dotspacemacs/user-init ()
   "Initialization function for user code.
 It is called immediately after `dotspacemacs/init'.  You are free to put any
@@ -604,7 +630,8 @@ layers configuration. You are free to put any user code."
 
   ;; Custom key bindings: global
   (define-keys global-map
-    '(("C-c C-j" helm-semantic-or-imenu)
+    '(("C-o" open-line-with-indentation)
+      ("C-c C-j" helm-semantic-or-imenu)
       ("C-x M-d" ztree-dir)
       ("C-x '" switch-to-previous-buffer)
       ("C-x -" split-window-below-and-focus)
