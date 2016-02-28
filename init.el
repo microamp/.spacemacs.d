@@ -304,6 +304,14 @@ values."
   (interactive)
   (switch-to-buffer (other-buffer (current-buffer) 1)))
 
+(defun switch-to-pprevious-buffer ()
+  "Switch to the buffer previous to the previous buffer."
+  (interactive)
+  (let* ((buffers (mapcar (function buffer-name) (buffer-list)))
+         (buffers-filtered (-filter (lambda (s) (not (string-prefix-p " " s)))
+                                    buffers)))
+    (switch-to-buffer (car (cdr (cdr buffers-filtered))))))
+
 (defun open-line-and-indent-next ()
   (progn
     (open-line 1)
@@ -638,6 +646,7 @@ layers configuration. You are free to put any user code."
       ("C-x C-b" ibuffer-list-buffers)
       ("C-x M-d" ztree-dir)
       ("C-x '" switch-to-previous-buffer)
+      ("C-x M-'" switch-to-pprevious-buffer)
       ("C-x -" split-window-below-and-focus)
       ("C-x \\" split-window-right-and-focus)
       ("C-x l" delete-other-windows)
