@@ -635,6 +635,7 @@ layers configuration. You are free to put any user code."
   (define-keys global-map
     '(("C-o" open-line-with-indentation)
       ("C-c C-j" helm-semantic-or-imenu)
+      ("C-x C-b" ibuffer-list-buffers)
       ("C-x M-d" ztree-dir)
       ("C-x '" switch-to-previous-buffer)
       ("C-x -" split-window-below-and-focus)
