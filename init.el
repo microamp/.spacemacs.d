@@ -671,6 +671,8 @@ layers configuration. You are free to put any user code."
     "ga" 'vc-annotate-current-buffer-head
     "gM" 'magit-show-refs-head
     "gl" 'magit-log-head
+    "hb" 'helm-filtered-bookmarks
+    "hl" 'helm-resume
     "ho" 'helm-occur
     "pP" 'projectile-test-project
     "pss" 'helm-projectile-ag
