@@ -649,6 +649,7 @@ layers configuration. You are free to put any user code."
       ("C-x C-b" ibuffer-list-buffers)
       ("C-x M-d" ztree-dir)
       ("C-x '" switch-to-previous-buffer)
+      ("C-x \"" switch-to-pprevious-buffer)
       ("C-x M-'" switch-to-pprevious-buffer)
       ("C-x -" split-window-below-and-focus)
       ("C-x \\" split-window-right-and-focus)
