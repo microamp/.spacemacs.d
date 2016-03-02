@@ -639,6 +639,9 @@ layers configuration. You are free to put any user code."
   ;; DocView for PDF files
   (add-to-list 'auto-mode-alist '("\\.pdf\\'" . doc-view-mode))
 
+  ;; Use org-mode for encrypted org file
+  (add-to-list 'auto-mode-alist '("\\.org.gpg\\'" . org-mode))
+
   ;; Custom key bindings: global
   (define-keys global-map
     '(("C-o" open-line-with-indentation)
