@@ -702,6 +702,7 @@ layers configuration. You are free to put any user code."
  '(beacon-size 15)
  '(deft-auto-save-interval 0.0)
  '(deft-directory "~/Dropbox/.deft")
+ '(deft-extensions (quote ("txt" "text" "md" "markdown" "org")))
  '(emms-mode-line-cycle-max-width 13)
  '(emms-mode-line-cycle-use-icon-p t)
  '(flycheck-javascript-standard-executable "semistandard")
