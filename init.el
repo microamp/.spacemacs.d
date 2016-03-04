@@ -576,9 +576,13 @@ layers configuration. You are free to put any user code."
                        sp--lisp-modes)
     (define-keys sp-keymap
       '(("C-M-a" sp-backward-down-sexp)
+        ("C-M-b" sp-backward-sexp)
+        ("C-M-d" sp-down-sexp)
+        ("C-M-f" sp-forward-sexp)
         ("C-M-e" sp-up-sexp)
         ("C-M-n" sp-next-sexp)
         ("C-M-p" sp-previous-sexp)
+        ("C-M-u" sp-backward-up-sexp)
         ("C-]" sp-select-next-thing-exchange)
         ("C-M-]" sp-select-next-thing))))
   ;; Package settings: yaml-mode
