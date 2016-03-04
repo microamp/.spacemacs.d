@@ -722,6 +722,8 @@ layers configuration. You are free to put any user code."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(default ((t (:foreground "#DCDCCC" :background "#3F3F3F"))))
+ '(ahs-definition-face ((t (:background "CadetBlue" :foreground "moccasin" :underline t))))
+ '(ahs-plugin-whole-buffer-face ((t (:background "CadetBlue" :foreground "moccasin"))))
  '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
  '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil))))
  '(elfeed-search-feed-face ((t (:foreground "#fabd2f"))))
