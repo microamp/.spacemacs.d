@@ -353,6 +353,8 @@ layers configuration. You are free to put any user code."
         mac-command-modifier 'meta
         mac-right-command-modifier 'super
         mac-function-modifier 'hyper)
+  ;; Scroll margin
+  (setq-default scroll-margin 5)
   ;; Fullscreen
   (set-frame-parameter nil 'fullscreen 'fullboth)
   ;; Overwrite highlighted
