@@ -119,8 +119,8 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(gruvbox
-                         base16-ashes-dark
+   dotspacemacs-themes '(base16-ashes-dark
+                         gruvbox
                          zenburn
                          darktooth)
    ;; If non nil the cursor color matches the state color.
@@ -380,7 +380,7 @@ layers configuration. You are free to put any user code."
   ;; Powerline: battery life
   (fancy-battery-mode t)
   ;; Powerline: separator style
-  (setq powerline-default-separator 'zigzag)
+  (setq powerline-default-separator 'arrow)
 
   ;; Set auto-save timeout
   (setq auto-save-timeout 10)
@@ -395,7 +395,10 @@ layers configuration. You are free to put any user code."
     :defer t
     :init
     (setq deft-recursive t
-          deft-use-filename-as-title t)
+          deft-use-filename-as-title t
+          deft-auto-save-interval 0.0
+          deft-directory "~/Dropbox/.deft"
+          deft-extensions (quote ("txt" "text" "md" "markdown" "org")))
     :config
     (progn
       (unbind-rebind-key deft-mode-map (kbd "f") 'deft-filter-increment)
@@ -423,8 +426,8 @@ layers configuration. You are free to put any user code."
     :defer t
     :init
     (setq elfeed-feeds
-          '(("http://blog.empathybox.com/rss" blog programming)
-            ("http://emacshorrors.com/feed.atom" blog emacs programming)
+          '(("http://emacshorrors.com/feed.atom" blog emacs programming)
+            ("http://blog.empathybox.com/rss" blog programming)
             ("http://endlessparentheses.com/atom.xml" blog emacs programming)
             ("http://feeds.feedburner.com/HighScalability" blog distributed-computing programming)
             ("http://feeds.feedburner.com/martinkl?format=xml" blog programming)
@@ -432,8 +435,10 @@ layers configuration. You are free to put any user code."
             ("http://nedroid.com/feed/" webcomic)
             ("http://softwareengineeringdaily.com/feed/podcast/" podcast programming)
             ("http://tagide.com/blog/feed/" blog programming)
+            ("http://tech.kakao.com/rss/" blog korean programming)
             ("http://www.juliabloggers.com/feed/" blog programming)
             ("http://xkcd.com/rss.xml" webcomic)
+            ("https://blog.gopheracademy.com/index.xml" blog programming)
             ("https://medium.com/feed/@unbalancedparen" blog programming)
             ("https://www.functionalgeekery.com/feed/" podcast programming))))
   ;; Package settings: eww
@@ -547,9 +552,6 @@ layers configuration. You are free to put any user code."
   ;; Package settings: neotree
   (use-package neotree
     :defer t
-    :init
-    (setq neo-show-hidden-files nil
-          neo-persist-show t)
     :config
     (progn
       (define-keys neotree-mode-map
@@ -698,39 +700,33 @@ layers configuration. You are free to put any user code."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(auth-source-save-behavior nil)
  '(beacon-blink-delay 0.2)
  '(beacon-blink-duration 0.4)
  '(beacon-blink-when-focused t)
- '(beacon-color "#BBAA97")
  '(beacon-dont-blink-major-modes
    (quote
     (t magit-status-mode magit-popup-mode inf-ruby-mode gnus-summary-mode gnus-group-mode eshell-mode)))
  '(beacon-size 15)
- '(deft-auto-save-interval 0.0)
- '(deft-directory "~/Dropbox/.deft")
- '(deft-extensions (quote ("txt" "text" "md" "markdown" "org")))
  '(emms-mode-line-cycle-max-width 13)
  '(emms-mode-line-cycle-use-icon-p t)
  '(flycheck-javascript-standard-executable "semistandard")
  '(magit-log-arguments (quote ("-n256" "--graph" "--decorate" "--color")))
- '(neo-persist-show t)
- '(neo-show-hidden-files nil)
- '(neo-theme (quote ascii))
- '(paradox-github-token t))
+ '(neo-persist-show t t)
+ '(neo-show-hidden-files nil t)
+ '(neo-theme (quote ascii)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:foreground "#DCDCCC" :background "#3F3F3F"))))
- '(ahs-definition-face ((t (:background "CadetBlue" :foreground "moccasin" :underline t))))
- '(ahs-plugin-whole-buffer-face ((t (:background "CadetBlue" :foreground "moccasin"))))
+ '(ahs-plugin-whole-buffer-face ((t (:background "#95AEC7" :foreground "#1C2023"))))
+ '(avy-lead-face ((t (:background "#AEC795" :foreground "#1C2023"))))
+ '(avy-lead-face-0 ((t (:background "#95AEC7" :foreground "#1C2023"))))
  '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
  '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil))))
- '(elfeed-search-feed-face ((t (:foreground "#fabd2f"))))
- '(elfeed-search-tag-face ((t (:foreground "#8ec07c"))))
- '(face-of-god ((t (:background "#66999D" :foreground "#504945" :box nil :inherit (quote mode-line)))))
+ '(elfeed-search-feed-face ((t (:foreground "#AEC795"))))
+ '(elfeed-search-tag-face ((t (:foreground "#95C7AE"))))
+ '(elfeed-search-title-face ((t (:foreground "#F3F4F5"))))
+ '(face-of-god ((t (:background "#66999D" :foreground "#565E65" :box nil :inherit (quote mode-line)))))
  '(spacemacs-emacs-face ((t (:background "#66999D" :foreground "#504945" :box nil :inherit (quote mode-line)))))
- '(spacemacs-hybrid-face ((t (:background "#66999D" :foreground "#504945" :box nil :inherit (quote mode-line)))))
- '(which-func ((t (:foreground "#87AFAF")))))
+ '(spacemacs-hybrid-face ((t (:inherit (quote mode-line) :box nil :foreground "#504945" :background "#66999D")))))
