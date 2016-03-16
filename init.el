@@ -348,6 +348,9 @@ user code."
   "Configuration function for user code.
  This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
+  (when (eq system-type 'darwin)
+    (set-fontset-font t 'hangul (font-spec :name "NanumGothicCoding" :size 12)))
+
   ;; On OS X, remap left Command to Meta
   (setq mac-option-modifier 'meta
         mac-command-modifier 'meta
@@ -426,8 +429,8 @@ layers configuration. You are free to put any user code."
     :defer t
     :init
     (setq elfeed-feeds
-          '(("http://emacshorrors.com/feed.atom" blog emacs programming)
-            ("http://blog.empathybox.com/rss" blog programming)
+          '(("http://blog.empathybox.com/rss" blog programming)
+            ("http://emacshorrors.com/feed.atom" blog emacs programming)
             ("http://endlessparentheses.com/atom.xml" blog emacs programming)
             ("http://feeds.feedburner.com/HighScalability" blog distributed-computing programming)
             ("http://feeds.feedburner.com/martinkl?format=xml" blog programming)
@@ -552,6 +555,9 @@ layers configuration. You are free to put any user code."
   ;; Package settings: neotree
   (use-package neotree
     :defer t
+    :init
+    (setq-default neo-show-hidden-files nil
+                  neo-persist-show t)
     :config
     (progn
       (define-keys neotree-mode-map
@@ -711,9 +717,8 @@ layers configuration. You are free to put any user code."
  '(emms-mode-line-cycle-use-icon-p t)
  '(flycheck-javascript-standard-executable "semistandard")
  '(magit-log-arguments (quote ("-n256" "--graph" "--decorate" "--color")))
- '(neo-persist-show t t)
- '(neo-show-hidden-files nil t)
- '(neo-theme (quote ascii)))
+ '(neo-theme (quote ascii))
+ '(paradox-github-token t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -727,6 +732,8 @@ layers configuration. You are free to put any user code."
  '(elfeed-search-feed-face ((t (:foreground "#AEC795"))))
  '(elfeed-search-tag-face ((t (:foreground "#95C7AE"))))
  '(elfeed-search-title-face ((t (:foreground "#F3F4F5"))))
+ '(elfeed-search-unread-title-face ((t (:foreground "#95AEC7" :weight bold))))
  '(face-of-god ((t (:background "#66999D" :foreground "#565E65" :box nil :inherit (quote mode-line)))))
+ '(mu4e-header-highlight-face ((t (:inherit region :weight bold))))
  '(spacemacs-emacs-face ((t (:background "#66999D" :foreground "#504945" :box nil :inherit (quote mode-line)))))
  '(spacemacs-hybrid-face ((t (:inherit (quote mode-line) :box nil :foreground "#504945" :background "#66999D")))))
