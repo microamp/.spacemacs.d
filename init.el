@@ -30,7 +30,9 @@ values."
      elixir
      emacs-lisp
      git
-     go
+     (go :variables
+         gofmt-command "goimports"
+         go-tab-width 2)
      html
      ipython-notebook
      jabber
@@ -48,7 +50,6 @@ values."
      rcirc
      restclient
      (scala :variables
-            scala-enable-eldoc-mode t
             scala-auto-insert-asterisk-in-comments t)
      (shell :variables
             shell-default-height 40
@@ -67,6 +68,7 @@ values."
                                       deft
                                       emms
                                       emms-mode-line-cycle
+                                      floobits
                                       go-direx
                                       go-errcheck
                                       go-playground
@@ -348,6 +350,7 @@ user code."
   "Configuration function for user code.
  This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
+  ;; Font for Hangul/Korean
   (when (eq system-type 'darwin)
     (set-fontset-font t 'hangul (font-spec :name "NanumGothicCoding" :size 12)))
 
@@ -430,6 +433,7 @@ layers configuration. You are free to put any user code."
     :init
     (setq elfeed-feeds
           '(("http://blog.empathybox.com/rss" blog programming)
+            ("http://blog.weirdx.io/feed" blog korean programming)
             ("http://emacshorrors.com/feed.atom" blog emacs programming)
             ("http://endlessparentheses.com/atom.xml" blog emacs programming)
             ("http://feeds.feedburner.com/HighScalability" blog distributed-computing programming)
@@ -439,11 +443,18 @@ layers configuration. You are free to put any user code."
             ("http://softwareengineeringdaily.com/feed/podcast/" podcast programming)
             ("http://tagide.com/blog/feed/" blog programming)
             ("http://tech.kakao.com/rss/" blog korean programming)
+            ("http://www.confluent.io/blog" bigdata blog programming)
             ("http://www.juliabloggers.com/feed/" blog programming)
+            ("http://www.lunaryorn.com/feed.atom" blog emacs programming)
             ("http://xkcd.com/rss.xml" webcomic)
             ("https://blog.gopheracademy.com/index.xml" blog programming)
+            ("https://danlamanna.com/feeds/atom.xml" blog emacs programming)
+            ("https://libsora.so/index.xml" blog programming)
             ("https://medium.com/feed/@unbalancedparen" blog programming)
-            ("https://www.functionalgeekery.com/feed/" podcast programming))))
+            ("https://owncloud.org/blogfeed/" blog cloud)
+            ("https://static.fsf.org/fsforg/rss/blogs.xml" blog foss)
+            ("https://www.functionalgeekery.com/feed/" podcast programming)
+            ("https://www.hackerslab.org/feed/" blog programming security))))
   ;; Package settings: eww
   (use-package eww
     :defer t
@@ -454,8 +465,6 @@ layers configuration. You are free to put any user code."
   ;; Package settings: go-mode
   (use-package go-mode
     :defer t
-    :init
-    (setq gofmt-command "goimports")
     :config
     (progn
       (require 'go-errcheck)
@@ -563,6 +572,12 @@ layers configuration. You are free to put any user code."
       (define-keys neotree-mode-map
         '(("o" neotree-enter)))
       (global-set-key [f8] 'neotree-find)))
+  ;; Package settings: org
+  (use-package org
+    :defer t
+    :bind (:map org-mode-map
+           ("C-c C-'" . org-todo)
+           ("C-c C-/" . org-sparse-tree)))
   ;; Package settings: projectile
   (use-package projectile
     :defer t
@@ -648,7 +663,7 @@ layers configuration. You are free to put any user code."
   (which-function-mode)
 
   ;; Set cursor colour
-  (set-cursor-color "#66999D")
+  ;(set-cursor-color "#66999D")
 
   ;; DocView for PDF files
   (add-to-list 'auto-mode-alist '("\\.pdf\\'" . doc-view-mode))
