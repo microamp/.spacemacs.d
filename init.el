@@ -418,6 +418,8 @@ layers configuration. You are free to put any user code."
   ;; Package settings: emms
   (use-package emms
     :defer t
+    :init
+    (setq emms-source-file-default-directory "~/Music")
     :config
     (progn
       (require 'emms-setup)
