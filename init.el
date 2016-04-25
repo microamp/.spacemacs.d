@@ -460,6 +460,12 @@ layers configuration. You are free to put any user code."
             ("https://static.fsf.org/fsforg/rss/blogs.xml" blog foss)
             ("https://www.functionalgeekery.com/feed/" podcast programming)
             ("https://www.hackerslab.org/feed/" blog programming security))))
+  ;; Package settings: ensime-mode
+  (use-package ensime-mode
+    :defer t
+    :bind (:map scala-mode-map
+                ("M-N" . vi-style-c-e)
+                ("M-P" . vi-style-c-y)))
   ;; Package settings: eww
   (use-package eww
     :defer t
@@ -516,6 +522,12 @@ layers configuration. You are free to put any user code."
         '(("C-c C-z" run-julia)
           ("C-c C-c" julia-shell-run-region-or-line)
           ("C-c C-s" julia-shell-save-and-go)))))
+  ;; Package settings: markdown
+  (use-package markdown
+    :defer t
+    :bind (:map markdown-mode-map
+                ("M-N" . vi-style-c-e)
+                ("M-P" . vi-style-c-y)))
   ;; Package settings: mu4e
   (use-package mu4e
     :defer t
