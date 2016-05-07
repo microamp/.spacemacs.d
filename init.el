@@ -26,13 +26,15 @@ values."
      better-defaults
      clojure
      colors
+     csv
      elfeed
      elixir
      emacs-lisp
      git
      (go :variables
          gofmt-command "goimports"
-         go-tab-width 2)
+         go-tab-width 2
+         go-use-gometalinter t)
      html
      ipython-notebook
      jabber
@@ -67,6 +69,7 @@ values."
    dotspacemacs-additional-packages '(base16-theme
                                       beacon
                                       deft
+                                      dictionary
                                       emms
                                       emms-mode-line-cycle
                                       floobits
@@ -456,7 +459,6 @@ layers configuration. You are free to put any user code."
             ("https://danlamanna.com/feeds/atom.xml" blog emacs programming)
             ("https://libsora.so/index.xml" blog programming)
             ("https://medium.com/feed/@unbalancedparen" blog programming)
-            ("https://owncloud.org/blogfeed/" blog cloud)
             ("https://static.fsf.org/fsforg/rss/blogs.xml" blog foss)
             ("https://www.functionalgeekery.com/feed/" podcast programming)
             ("https://www.hackerslab.org/feed/" blog programming security))))
@@ -751,6 +753,13 @@ layers configuration. You are free to put any user code."
  '(beacon-size 15)
  '(emms-mode-line-cycle-max-width 13)
  '(emms-mode-line-cycle-use-icon-p t)
+ '(flycheck-checkers
+   (quote
+    (gometalinter ada-gnat asciidoc c/c++-clang c/c++-gcc c/c++-cppcheck cfengine chef-foodcritic coffee coffee-coffeelint coq css-csslint d-dmd emacs-lisp emacs-lisp-checkdoc erlang eruby-erubis fortran-gfortran go-gofmt go-build go-test groovy haml handlebars haskell-stack-ghc haskell-ghc haskell-hlint html-tidy jade javascript-eslint javascript-jshint javascript-gjslint javascript-jscs javascript-standard json-jsonlint json-python-json less luacheck lua perl perl-perlcritic php php-phpmd php-phpcs processing puppet-parser puppet-lint python-flake8 python-pylint python-pycompile r-lintr racket rpm-rpmlint markdown-mdl rst-sphinx rst ruby-rubocop ruby-rubylint ruby ruby-jruby rust-cargo rust sass scala scala-scalastyle scss-lint scss sh-bash sh-posix-dash sh-posix-bash sh-zsh sh-shellcheck slim sql-sqlint tex-chktex tex-lacheck texinfo verilog-verilator xml-xmlstarlet xml-xmllint yaml-jsyaml yaml-ruby)))
+ '(flycheck-disabled-checkers nil)
+ '(flycheck-gometalinter-disable-linters
+   (quote
+    ("gotype" "aligncheck" "ineffassign" "structcheck" "unconvert")))
  '(flycheck-javascript-standard-executable "semistandard")
  '(magit-log-arguments (quote ("-n256" "--graph" "--decorate" "--color")))
  '(neo-theme (quote ascii))
@@ -771,5 +780,7 @@ layers configuration. You are free to put any user code."
  '(elfeed-search-unread-title-face ((t (:foreground "#95AEC7" :weight bold))))
  '(face-of-god ((t (:background "#66999D" :foreground "#565E65" :box nil :inherit (quote mode-line)))))
  '(mu4e-header-highlight-face ((t (:inherit region :weight bold))))
+ '(neo-dir-link-face ((t (:foreground "#95C7AE"))))
+ '(neo-vc-edited-face ((t (:foreground "#C7AE95"))))
  '(spacemacs-emacs-face ((t (:background "#66999D" :foreground "#504945" :box nil :inherit (quote mode-line)))))
  '(spacemacs-hybrid-face ((t (:inherit (quote mode-line) :box nil :foreground "#504945" :background "#66999D")))))
