@@ -442,6 +442,7 @@ layers configuration. You are free to put any user code."
             ("http://blog.weirdx.io/feed" blog korean programming)
             ("http://emacshorrors.com/feed.atom" blog emacs programming)
             ("http://endlessparentheses.com/atom.xml" blog emacs programming)
+            ("http://feeds.5by5.tv/changelog" podcast programming)
             ("http://feeds.feedburner.com/HighScalability" blog distributed-computing programming)
             ("http://feeds.feedburner.com/martinkl?format=xml" blog programming)
             ("http://iamprogrammer.io/" korean podcast programming)
@@ -451,17 +452,13 @@ layers configuration. You are free to put any user code."
             ("http://tagide.com/blog/feed/" blog programming)
             ("http://tech.kakao.com/rss/" blog korean programming)
             ("http://www.confluent.io/blog" bigdata blog programming)
-            ("http://www.juliabloggers.com/feed/" blog programming)
             ("http://www.lunaryorn.com/feed.atom" blog emacs programming)
             ("http://www.sangkon.com/rss/" blog korean programming)
             ("http://xkcd.com/rss.xml" webcomic)
             ("https://blog.gopheracademy.com/index.xml" blog programming)
             ("https://danlamanna.com/feeds/atom.xml" blog emacs programming)
-            ("https://libsora.so/index.xml" blog programming)
             ("https://medium.com/feed/@unbalancedparen" blog programming)
-            ("https://static.fsf.org/fsforg/rss/blogs.xml" blog foss)
-            ("https://www.functionalgeekery.com/feed/" podcast programming)
-            ("https://www.hackerslab.org/feed/" blog programming security))))
+            ("https://www.functionalgeekery.com/feed/" podcast programming))))
   ;; Package settings: ensime-mode
   (use-package ensime-mode
     :defer t
@@ -759,7 +756,7 @@ layers configuration. You are free to put any user code."
  '(flycheck-disabled-checkers nil)
  '(flycheck-gometalinter-disable-linters
    (quote
-    ("gotype" "aligncheck" "ineffassign" "structcheck" "unconvert")))
+    ("gotype" "aligncheck" "ineffassign" "structcheck" "unconvert" "staticcheck" "gocyclo" "goconst")))
  '(flycheck-javascript-standard-executable "semistandard")
  '(magit-log-arguments (quote ("-n256" "--graph" "--decorate" "--color")))
  '(neo-theme (quote ascii))
