@@ -392,8 +392,8 @@ layers configuration. You are free to put any user code."
   ;; Powerline: separator style
   (setq powerline-default-separator 'arrow)
 
-  ;; Set auto-save timeout
-  (setq auto-save-timeout 10)
+  ;; Disable auto-save
+  (setq auto-save-timeout nil)
 
   ;; Package settings: anzu
   (use-package anzu
@@ -444,6 +444,7 @@ layers configuration. You are free to put any user code."
             ("http://endlessparentheses.com/atom.xml" blog emacs programming)
             ("http://feeds.5by5.tv/changelog" podcast programming)
             ("http://feeds.feedburner.com/HighScalability" blog distributed-computing programming)
+            ("http://feeds.feedburner.com/WisdomAndWonder" blog emacs mech-keys programming)
             ("http://feeds.feedburner.com/martinkl?format=xml" blog programming)
             ("http://iamprogrammer.io/" korean podcast programming)
             ("http://nedroid.com/feed/" webcomic)
@@ -521,12 +522,6 @@ layers configuration. You are free to put any user code."
         '(("C-c C-z" run-julia)
           ("C-c C-c" julia-shell-run-region-or-line)
           ("C-c C-s" julia-shell-save-and-go)))))
-  ;; Package settings: markdown
-  (use-package markdown
-    :defer t
-    :bind (:map markdown-mode-map
-                ("M-N" . vi-style-c-e)
-                ("M-P" . vi-style-c-y)))
   ;; Package settings: mu4e
   (use-package mu4e
     :defer t
@@ -756,7 +751,7 @@ layers configuration. You are free to put any user code."
  '(flycheck-disabled-checkers nil)
  '(flycheck-gometalinter-disable-linters
    (quote
-    ("gotype" "aligncheck" "ineffassign" "structcheck" "unconvert" "staticcheck" "gocyclo" "goconst")))
+    ("gotype" "aligncheck" "ineffassign" "structcheck" "unconvert" "staticcheck" "gocyclo" "goconst" "dupl")))
  '(flycheck-javascript-standard-executable "semistandard")
  '(magit-log-arguments (quote ("-n256" "--graph" "--decorate" "--color")))
  '(neo-theme (quote ascii))
