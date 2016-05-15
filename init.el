@@ -446,6 +446,7 @@ layers configuration. You are free to put any user code."
             ("http://feeds.feedburner.com/HighScalability" blog distributed-computing programming)
             ("http://feeds.feedburner.com/WisdomAndWonder" blog emacs mech-keys programming)
             ("http://feeds.feedburner.com/martinkl?format=xml" blog programming)
+            ("http://garbage.fm/episodes.rss" podcast programming)
             ("http://iamprogrammer.io/" korean podcast programming)
             ("http://nedroid.com/feed/" webcomic)
             ("http://sachachua.com/blog/category/emacs-news/feed/" blog emacs programming)
