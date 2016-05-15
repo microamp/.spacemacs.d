@@ -486,12 +486,13 @@ layers configuration. You are free to put any user code."
               :dedicated t
               :stick t)
             popwin:special-display-config)
-      (unbind-rebind-key go-mode-map (kbd "C-c C-j") 'go-direx-switch-to-buffer)
+      (unbind-rebind-key go-mode-map (kbd "C-c C-j") 'helm-semantic-or-imenu)
       (define-keys go-mode-map
         '(("M-." godef-jump)
           ("M-," pop-tag-mark)
           ("C-c C-e" go-errcheck-project)
-          ("C-c C-p" go-playground)))
+          ("C-c C-p" go-playground)
+          ("C-c C-M-j" go-direx-switch-to-buffer)))
       (evil-leader/set-key-for-mode 'go-mode
         "mjp" 'go-direx-pop-to-buffer
         "mjs" 'go-direx-switch-to-buffer
