@@ -54,6 +54,7 @@ values."
      restclient
      (scala :variables
             scala-auto-insert-asterisk-in-comments t)
+     search-engine
      (shell :variables
             shell-default-height 40
             shell-default-position 'bottom)
@@ -707,6 +708,7 @@ layers configuration. You are free to put any user code."
   ;; Custom key bindings: SPC shortcuts
   (spacemacs/set-leader-keys
     "M-m" 'avy-goto-word-or-subword-1
+    "ag" 'engine/search-google
     "ameh" 'helm-emms
     "amep" 'emms-start
     "ames" 'emms-stop
