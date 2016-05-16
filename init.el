@@ -675,12 +675,6 @@ layers configuration. You are free to put any user code."
   ;; Keep the same font in new frames (OS X issue)
   (add-hook 'after-make-frame-functions '(lambda (frame) (set-frame-font "Source Code Pro-10" nil t)))
 
-  ;; Show under which function the point currently is
-  (which-function-mode)
-
-  ;; Set cursor colour
-  ;(set-cursor-color "#66999D")
-
   ;; DocView for PDF files
   (add-to-list 'auto-mode-alist '("\\.pdf\\'" . doc-view-mode))
 
