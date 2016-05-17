@@ -392,6 +392,8 @@ layers configuration. You are free to put any user code."
   (fancy-battery-mode t)
   ;; Powerline: separator style
   (setq powerline-default-separator 'arrow)
+  ;; Set kill ring max size
+  (setq kill-ring-max 10)
 
   ;; Disable auto-save
   (setq auto-save-timeout nil)
