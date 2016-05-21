@@ -411,7 +411,7 @@ layers configuration. You are free to put any user code."
           deft-use-filename-as-title t
           deft-auto-save-interval 0.0
           deft-directory "~/Dropbox/.deft"
-          deft-extensions (quote ("txt" "text" "md" "markdown" "org")))
+          deft-extensions (quote ("txt" "text" "md" "markdown" "org" "gpg")))
     :config
     (progn
       (unbind-rebind-key deft-mode-map (kbd "f") 'deft-filter-increment)
