@@ -598,7 +598,12 @@ layers configuration. You are free to put any user code."
   (use-package projectile
     :defer t
     :init
-    (setq projectile-switch-project-action 'magit-show-refs-head))
+    (setq projectile-switch-project-action
+          (lambda ()
+            (progn
+              (when (neo-global--window-exists-p)
+                (neotree-find))
+              (magit-show-refs-head)))))
   ;; Package settings: python-mode
   (use-package python
     :defer t
