@@ -85,6 +85,7 @@ values."
                                       jdee
                                       julia-mode
                                       julia-shell
+                                      password-generator
                                       twittering-mode
                                       w3m
                                       yaml-mode
@@ -601,9 +602,10 @@ layers configuration. You are free to put any user code."
     (setq projectile-switch-project-action
           (lambda ()
             (progn
+              (magit-show-refs-head)
               (when (neo-global--window-exists-p)
-                (neotree-find))
-              (magit-show-refs-head)))))
+                (neotree-find)
+                (other-window 1))))))
   ;; Package settings: python-mode
   (use-package python
     :defer t
@@ -652,7 +654,8 @@ layers configuration. You are free to put any user code."
                eldoc-mode
                hl-todo-mode
                linum-mode
-               rainbow-delimiters-mode))
+               rainbow-delimiters-mode
+               smartparens-mode))
   ;; Hooks added: auto-save
   (add-hooks 'auto-save-hook
              '(delete-trailing-whitespace))
@@ -664,12 +667,6 @@ layers configuration. You are free to put any user code."
              '(epa-mail-mode))
   (add-hooks 'mu4e-view-mode-hook
              '(epa-mail-mode))
-  ;; Hooks removed: Go mode
-  (remove-hooks 'go-mode-hook
-                '(flycheck-mode))
-  ;; Hooks removed: Org mode
-  (remove-hooks 'org-mode
-                '(smartparens-mode))
 
   ;; Occupy entire frame
   (advice-add 'gh-md-render-buffer :after (apply-partially 'focus-then-maximise "*gh-md*"))
@@ -746,18 +743,18 @@ layers configuration. You are free to put any user code."
  '(beacon-blink-when-focused t)
  '(beacon-dont-blink-major-modes
    (quote
-    (t magit-status-mode magit-popup-mode magit-refs-mode inf-ruby-mode gnus-summary-mode gnus-group-mode eshell-mode sbt-mode ensime-mode compilation-mode neotree-mode dired-mode)))
+    (t magit-status-mode magit-popup-mode magit-refs-mode inf-ruby-mode gnus-summary-mode gnus-group-mode eshell-mode sbt-mode ensime-mode compilation-mode neotree-mode dired-mode fundamental-mode comint-mode)))
  '(beacon-size 15)
  '(emms-mode-line-cycle-max-width 13)
  '(emms-mode-line-cycle-use-icon-p t)
  '(flycheck-checkers
    (quote
-    (gometalinter ada-gnat asciidoc c/c++-clang c/c++-gcc c/c++-cppcheck cfengine chef-foodcritic coffee coffee-coffeelint coq css-csslint d-dmd emacs-lisp emacs-lisp-checkdoc erlang eruby-erubis fortran-gfortran go-gofmt go-build go-test groovy haml handlebars haskell-stack-ghc haskell-ghc haskell-hlint html-tidy jade javascript-eslint javascript-jshint javascript-gjslint javascript-jscs javascript-standard json-jsonlint json-python-json less luacheck lua perl perl-perlcritic php php-phpmd php-phpcs processing puppet-parser puppet-lint python-flake8 python-pylint python-pycompile r-lintr racket rpm-rpmlint markdown-mdl rst-sphinx rst ruby-rubocop ruby-rubylint ruby ruby-jruby rust-cargo rust sass scala scala-scalastyle scss-lint scss sh-bash sh-posix-dash sh-posix-bash sh-zsh sh-shellcheck slim sql-sqlint tex-chktex tex-lacheck texinfo verilog-verilator xml-xmlstarlet xml-xmllint yaml-jsyaml yaml-ruby)))
+    (gometalinter ada-gnat asciidoc c/c++-clang c/c++-gcc c/c++-cppcheck cfengine chef-foodcritic coffee coffee-coffeelint coq css-csslint d-dmd emacs-lisp emacs-lisp-checkdoc erlang eruby-erubis fortran-gfortran go-gofmt go-build go-test groovy haml handlebars haskell-stack-ghc haskell-ghc haskell-hlint html-tidy jade javascript-standard json-jsonlint json-python-json less luacheck lua perl perl-perlcritic php php-phpmd php-phpcs processing puppet-parser puppet-lint python-flake8 python-pylint python-pycompile r-lintr racket rpm-rpmlint markdown-mdl rst-sphinx rst ruby-rubocop ruby-rubylint ruby ruby-jruby rust-cargo rust sass scala scala-scalastyle scss-lint scss sh-bash sh-posix-dash sh-posix-bash sh-zsh sh-shellcheck slim sql-sqlint tex-chktex tex-lacheck texinfo verilog-verilator xml-xmlstarlet xml-xmllint yaml-jsyaml yaml-ruby)))
  '(flycheck-disabled-checkers nil)
  '(flycheck-gometalinter-disable-linters
    (quote
     ("gotype" "aligncheck" "ineffassign" "structcheck" "unconvert" "staticcheck" "gocyclo" "goconst" "dupl")))
- '(flycheck-javascript-standard-executable "semistandard")
+ '(flycheck-javascript-standard-executable "standard")
  '(magit-log-arguments (quote ("-n256" "--graph" "--decorate" "--color")))
  '(neo-theme (quote ascii))
  '(paradox-github-token t))
