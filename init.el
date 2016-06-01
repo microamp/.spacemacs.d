@@ -497,7 +497,7 @@ layers configuration. You are free to put any user code."
           ("M-," pop-tag-mark)
           ("C-c C-e" go-errcheck-project)
           ("C-c C-p" go-playground)
-          ("C-c C-M-j" go-direx-switch-to-buffer)))
+          ("C-c j" go-direx-switch-to-buffer)))
       (evil-leader/set-key-for-mode 'go-mode
         "mjp" 'go-direx-pop-to-buffer
         "mjs" 'go-direx-switch-to-buffer
