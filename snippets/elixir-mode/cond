@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: cond
+# --
+cond do
+  true -> $1
+end

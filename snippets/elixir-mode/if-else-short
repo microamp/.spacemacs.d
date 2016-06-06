@@ -1,0 +1,4 @@
+# -*- mode: snippet -*-
+# name: if-else-short
+# --
+if $1, do: $2, else: $3

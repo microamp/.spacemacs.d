@@ -1,0 +1,4 @@
+# -*- mode: snippet -*-
+# name: map
+# --
+%{$1 => $2}

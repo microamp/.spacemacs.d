@@ -27,6 +27,8 @@ values."
      clojure
      colors
      csv
+     (dash :variables
+           helm-dash-docset-newpath "/Users/microamp/Library/Application Support/Dash/DocSets")
      elfeed
      elixir
      emacs-lisp
@@ -139,7 +141,7 @@ values."
                                :size 10
                                :weight normal
                                :width normal
-                               :powerline-scale 1.1)
+                               :powerline-scale 1.3)
    ;; The leader key
    dotspacemacs-leader-key "SPC"
    ;; The leader key accessible in `emacs state' and `insert state'
@@ -399,6 +401,10 @@ layers configuration. You are free to put any user code."
   ;; Disable auto-save
   (setq auto-save-timeout nil)
 
+  ;; Package settings: alchemist
+  (use-package alchemist
+    :bind (:map alchemist-iex-mode-map
+                ("C-l" . alchemist-iex-clear-buffer)))
   ;; Package settings: anzu
   (use-package anzu
     :defer t
@@ -502,6 +508,11 @@ layers configuration. You are free to put any user code."
         "mjp" 'go-direx-pop-to-buffer
         "mjs" 'go-direx-switch-to-buffer
         "mE" 'go-errcheck-project)))
+  ;; Package settings: helm-dash
+  (use-package helm-dash
+    :defer t
+    :init
+    (setq helm-dash-browser-func 'eww))
   ;; Package settings: jdee
   (use-package jdee
     :defer t
@@ -598,7 +609,7 @@ layers configuration. You are free to put any user code."
   ;; Package settings: projectile
   (use-package projectile
     :defer t
-    :init
+    :config
     (setq projectile-switch-project-action
           (lambda ()
             (progn
@@ -638,6 +649,11 @@ layers configuration. You are free to put any user code."
     :defer t
     :config
     (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode)))
+  ;; Package settings: yasnippet
+  (use-package yasnippet
+    :defer t
+    :init
+    (setq yas-before-expand-snippet-hook nil))
   ;; Package settings: ztree
   (use-package ztree
     :defer t
@@ -668,6 +684,14 @@ layers configuration. You are free to put any user code."
   (add-hooks 'mu4e-view-mode-hook
              '(epa-mail-mode))
 
+  ;; Colorise compilation buffer
+  (require 'ansi-color)
+  (defun colorise-compilation-buffer ()
+    (toggle-read-only)
+    (ansi-color-apply-on-region (point-min) (point-max))
+    (toggle-read-only))
+  (add-hook 'compilation-filter-hook 'colorise-compilation-buffer)
+
   ;; Occupy entire frame
   (advice-add 'gh-md-render-buffer :after (apply-partially 'focus-then-maximise "*gh-md*"))
   (advice-add 'helm-projectile-switch-project :after 'go-set-oracle-scope)
@@ -676,6 +700,9 @@ layers configuration. You are free to put any user code."
   (advice-add 'magit-log-head :after 'delete-other-windows)
   (advice-add 'magit-show-refs-head :after 'delete-other-windows)
   (advice-add 'magit-status :after 'delete-other-windows)
+
+  ;; Make sure vertical windows are split evenly
+  (advice-add 'split-window-right :after 'balance-windows)
 
   ;; Keep the same font in new frames (OS X issue)
   (add-hook 'after-make-frame-functions '(lambda (frame) (set-frame-font "Source Code Pro-10" nil t)))

@@ -1,0 +1,4 @@
+# -*- mode: snippet -*-
+# name: for-short
+# --
+for $1 <- $2, do: $3

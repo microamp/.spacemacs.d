@@ -1,0 +1,4 @@
+# -*- mode: snippet -*-
+# name: defp-short
+# --
+defp $1($2), do: $3

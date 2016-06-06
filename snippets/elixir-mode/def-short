@@ -1,0 +1,4 @@
+# -*- mode: snippet -*-
+# name: def-short
+# --
+def $1($2), do: $3

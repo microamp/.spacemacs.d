@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: def
+# --
+def $1($2) do
+  $3
+end

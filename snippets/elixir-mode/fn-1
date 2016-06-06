@@ -1,0 +1,4 @@
+# -*- mode: snippet -*-
+# name: fn-1
+# --
+fn ($1) -> $2 end
