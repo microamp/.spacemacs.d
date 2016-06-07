@@ -71,6 +71,7 @@ values."
    ;; configuration in `dotspacemacs/config'.
    dotspacemacs-additional-packages '(base16-theme
                                       beacon
+                                      browse-at-remote
                                       deft
                                       dictionary
                                       emms
@@ -746,6 +747,7 @@ layers configuration. You are free to put any user code."
     "an" 'deft
     "at" 'twit
     "ga" 'vc-annotate-current-buffer-head
+    "gw" 'browse-at-remote/browse
     "gM" 'magit-show-refs-head
     "gl" 'magit-log-head
     "hb" 'helm-filtered-bookmarks
