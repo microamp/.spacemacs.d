@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: try-after
+# --
+try do
+  $1
+after
+  $2
+end

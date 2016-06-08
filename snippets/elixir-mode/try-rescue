@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: try-rescue
+# --
+try do
+  $1
+rescue
+  $2
+end

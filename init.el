@@ -32,7 +32,8 @@ values."
      elfeed
      elixir
      emacs-lisp
-     git
+     (git :variables
+          git-magit-status-fullscreen t)
      (go :variables
          gofmt-command "goimports"
          go-tab-width 2
@@ -44,7 +45,8 @@ values."
                  js2-basic-offset 2
                  js-indent-level 2)
      lua
-     markdown
+     (markdown :variables
+               markdown-live-preview-engine 'vmd)
      (mu4e :variables
            mu4e-installation-path "/usr/local/Cellar/mu/HEAD/share/emacs/site-lisp/mu/mu4e")
      ocaml
@@ -69,7 +71,8 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages then consider to create a layer, you can also put the
    ;; configuration in `dotspacemacs/config'.
-   dotspacemacs-additional-packages '(base16-theme
+   dotspacemacs-additional-packages '(apropospriate-theme
+                                      base16-theme
                                       beacon
                                       browse-at-remote
                                       deft
@@ -130,7 +133,9 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(base16-ashes-dark
+   dotspacemacs-themes '(base16-ocean-dark
+                         apropospriate-dark
+                         base16-ashes-dark
                          gruvbox
                          zenburn
                          darktooth)
@@ -252,11 +257,6 @@ values."
 (defun add-hooks (mode-hook functions)
   (mapc (lambda (function)
           (add-hook mode-hook function))
-        functions))
-
-(defun remove-hooks (mode-hook functions)
-  (mapc (lambda (function)
-          (remove-hook mode-hook function))
         functions))
 
 (defun vi-style-c-e (n)
@@ -452,6 +452,7 @@ layers configuration. You are free to put any user code."
           '(("http://blog.empathybox.com/rss" blog programming)
             ("http://blog.weirdx.io/feed" blog korean programming)
             ("http://emacshorrors.com/feed.atom" blog emacs programming)
+            ("http://emacsninja.com/feed.atom" blog emacs programming)
             ("http://endlessparentheses.com/atom.xml" blog emacs programming)
             ("http://feeds.5by5.tv/changelog" podcast programming)
             ("http://feeds.feedburner.com/HighScalability" blog distributed-computing programming)
@@ -700,7 +701,6 @@ layers configuration. You are free to put any user code."
   (advice-add 'magit-log-buffer-file :after 'delete-other-windows)
   (advice-add 'magit-log-head :after 'delete-other-windows)
   (advice-add 'magit-show-refs-head :after 'delete-other-windows)
-  (advice-add 'magit-status :after 'delete-other-windows)
 
   ;; Make sure vertical windows are split evenly
   (advice-add 'split-window-right :after 'balance-windows)
@@ -772,7 +772,7 @@ layers configuration. You are free to put any user code."
  '(beacon-blink-when-focused t)
  '(beacon-dont-blink-major-modes
    (quote
-    (t magit-status-mode magit-popup-mode magit-log-mode magit-refs-mode magit-process-mode magit-diff-mode inf-ruby-mode gnus-summary-mode gnus-group-mode eshell-mode sbt-mode ensime-mode compilation-mode neotree-mode dired-mode fundamental-mode comint-mode spacemacs-buffer-mode Custom-mode help-mode)))
+    (t magit-status-mode magit-popup-mode magit-log-mode magit-refs-mode magit-process-mode magit-diff-mode inf-ruby-mode gnus-summary-mode gnus-group-mode eshell-mode sbt-mode ensime-mode compilation-mode neotree-mode dired-mode fundamental-mode comint-mode spacemacs-buffer-mode Custom-mode help-mode twittering-mode elfeed-search-mode elfeed-show-mode)))
  '(beacon-size 15)
  '(emms-mode-line-cycle-max-width 13)
  '(emms-mode-line-cycle-use-icon-p t)

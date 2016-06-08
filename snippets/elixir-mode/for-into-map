@@ -1,0 +1,4 @@
+# -*- mode: snippet -*-
+# name: for-into-map
+# --
+for {$1, $2} <- %{$3 => $4}, into: %{}, do: {$5, $6}

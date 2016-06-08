@@ -1,0 +1,4 @@
+# -*- mode: snippet -*-
+# name: exit
+# --
+exit($1)

@@ -1,0 +1,4 @@
+# -*- mode: snippet -*-
+# name: raise
+# --
+raise $1, message: "$2"
