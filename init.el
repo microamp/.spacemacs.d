@@ -72,6 +72,7 @@ values."
    ;; packages then consider to create a layer, you can also put the
    ;; configuration in `dotspacemacs/config'.
    dotspacemacs-additional-packages '(apropospriate-theme
+                                      anzu
                                       base16-theme
                                       beacon
                                       browse-at-remote
@@ -97,7 +98,26 @@ values."
                                       yaml-mode
                                       ztree)
    ;; A list of packages and/or extensions that will not be install and loaded.
-   dotspacemacs-excluded-packages '()
+   dotspacemacs-excluded-packages '(evil-anzu
+                                    evil-args
+                                    evil-ediff
+                                    evil-escape
+                                    evil-exchange
+                                    evil-iedit-state
+                                    evil-indent-plus
+                                    evil-lisp-state
+                                    evil-local
+                                    evil-magit
+                                    evil-matchit
+                                    evil-mc
+                                    evil-nerd-commenter
+                                    evil-numbers
+                                    evil-org
+                                    evil-search-highlight-persist
+                                    evil-surround
+                                    evil-tutor
+                                    evil-visual-mark-mode
+                                    evil-visualstar)
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
    ;; are declared in a layer which is not a member of
    ;; the list `dotspacemacs-configuration-layers'. (default t)
