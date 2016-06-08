@@ -451,9 +451,10 @@ layers configuration. You are free to put any user code."
     (setq elfeed-feeds
           '(("http://blog.empathybox.com/rss" blog programming)
             ("http://blog.weirdx.io/feed" blog korean programming)
-            ("http://emacshorrors.com/feed.atom" blog emacs programming)
+            ("http://blog.josephwilk.net/atom.xml" blog emacs programming music)
             ("http://emacsninja.com/feed.atom" blog emacs programming)
             ("http://endlessparentheses.com/atom.xml" blog emacs programming)
+            ("http://emacshorrors.com/feed.atom" blog emacs programming)
             ("http://feeds.5by5.tv/changelog" podcast programming)
             ("http://feeds.feedburner.com/HighScalability" blog distributed-computing programming)
             ("http://feeds.feedburner.com/WisdomAndWonder" blog emacs mech-keys programming)
@@ -686,6 +687,10 @@ layers configuration. You are free to put any user code."
   (add-hooks 'mu4e-view-mode-hook
              '(epa-mail-mode))
 
+  ;; Add transparency
+  (set-frame-parameter (selected-frame) 'alpha '(70 85))
+  (add-to-list 'default-frame-alist '(alpha 70 85))
+
   ;; Colorise compilation buffer
   (require 'ansi-color)
   (defun colorise-compilation-buffer ()
@@ -772,7 +777,7 @@ layers configuration. You are free to put any user code."
  '(beacon-blink-when-focused t)
  '(beacon-dont-blink-major-modes
    (quote
-    (t magit-status-mode magit-popup-mode magit-log-mode magit-refs-mode magit-process-mode magit-diff-mode inf-ruby-mode gnus-summary-mode gnus-group-mode eshell-mode sbt-mode ensime-mode compilation-mode neotree-mode dired-mode fundamental-mode comint-mode spacemacs-buffer-mode Custom-mode help-mode twittering-mode elfeed-search-mode elfeed-show-mode)))
+    (t magit-status-mode magit-popup-mode magit-log-mode magit-refs-mode magit-process-mode magit-diff-mode inf-ruby-mode gnus-summary-mode gnus-group-mode eshell-mode sbt-mode ensime-mode compilation-mode neotree-mode dired-mode fundamental-mode comint-mode spacemacs-buffer-mode Custom-mode help-mode twittering-mode elfeed-search-mode elfeed-show-mode eww-mode)))
  '(beacon-size 15)
  '(emms-mode-line-cycle-max-width 13)
  '(emms-mode-line-cycle-use-icon-p t)
@@ -801,7 +806,10 @@ layers configuration. You are free to put any user code."
  '(elfeed-search-tag-face ((t (:foreground "#95C7AE"))))
  '(elfeed-search-title-face ((t (:foreground "#F3F4F5"))))
  '(elfeed-search-unread-title-face ((t (:foreground "#95AEC7" :weight bold))))
+ '(eval-sexp-fu-flash ((t (:background "#66999D" :foreground "#565E65" :weight bold))))
  '(face-of-god ((t (:background "#66999D" :foreground "#565E65" :box nil :inherit (quote mode-line)))))
+ '(helm-swoop-target-line-face ((t (:background "#AEC795" :foreground "#1C2023"))))
+ '(helm-swoop-target-word-face ((t (:background "#95AEC7" :foreground "#1C2023"))))
  '(mu4e-header-highlight-face ((t (:inherit region :weight bold))))
  '(neo-dir-link-face ((t (:foreground "#95C7AE"))))
  '(neo-vc-edited-face ((t (:foreground "#C7AE95"))))
