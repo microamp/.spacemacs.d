@@ -117,7 +117,8 @@ values."
                                     evil-surround
                                     evil-tutor
                                     evil-visual-mark-mode
-                                    evil-visualstar)
+                                    evil-visualstar
+                                    vi-tilde-fringe)
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
    ;; are declared in a layer which is not a member of
    ;; the list `dotspacemacs-configuration-layers'. (default t)
@@ -167,7 +168,7 @@ values."
                                :size 10
                                :weight normal
                                :width normal
-                               :powerline-scale 1.3)
+                               :powerline-scale 1.0)
    ;; The leader key
    dotspacemacs-leader-key "SPC"
    ;; The leader key accessible in `emacs state' and `insert state'
@@ -469,18 +470,20 @@ layers configuration. You are free to put any user code."
     :defer t
     :init
     (setq elfeed-feeds
-          '(("http://blog.empathybox.com/rss" blog programming)
+          '(("http://aliveandhealthy.com/feed/" blog)http://aliveandhealthy.com/feed/
+            ("http://blog.empathybox.com/rss" blog programming)
             ("http://blog.weirdx.io/feed" blog korean programming)
             ("http://blog.josephwilk.net/atom.xml" blog emacs programming music)
             ("http://emacsninja.com/feed.atom" blog emacs programming)
-            ("http://endlessparentheses.com/atom.xml" blog emacs programming)
             ("http://emacshorrors.com/feed.atom" blog emacs programming)
+            ("http://endlessparentheses.com/atom.xml" blog emacs programming)
             ("http://feeds.5by5.tv/changelog" podcast programming)
             ("http://feeds.feedburner.com/HighScalability" blog distributed-computing programming)
             ("http://feeds.feedburner.com/WisdomAndWonder" blog emacs mech-keys programming)
             ("http://feeds.feedburner.com/martinkl?format=xml" blog programming)
             ("http://garbage.fm/episodes.rss" podcast programming)
             ("http://iamprogrammer.io/" korean podcast programming)
+            ("http://nathan.torkington.com/blog/comments/feed/" blog)
             ("http://nedroid.com/feed/" webcomic)
             ("http://sachachua.com/blog/category/emacs-news/feed/" blog emacs programming)
             ("http://softwareengineeringdaily.com/feed/podcast/" podcast programming)
@@ -797,7 +800,7 @@ layers configuration. You are free to put any user code."
  '(beacon-blink-when-focused t)
  '(beacon-dont-blink-major-modes
    (quote
-    (t magit-status-mode magit-popup-mode magit-log-mode magit-refs-mode magit-process-mode magit-diff-mode inf-ruby-mode gnus-summary-mode gnus-group-mode eshell-mode sbt-mode ensime-mode compilation-mode neotree-mode dired-mode fundamental-mode comint-mode spacemacs-buffer-mode Custom-mode help-mode twittering-mode elfeed-search-mode elfeed-show-mode eww-mode)))
+    (t magit-status-mode magit-popup-mode magit-log-mode magit-refs-mode magit-process-mode magit-diff-mode inf-ruby-mode gnus-summary-mode gnus-group-mode eshell-mode sbt-mode ensime-mode compilation-mode neotree-mode dired-mode fundamental-mode comint-mode spacemacs-buffer-mode Custom-mode help-mode twittering-mode elfeed-search-mode elfeed-show-mode eww-mode deft-mode org-mode calendar-mode paradox-menu-mode ibuffer-mode mu4e-view-mode mu4e-headers-mode dictionary-mode)))
  '(beacon-size 15)
  '(emms-mode-line-cycle-max-width 13)
  '(emms-mode-line-cycle-use-icon-p t)
@@ -828,6 +831,9 @@ layers configuration. You are free to put any user code."
  '(elfeed-search-unread-title-face ((t (:foreground "#95AEC7" :weight bold))))
  '(eval-sexp-fu-flash ((t (:background "#66999D" :foreground "#565E65" :weight bold))))
  '(face-of-god ((t (:background "#66999D" :foreground "#565E65" :box nil :inherit (quote mode-line)))))
+ '(git-gutter+-added ((t (:foreground "#448844" :weight bold))))
+ '(git-gutter+-deleted ((t (:foreground "#AA4444" :weight bold))))
+ '(git-gutter+-modified ((t (:foreground "#B48EAD" :weight bold))))
  '(helm-swoop-target-line-face ((t (:background "#AEC795" :foreground "#1C2023"))))
  '(helm-swoop-target-word-face ((t (:background "#95AEC7" :foreground "#1C2023"))))
  '(mu4e-header-highlight-face ((t (:inherit region :weight bold))))

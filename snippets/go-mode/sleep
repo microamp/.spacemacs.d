@@ -1,0 +1,4 @@
+# -*- mode: snippet -*-
+# name: sleep
+# --
+time.Sleep($1 * time.Second)

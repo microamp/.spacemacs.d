@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: flags
+# --
+flags := flag.NewFlagSet("$1", flag.ExitOnError)
+flags.StringVar(&$2, "<name>", "", "<desc>")
+err := flags.Parse(os.Args[1:])
+if err != nil {
+	$3
+}

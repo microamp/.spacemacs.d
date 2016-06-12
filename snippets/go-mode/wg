@@ -1,0 +1,4 @@
+# -*- mode: snippet -*-
+# name: wg
+# --
+var $1 sync.WaitGroup
