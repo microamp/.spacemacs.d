@@ -565,6 +565,21 @@ layers configuration. You are free to put any user code."
         '(("C-c C-z" run-julia)
           ("C-c C-c" julia-shell-run-region-or-line)
           ("C-c C-s" julia-shell-save-and-go)))))
+  ;; Package settings: midnight
+  (use-package midnight
+    :defer t
+    :config
+    (progn
+      (setq clean-buffer-list-kill-regexps
+            (append clean-buffer-list-kill-regexps
+                    '("\\`\\*Backtrace\\*\\'"
+                      "\\`\\*Helm.*\\*\\'"
+                      "\\`\\*helm.*\\*\\'"
+                      "\\`\\*magit.*\\*\\'")))
+      ;; Run cleanups every hour
+      (let ((hrs 1))
+        (setq clean-buffer-list-delay-special (* hrs 60 60))
+        (run-at-time nil (* hrs 60 60) 'clean-buffer-list))))
   ;; Package settings: mu4e
   (use-package mu4e
     :defer t
