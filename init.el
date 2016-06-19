@@ -92,6 +92,7 @@ values."
                                       jdee
                                       julia-mode
                                       julia-shell
+                                      know-your-http-well
                                       password-generator
                                       twittering-mode
                                       w3m
@@ -470,12 +471,12 @@ layers configuration. You are free to put any user code."
     :defer t
     :init
     (setq elfeed-feeds
-          '(("http://aliveandhealthy.com/feed/" blog)http://aliveandhealthy.com/feed/
+          '(("http://aliveandhealthy.com/feed/" blog)
             ("http://blog.empathybox.com/rss" blog programming)
-            ("http://blog.weirdx.io/feed" blog korean programming)
             ("http://blog.josephwilk.net/atom.xml" blog emacs programming music)
-            ("http://emacsninja.com/feed.atom" blog emacs programming)
+            ("http://blog.weirdx.io/feed" blog korean programming)
             ("http://emacshorrors.com/feed.atom" blog emacs programming)
+            ("http://emacsninja.com/feed.atom" blog emacs programming)
             ("http://endlessparentheses.com/atom.xml" blog emacs programming)
             ("http://feeds.5by5.tv/changelog" podcast programming)
             ("http://feeds.feedburner.com/HighScalability" blog distributed-computing programming)
@@ -573,6 +574,7 @@ layers configuration. You are free to put any user code."
       (setq clean-buffer-list-kill-regexps
             (append clean-buffer-list-kill-regexps
                     '("\\`\\*Backtrace\\*\\'"
+                      "\\`\\*gh-md\\*\\'"
                       "\\`\\*Helm.*\\*\\'"
                       "\\`\\*helm.*\\*\\'"
                       "\\`\\*magit.*\\*\\'")))
@@ -585,6 +587,9 @@ layers configuration. You are free to put any user code."
     :defer t
     :init
     (progn
+      ;; use imagemagick, if available
+      (when (fboundp 'imagemagick-register-types)
+        (imagemagick-register-types))
       (setq
        ;; Path to Maildir directory
        mu4e-maildir "~/Maildir"
@@ -726,8 +731,8 @@ layers configuration. You are free to put any user code."
              '(epa-mail-mode))
 
   ;; Add transparency
-  (set-frame-parameter (selected-frame) 'alpha '(70 85))
-  (add-to-list 'default-frame-alist '(alpha 70 85))
+  (set-frame-parameter (selected-frame) 'alpha '(60 85))
+  (add-to-list 'default-frame-alist '(alpha 60 85))
 
   ;; Colorise compilation buffer
   (require 'ansi-color)
@@ -783,10 +788,10 @@ layers configuration. You are free to put any user code."
   ;; Custom key bindings: SPC shortcuts
   (spacemacs/set-leader-keys
     "M-m" 'avy-goto-word-or-subword-1
-    "ag" 'engine/search-google
     "ameh" 'helm-emms
     "amep" 'emms-start
     "ames" 'emms-stop
+    "aC" 'calendar
     "an" 'deft
     "at" 'twit
     "ga" 'vc-annotate-current-buffer-head
@@ -817,8 +822,10 @@ layers configuration. You are free to put any user code."
    (quote
     (t magit-status-mode magit-popup-mode magit-log-mode magit-refs-mode magit-process-mode magit-diff-mode inf-ruby-mode gnus-summary-mode gnus-group-mode eshell-mode sbt-mode ensime-mode compilation-mode neotree-mode dired-mode fundamental-mode comint-mode spacemacs-buffer-mode Custom-mode help-mode twittering-mode elfeed-search-mode elfeed-show-mode eww-mode deft-mode org-mode calendar-mode paradox-menu-mode ibuffer-mode mu4e-view-mode mu4e-headers-mode dictionary-mode)))
  '(beacon-size 15)
+ '(emms-cache-file "~/.spacemacs.d/emms/cache")
  '(emms-mode-line-cycle-max-width 13)
  '(emms-mode-line-cycle-use-icon-p t)
+ '(emms-stream-bookmarks-file "~/.spacemacs.d/emms/streams")
  '(flycheck-checkers
    (quote
     (gometalinter ada-gnat asciidoc c/c++-clang c/c++-gcc c/c++-cppcheck cfengine chef-foodcritic coffee coffee-coffeelint coq css-csslint d-dmd emacs-lisp emacs-lisp-checkdoc erlang eruby-erubis fortran-gfortran go-gofmt go-build go-test groovy haml handlebars haskell-stack-ghc haskell-ghc haskell-hlint html-tidy jade javascript-standard json-jsonlint json-python-json less luacheck lua perl perl-perlcritic php php-phpmd php-phpcs processing puppet-parser puppet-lint python-flake8 python-pylint python-pycompile r-lintr racket rpm-rpmlint markdown-mdl rst-sphinx rst ruby-rubocop ruby-rubylint ruby ruby-jruby rust-cargo rust sass scala scala-scalastyle scss-lint scss sh-bash sh-posix-dash sh-posix-bash sh-zsh sh-shellcheck slim sql-sqlint tex-chktex tex-lacheck texinfo verilog-verilator xml-xmlstarlet xml-xmllint yaml-jsyaml yaml-ruby)))
@@ -828,6 +835,7 @@ layers configuration. You are free to put any user code."
     ("gotype" "aligncheck" "ineffassign" "structcheck" "unconvert" "staticcheck" "gocyclo" "goconst" "dupl")))
  '(flycheck-javascript-standard-executable "standard")
  '(magit-log-arguments (quote ("-n256" "--graph" "--decorate" "--color")))
+ '(mu4e-view-show-images t)
  '(neo-theme (quote ascii))
  '(paradox-github-token t))
 (custom-set-faces
