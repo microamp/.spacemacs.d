@@ -668,6 +668,8 @@ layers configuration. You are free to put any user code."
     :defer t
     :init
     (setq fci-rule-column 99)
+    :bind (:map python-mode-map
+                ("C-M-," . anaconda-mode-go-back))
     :config
     (progn
       (evil-leader/set-key-for-mode 'python-mode
@@ -723,7 +725,9 @@ layers configuration. You are free to put any user code."
              '(delete-trailing-whitespace))
   ;; Hooks added: Python mode
   (add-hooks 'python-mode-hook
-             '(fci-mode))
+             '(fci-mode
+               highlight-indentation-mode
+               which-function-mode))
   ;; Hooks added: mu4e with gpg
   (add-hooks 'mu4e-compose-mode-hook
              '(epa-mail-mode))
@@ -837,7 +841,9 @@ layers configuration. You are free to put any user code."
  '(magit-log-arguments (quote ("-n256" "--graph" "--decorate" "--color")))
  '(mu4e-view-show-images t)
  '(neo-theme (quote ascii))
- '(paradox-github-token t))
+ '(paradox-github-token t)
+ '(python-shell-interpreter "ipython")
+ '(python-shell-virtualenv-path "~/pyvenv"))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
