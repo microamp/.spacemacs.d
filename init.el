@@ -799,7 +799,7 @@ layers configuration. You are free to put any user code."
     "an" 'deft
     "at" 'twit
     "ga" 'vc-annotate-current-buffer-head
-    "gw" 'browse-at-remote/browse
+    "gw" 'browse-at-remote
     "gM" 'magit-show-refs-head
     "gl" 'magit-log-head
     "hb" 'helm-filtered-bookmarks
@@ -824,7 +824,7 @@ layers configuration. You are free to put any user code."
  '(beacon-blink-when-focused t)
  '(beacon-dont-blink-major-modes
    (quote
-    (t magit-status-mode magit-popup-mode magit-log-mode magit-refs-mode magit-process-mode magit-diff-mode inf-ruby-mode gnus-summary-mode gnus-group-mode eshell-mode sbt-mode ensime-mode compilation-mode neotree-mode dired-mode fundamental-mode comint-mode spacemacs-buffer-mode Custom-mode help-mode twittering-mode elfeed-search-mode elfeed-show-mode eww-mode deft-mode org-mode calendar-mode paradox-menu-mode ibuffer-mode mu4e-view-mode mu4e-headers-mode dictionary-mode)))
+    (t magit-status-mode magit-popup-mode magit-log-mode magit-refs-mode magit-process-mode magit-diff-mode inf-ruby-mode gnus-summary-mode gnus-group-mode eshell-mode sbt-mode ensime-mode compilation-mode neotree-mode dired-mode fundamental-mode comint-mode spacemacs-buffer-mode Custom-mode help-mode twittering-mode elfeed-search-mode elfeed-show-mode eww-mode deft-mode org-mode calendar-mode paradox-menu-mode ibuffer-mode mu4e-view-mode mu4e-headers-mode dictionary-mode restclient-mode vc-annotate-mode)))
  '(beacon-size 15)
  '(emms-cache-file "~/.spacemacs.d/emms/cache")
  '(emms-mode-line-cycle-max-width 13)
