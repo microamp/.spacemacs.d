@@ -81,6 +81,7 @@ values."
                                       emms
                                       emms-mode-line-cycle
                                       floobits
+                                      fzf
                                       go-direx
                                       go-errcheck
                                       go-playground
@@ -798,6 +799,7 @@ layers configuration. You are free to put any user code."
     "aC" 'calendar
     "an" 'deft
     "at" 'twit
+    "az" 'fzf
     "ga" 'vc-annotate-current-buffer-head
     "gw" 'browse-at-remote
     "gM" 'magit-show-refs-head
@@ -838,6 +840,7 @@ layers configuration. You are free to put any user code."
    (quote
     ("gotype" "aligncheck" "ineffassign" "structcheck" "unconvert" "staticcheck" "gocyclo" "goconst" "dupl")))
  '(flycheck-javascript-standard-executable "standard")
+ '(fzf/window-height 30)
  '(magit-log-arguments (quote ("-n256" "--graph" "--decorate" "--color")))
  '(mu4e-view-show-images t)
  '(neo-theme (quote ascii))
