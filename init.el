@@ -71,11 +71,12 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages then consider to create a layer, you can also put the
    ;; configuration in `dotspacemacs/config'.
-   dotspacemacs-additional-packages '(apropospriate-theme
-                                      anzu
+   dotspacemacs-additional-packages '(anzu
+                                      apropospriate-theme
                                       base16-theme
                                       beacon
                                       browse-at-remote
+                                      dart-mode
                                       deft
                                       dictionary
                                       emms
@@ -328,11 +329,6 @@ values."
     (switch-to-buffer buf-name)
     (delete-other-windows)))
 
-(defun unbind-rebind-key (mode-map key new-func)
-  "Unbinding and rebind the key with the given function."
-  (define-key mode-map key nil)
-  (define-key mode-map key new-func))
-
 (defun switch-to-previous-buffer ()
   "Switch to the previous buffer."
   (interactive)
@@ -425,15 +421,20 @@ layers configuration. You are free to put any user code."
   ;; Disable auto-save
   (setq auto-save-timeout nil)
 
+  ;; Package settings: ace-window
+  (use-package ace-window
+    :init
+    (progn
+      (global-set-key [remap other-window] 'ace-window)))
   ;; Package settings: alchemist
   (use-package alchemist
     :bind (:map alchemist-iex-mode-map
                 ("C-l" . alchemist-iex-clear-buffer)))
   ;; Package settings: anzu
   (use-package anzu
-    :defer t
-    :config
-    (global-anzu-mode t))
+    :ensure t
+    :init
+    (global-anzu-mode))
   ;; Package settings: deft
   (use-package deft
     :defer t
@@ -445,7 +446,6 @@ layers configuration. You are free to put any user code."
           deft-extensions (quote ("txt" "text" "md" "markdown" "org" "gpg")))
     :config
     (progn
-      (unbind-rebind-key deft-mode-map (kbd "f") 'deft-filter-increment)
       (define-keys deft-mode-map
         '(("C-g" ibuffer-quit)
           ("C-k" deft-filter-clear)
@@ -476,6 +476,7 @@ layers configuration. You are free to put any user code."
             ("http://blog.empathybox.com/rss" blog programming)
             ("http://blog.josephwilk.net/atom.xml" blog emacs programming music)
             ("http://blog.weirdx.io/feed" blog korean programming)
+            ("http://cestlaz.github.io/rss.xml" blog emacs programming)
             ("http://emacshorrors.com/feed.atom" blog emacs programming)
             ("http://emacsninja.com/feed.atom" blog emacs programming)
             ("http://endlessparentheses.com/atom.xml" blog emacs programming)
@@ -491,6 +492,7 @@ layers configuration. You are free to put any user code."
             ("http://softwareengineeringdaily.com/feed/podcast/" podcast programming)
             ("http://tagide.com/blog/feed/" blog programming)
             ("http://tech.kakao.com/rss/" blog korean programming)
+            ("http://whattheemacsd.com/atom.xml" blog emacs programming)
             ("http://www.confluent.io/blog" bigdata blog programming)
             ("http://www.lunaryorn.com/feed.atom" blog emacs programming)
             ("http://www.sangkon.com/rss/" blog korean programming)
@@ -498,6 +500,8 @@ layers configuration. You are free to put any user code."
             ("https://blog.gopheracademy.com/index.xml" blog programming)
             ("https://danlamanna.com/feeds/atom.xml" blog emacs programming)
             ("https://medium.com/feed/@unbalancedparen" blog programming)
+            ("https://oden-lang.org/feed.xml" blog programming)
+            ("https://wickstrom.tech/feed.xml" blog programming)
             ("https://www.functionalgeekery.com/feed/" podcast programming))))
   ;; Package settings: ensime-mode
   (use-package ensime-mode
@@ -525,12 +529,12 @@ layers configuration. You are free to put any user code."
               :dedicated t
               :stick t)
             popwin:special-display-config)
-      (unbind-rebind-key go-mode-map (kbd "C-c C-j") 'helm-semantic-or-imenu)
       (define-keys go-mode-map
         '(("M-." godef-jump)
           ("M-," pop-tag-mark)
           ("C-c C-e" go-errcheck-project)
           ("C-c C-p" go-playground)
+          ("C-c C-j" helm-semantic-or-imenu)
           ("C-c j" go-direx-switch-to-buffer)))
       (evil-leader/set-key-for-mode 'go-mode
         "mjp" 'go-direx-pop-to-buffer
@@ -670,12 +674,12 @@ layers configuration. You are free to put any user code."
     :init
     (setq fci-rule-column 99)
     :bind (:map python-mode-map
-                ("C-M-," . anaconda-mode-go-back))
+                ("C-M-," . anaconda-mode-go-back)
+                ("C-c C-j" . helm-semantic-or-imenu))
     :config
     (progn
       (evil-leader/set-key-for-mode 'python-mode
-        "mf" 'py-yapf-buffer)
-      (unbind-rebind-key python-mode-map (kbd "C-c C-j") 'helm-semantic-or-imenu)))
+        "mf" 'py-yapf-buffer)))
   ;; Package settings: smartparens
   (use-package smartparens
     :defer t
@@ -683,16 +687,17 @@ layers configuration. You are free to put any user code."
     (apply-fn-to-modes 'smartparens-strict-mode
                        sp--lisp-modes)
     (define-keys sp-keymap
-      '(("C-M-a" sp-backward-down-sexp)
+      '(("<C-M-backspace>" sp-splice-sexp)
+        ("C-M-]" sp-select-next-thing)
+        ("C-M-a" sp-backward-down-sexp)
         ("C-M-b" sp-backward-sexp)
         ("C-M-d" sp-down-sexp)
-        ("C-M-f" sp-forward-sexp)
         ("C-M-e" sp-up-sexp)
+        ("C-M-f" sp-forward-sexp)
         ("C-M-n" sp-next-sexp)
         ("C-M-p" sp-previous-sexp)
         ("C-M-u" sp-backward-up-sexp)
-        ("C-]" sp-select-next-thing-exchange)
-        ("C-M-]" sp-select-next-thing))))
+        ("C-]" sp-select-next-thing-exchange))))
   ;; Package settings: yaml-mode
   (use-package yaml-mode
     :defer t
@@ -746,6 +751,7 @@ layers configuration. You are free to put any user code."
     (ansi-color-apply-on-region (point-min) (point-max))
     (toggle-read-only))
   (add-hook 'compilation-filter-hook 'colorise-compilation-buffer)
+  (add-hook 'compilation-mode-hook 'colorise-compilation-buffer)
 
   ;; Occupy entire frame
   (advice-add 'gh-md-render-buffer :after (apply-partially 'focus-then-maximise "*gh-md*"))
@@ -821,9 +827,11 @@ layers configuration. You are free to put any user code."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(aw-keys (quote (104 106 107 108 97 115 100 102 103)))
  '(beacon-blink-delay 0.2)
- '(beacon-blink-duration 0.4)
+ '(beacon-blink-duration 0.3)
  '(beacon-blink-when-focused t)
+ '(beacon-color "gray32")
  '(beacon-dont-blink-major-modes
    (quote
     (t magit-status-mode magit-popup-mode magit-log-mode magit-refs-mode magit-process-mode magit-diff-mode inf-ruby-mode gnus-summary-mode gnus-group-mode eshell-mode sbt-mode ensime-mode compilation-mode neotree-mode dired-mode fundamental-mode comint-mode spacemacs-buffer-mode Custom-mode help-mode twittering-mode elfeed-search-mode elfeed-show-mode eww-mode deft-mode org-mode calendar-mode paradox-menu-mode ibuffer-mode mu4e-view-mode mu4e-headers-mode dictionary-mode restclient-mode vc-annotate-mode)))
@@ -845,7 +853,7 @@ layers configuration. You are free to put any user code."
  '(mu4e-view-show-images t)
  '(neo-theme (quote ascii))
  '(paradox-github-token t)
- '(python-shell-interpreter "ipython")
+ '(python-shell-interpreter "ipython" t)
  '(python-shell-virtualenv-path "~/pyvenv"))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -853,8 +861,12 @@ layers configuration. You are free to put any user code."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(ahs-plugin-whole-buffer-face ((t (:background "#95AEC7" :foreground "#1C2023"))))
+ '(anzu-mode-line ((t (:foreground "#B48EAD" :weight bold))))
  '(avy-lead-face ((t (:background "#AEC795" :foreground "#1C2023"))))
  '(avy-lead-face-0 ((t (:background "#95AEC7" :foreground "#1C2023"))))
+ '(aw-background-face ((t (:background "#2B303B" :foreground "#2B303B"))))
+ '(aw-leading-char-face ((t (:foreground "#EFF1F5"))))
+ '(beacon-fallback-background ((t (:background "white"))))
  '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
  '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil))))
  '(elfeed-search-feed-face ((t (:foreground "#AEC795"))))
@@ -868,6 +880,7 @@ layers configuration. You are free to put any user code."
  '(git-gutter+-modified ((t (:foreground "#B48EAD" :weight bold))))
  '(helm-swoop-target-line-face ((t (:background "#AEC795" :foreground "#1C2023"))))
  '(helm-swoop-target-word-face ((t (:background "#95AEC7" :foreground "#1C2023"))))
+ '(highlight-indentation-face ((t (:background "gray22"))))
  '(mu4e-header-highlight-face ((t (:inherit region :weight bold))))
  '(neo-dir-link-face ((t (:foreground "#95C7AE"))))
  '(neo-vc-edited-face ((t (:foreground "#C7AE95"))))
