@@ -423,9 +423,7 @@ layers configuration. You are free to put any user code."
 
   ;; Package settings: ace-window
   (use-package ace-window
-    :init
-    (progn
-      (global-set-key [remap other-window] 'ace-window)))
+    :defer t)
   ;; Package settings: alchemist
   (use-package alchemist
     :bind (:map alchemist-iex-mode-map
@@ -486,6 +484,7 @@ layers configuration. You are free to put any user code."
             ("http://feeds.feedburner.com/martinkl?format=xml" blog programming)
             ("http://garbage.fm/episodes.rss" podcast programming)
             ("http://iamprogrammer.io/" korean podcast programming)
+            ("http://lucumr.pocoo.org/feed.atom" blog programming)
             ("http://nathan.torkington.com/blog/comments/feed/" blog)
             ("http://nedroid.com/feed/" webcomic)
             ("http://sachachua.com/blog/category/emacs-news/feed/" blog emacs programming)
@@ -809,7 +808,7 @@ layers configuration. You are free to put any user code."
     "ga" 'vc-annotate-current-buffer-head
     "gw" 'browse-at-remote
     "gM" 'magit-show-refs-head
-    "gl" 'magit-log-head
+    "gL" 'magit-log-buffer-file
     "hb" 'helm-filtered-bookmarks
     "hl" 'helm-resume
     "ho" 'helm-occur
@@ -827,7 +826,6 @@ layers configuration. You are free to put any user code."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(aw-keys (quote (104 106 107 108 97 115 100 102 103)))
  '(beacon-blink-delay 0.2)
  '(beacon-blink-duration 0.3)
  '(beacon-blink-when-focused t)
@@ -853,7 +851,7 @@ layers configuration. You are free to put any user code."
  '(mu4e-view-show-images t)
  '(neo-theme (quote ascii))
  '(paradox-github-token t)
- '(python-shell-interpreter "ipython" t)
+ '(python-shell-interpreter "ipython")
  '(python-shell-virtualenv-path "~/pyvenv"))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -880,6 +878,14 @@ layers configuration. You are free to put any user code."
  '(git-gutter+-modified ((t (:foreground "#B48EAD" :weight bold))))
  '(helm-swoop-target-line-face ((t (:background "#AEC795" :foreground "#1C2023"))))
  '(helm-swoop-target-word-face ((t (:background "#95AEC7" :foreground "#1C2023"))))
+ '(hi-black-b ((t (:background "#EFF1F5" :foreground "#2B303B" :weight bold))))
+ '(hi-black-hb ((t (:background "DarkGray" :foreground "#2B303B"))))
+ '(hi-blue ((t (:background "#8FA1B3" :foreground "#2B303B"))))
+ '(hi-blue-b ((t (:background "#96B5B4" :foreground "#2B303B" :weight bold))))
+ '(hi-green ((t (:background "#A3BE8C" :foreground "#2B303B"))))
+ '(hi-green-b ((t (:foreground "PaleGreen1" :weight bold))))
+ '(hi-red-b ((t (:background "#BF616A" :foreground "#2B303B" :weight bold))))
+ '(hi-yellow ((t (:background "#EBCB8B" :foreground "#2B303B"))))
  '(highlight-indentation-face ((t (:background "gray22"))))
  '(mu4e-header-highlight-face ((t (:inherit region :weight bold))))
  '(neo-dir-link-face ((t (:foreground "#95C7AE"))))
