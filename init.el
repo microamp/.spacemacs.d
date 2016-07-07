@@ -121,7 +121,8 @@ values."
                                     evil-tutor
                                     evil-visual-mark-mode
                                     evil-visualstar
-                                    vi-tilde-fringe)
+                                    vi-tilde-fringe
+                                    xterm-color)
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
    ;; are declared in a layer which is not a member of
    ;; the list `dotspacemacs-configuration-layers'. (default t)
@@ -374,6 +375,12 @@ It is called immediately after `dotspacemacs/init'.  You are free to put any
 user code."
   )
 
+(defun render-html-message ()
+  (let ((dom (libxml-parse-html-region (point-min) (point-max))))
+    (erase-buffer)
+    (shr-insert-document dom)
+    (goto-char (point-min))))
+
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
  This function is called at the very end of Spacemacs initialization after
@@ -501,7 +508,9 @@ layers configuration. You are free to put any user code."
             ("https://medium.com/feed/@unbalancedparen" blog programming)
             ("https://oden-lang.org/feed.xml" blog programming)
             ("https://wickstrom.tech/feed.xml" blog programming)
-            ("https://www.functionalgeekery.com/feed/" podcast programming))))
+            ("https://www.functionalgeekery.com/feed/" podcast programming)))
+    :config
+    (global-set-key [remap elfeed-goodies/show-ace-link] 'scroll-down-command))
   ;; Package settings: ensime-mode
   (use-package ensime-mode
     :defer t
@@ -638,7 +647,7 @@ layers configuration. You are free to put any user code."
        message-kill-buffer-on-exit t
 
        ;; View content using w3m
-       mu4e-html2text-command "w3m -dump -T text/html")))
+       mu4e-html2text-command 'render-html-message)))
   ;; Package settings: neotree
   (use-package neotree
     :defer t
@@ -728,6 +737,9 @@ layers configuration. You are free to put any user code."
   ;; Hooks added: auto-save
   (add-hooks 'auto-save-hook
              '(delete-trailing-whitespace))
+  ;; Hooks added: Dart mode
+  (add-hooks 'dart-mode-hook
+             '(smartparens-mode))
   ;; Hooks added: Python mode
   (add-hooks 'python-mode-hook
              '(fci-mode
