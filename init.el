@@ -81,6 +81,7 @@ values."
                                       dictionary
                                       emms
                                       emms-mode-line-cycle
+                                      find-file-in-project
                                       floobits
                                       fzf
                                       go-direx
@@ -96,6 +97,7 @@ values."
                                       julia-shell
                                       know-your-http-well
                                       password-generator
+                                      sr-speedbar
                                       twittering-mode
                                       w3m
                                       yaml-mode
@@ -343,32 +345,6 @@ values."
                                     buffers)))
     (switch-to-buffer (car (cdr (cdr buffers-filtered))))))
 
-(defun open-line-and-indent-next ()
-  (progn
-    (open-line 1)
-    (spacemacs/evil-goto-next-line-and-indent)))
-
-(defun open-line-with-indentation ()
-  "Implement `open-line' with indentation support."
-  (interactive)
-  (progn
-    ;; If EOL
-    (if (eolp)
-        (open-line 1)
-      (progn
-        ;; If BOL
-        (skip-chars-backward " ")
-        (if (bolp)
-            (progn
-              (open-line-and-indent-next)
-              (previous-line)
-              (indent-for-tab-command))
-          ;; Otherwise
-          (let ((pos (point-marker)))
-            (progn
-              (open-line-and-indent-next)
-              (goto-char pos))))))))
-
 (defun dotspacemacs/user-init ()
   "Initialization function for user code.
 It is called immediately after `dotspacemacs/init'.  You are free to put any
@@ -424,6 +400,8 @@ layers configuration. You are free to put any user code."
   (setq powerline-default-separator 'arrow)
   ;; Set kill ring max size
   (setq kill-ring-max 20)
+  ;; No highlight on current line (on by default)
+  (spacemacs/toggle-highlight-current-line-globally)
 
   ;; Disable auto-save
   (setq auto-save-timeout nil)
@@ -510,7 +488,10 @@ layers configuration. You are free to put any user code."
             ("https://wickstrom.tech/feed.xml" blog programming)
             ("https://www.functionalgeekery.com/feed/" podcast programming)))
     :config
-    (global-set-key [remap elfeed-goodies/show-ace-link] 'scroll-down-command))
+    (progn
+      (global-set-key [remap elfeed-goodies/show-ace-link] 'scroll-down-command)
+      (global-set-key [remap elfeed-goodies/split-show-next] 'next-line)
+      (global-set-key [remap elfeed-goodies/split-show-prev] 'previous-line)))
   ;; Package settings: ensime-mode
   (use-package ensime-mode
     :defer t
@@ -772,6 +753,9 @@ layers configuration. You are free to put any user code."
   (advice-add 'magit-log-head :after 'delete-other-windows)
   (advice-add 'magit-show-refs-head :after 'delete-other-windows)
 
+  ;; Move point to the beginning of the line before opening a new line
+  (advice-add 'open-line :before 'beginning-of-line)
+
   ;; Make sure vertical windows are split evenly
   (advice-add 'split-window-right :after 'balance-windows)
 
@@ -786,8 +770,7 @@ layers configuration. You are free to put any user code."
 
   ;; Custom key bindings: global
   (define-keys global-map
-    '(("C-o" open-line-with-indentation)
-      ("C-c C-j" helm-semantic-or-imenu)
+    '(("C-c C-j" helm-semantic-or-imenu)
       ("C-x C-b" ibuffer-list-buffers)
       ("C-x '" switch-to-previous-buffer)
       ("C-x -" split-window-below-and-focus)
@@ -859,12 +842,14 @@ layers configuration. You are free to put any user code."
     ("gotype" "aligncheck" "ineffassign" "structcheck" "unconvert" "staticcheck" "gocyclo" "goconst" "dupl")))
  '(flycheck-javascript-standard-executable "standard")
  '(fzf/window-height 30)
+ '(ivy-height 25)
  '(magit-log-arguments (quote ("-n256" "--graph" "--decorate" "--color")))
  '(mu4e-view-show-images t)
  '(neo-theme (quote ascii))
  '(paradox-github-token t)
  '(python-shell-interpreter "ipython")
- '(python-shell-virtualenv-path "~/pyvenv"))
+ '(python-shell-virtualenv-path "~/pyvenv")
+ '(sr-speedbar-right-side nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -883,8 +868,8 @@ layers configuration. You are free to put any user code."
  '(elfeed-search-tag-face ((t (:foreground "#95C7AE"))))
  '(elfeed-search-title-face ((t (:foreground "#F3F4F5"))))
  '(elfeed-search-unread-title-face ((t (:foreground "#95AEC7" :weight bold))))
- '(eval-sexp-fu-flash ((t (:background "#66999D" :foreground "#565E65" :weight bold))))
- '(face-of-god ((t (:background "#66999D" :foreground "#565E65" :box nil :inherit (quote mode-line)))))
+ '(eval-sexp-fu-flash ((t (:background "#66999D" :foreground "#560E60" :weight bold))))
+ '(face-of-god ((t (:background "#66999D" :foreground "#560E60" :box nil :inherit (quote mode-line)))))
  '(git-gutter+-added ((t (:foreground "#448844" :weight bold))))
  '(git-gutter+-deleted ((t (:foreground "#AA4444" :weight bold))))
  '(git-gutter+-modified ((t (:foreground "#B48EAD" :weight bold))))
@@ -902,5 +887,5 @@ layers configuration. You are free to put any user code."
  '(mu4e-header-highlight-face ((t (:inherit region :weight bold))))
  '(neo-dir-link-face ((t (:foreground "#95C7AE"))))
  '(neo-vc-edited-face ((t (:foreground "#C7AE95"))))
- '(spacemacs-emacs-face ((t (:background "#66999D" :foreground "#504945" :box nil :inherit (quote mode-line)))))
- '(spacemacs-hybrid-face ((t (:inherit (quote mode-line) :box nil :foreground "#504945" :background "#66999D")))))
+ '(spacemacs-emacs-face ((t (:background "#66999D" :foreground "#604960" :box nil :inherit (quote mode-line)))))
+ '(spacemacs-hybrid-face ((t (:inherit (quote mode-line) :box nil :foreground "#604960" :background "#66999D")))))
