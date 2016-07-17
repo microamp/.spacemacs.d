@@ -697,15 +697,13 @@ layers configuration. You are free to put any user code."
     :defer t
     :init
     (setq yas-before-expand-snippet-hook nil))
-  ;; Package settings: ztree
-  (use-package ztree
+  ;; Package settings: ztree-dir
+  (use-package ztree-dir
     :defer t
-    :init
-    (progn
-      (require 'ztree-dir)
-      (bind-key "n" 'next-line ztreedir-mode-map)
-      (bind-key "p" 'previous-line ztreedir-mode-map)
-      (bind-key "o" 'ztree-perform-action ztreedir-mode-map)))
+    :bind (:map ztreedir-mode-map
+                ("n" . next-line)
+                ("p" . previous-line)
+                ("o" . ztree-perform-action)))
 
   ;; Hooks added: programming modes
   (add-hooks 'prog-mode-hook
