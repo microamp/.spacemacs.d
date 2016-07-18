@@ -791,6 +791,8 @@ layers configuration. You are free to put any user code."
       ("RET" newline-and-indent)))
   ;; Custom key bindings: SPC shortcuts
   (spacemacs/set-leader-keys
+    "M-b" 'helm-mini
+    "M-f" 'helm-mini
     "M-m" 'avy-goto-word-or-subword-1
     "ameh" 'helm-emms
     "amep" 'emms-start
