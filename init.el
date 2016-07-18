@@ -121,6 +121,7 @@ values."
                                     evil-search-highlight-persist
                                     evil-surround
                                     evil-tutor
+                                    evil-unimpaired
                                     evil-visual-mark-mode
                                     evil-visualstar
                                     vi-tilde-fringe
@@ -672,21 +673,21 @@ layers configuration. You are free to put any user code."
   ;; Package settings: smartparens
   (use-package smartparens
     :defer t
+    :bind (:map sp-keymap
+                ("<C-M-backspace>" . sp-splice-sexp)
+                ("C-M-]" . sp-select-next-thing)
+                ("C-M-a" . sp-backward-down-sexp)
+                ("C-M-b" . sp-backward-sexp)
+                ("C-M-d" . sp-down-sexp)
+                ("C-M-e" . sp-up-sexp)
+                ("C-M-f" . sp-forward-sexp)
+                ("C-M-n" . sp-next-sexp)
+                ("C-M-p" . sp-previous-sexp)
+                ("C-M-u" . sp-backward-up-sexp)
+                ("C-]" . sp-select-next-thing-exchange))
     :config
     (apply-fn-to-modes 'smartparens-strict-mode
-                       sp--lisp-modes)
-    (define-keys sp-keymap
-      '(("<C-M-backspace>" sp-splice-sexp)
-        ("C-M-]" sp-select-next-thing)
-        ("C-M-a" sp-backward-down-sexp)
-        ("C-M-b" sp-backward-sexp)
-        ("C-M-d" sp-down-sexp)
-        ("C-M-e" sp-up-sexp)
-        ("C-M-f" sp-forward-sexp)
-        ("C-M-n" sp-next-sexp)
-        ("C-M-p" sp-previous-sexp)
-        ("C-M-u" sp-backward-up-sexp)
-        ("C-]" sp-select-next-thing-exchange))))
+                       sp--lisp-modes))
   ;; Package settings: yaml-mode
   (use-package yaml-mode
     :defer t
