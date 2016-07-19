@@ -751,6 +751,7 @@ layers configuration. You are free to put any user code."
   (advice-add 'magit-log-buffer-file :after 'delete-other-windows)
   (advice-add 'magit-log-head :after 'delete-other-windows)
   (advice-add 'magit-show-refs-head :after 'delete-other-windows)
+  (advice-add 'vc-annotate-current-buffer-head :after 'delete-other-windows)
 
   ;; Move point to the beginning of the line before opening a new line
   (advice-add 'open-line :before 'beginning-of-line)
