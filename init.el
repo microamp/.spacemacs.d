@@ -664,12 +664,13 @@ layers configuration. You are free to put any user code."
     :init
     (setq fci-rule-column 99)
     :bind (:map python-mode-map
-                ("C-M-," . anaconda-mode-go-back)
                 ("C-c C-j" . helm-semantic-or-imenu))
     :config
     (progn
       (evil-leader/set-key-for-mode 'python-mode
-        "mf" 'py-yapf-buffer)))
+        "mf" 'py-yapf-buffer)
+      (global-set-key [remap anaconda-mode-find-assignments] 'anaconda-mode-go-back)
+      (global-set-key [remap anaconda-mode-find-definitions] 'anaconda-mode-find-assignments)))
   ;; Package settings: smartparens
   (use-package smartparens
     :defer t
