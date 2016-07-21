@@ -358,6 +358,18 @@ user code."
     (shr-insert-document dom)
     (goto-char (point-min))))
 
+(defun bg-transparent-on ()
+  (interactive)
+  (progn
+    (set-frame-parameter (selected-frame) 'alpha '(50 85))
+    (add-to-list 'default-frame-alist '(alpha 50 85))))
+
+(defun bg-transparent-off ()
+  (interactive)
+  (progn
+    (set-frame-parameter (selected-frame) 'alpha '(100 85))
+    (add-to-list 'default-frame-alist '(alpha 100 85))))
+
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
  This function is called at the very end of Spacemacs initialization after
@@ -732,9 +744,8 @@ layers configuration. You are free to put any user code."
   (add-hooks 'mu4e-view-mode-hook
              '(epa-mail-mode))
 
-  ;; Add transparency
-  (set-frame-parameter (selected-frame) 'alpha '(60 85))
-  (add-to-list 'default-frame-alist '(alpha 60 85))
+  ;; Transparency on by default
+  (bg-transparent-on)
 
   ;; Colorise compilation buffer
   (require 'ansi-color)
@@ -849,6 +860,7 @@ layers configuration. You are free to put any user code."
  '(magit-log-arguments (quote ("-n256" "--graph" "--decorate" "--color")))
  '(mu4e-view-show-images t)
  '(neo-theme (quote ascii))
+ '(neo-window-width 35)
  '(paradox-github-token t)
  '(python-shell-interpreter "ipython")
  '(python-shell-virtualenv-path "~/pyvenv")
