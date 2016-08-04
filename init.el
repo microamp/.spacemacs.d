@@ -343,6 +343,13 @@ values."
                                     buffers)))
     (switch-to-buffer (car (cdr (cdr buffers-filtered))))))
 
+(defun split-and-search-in-proj ()
+  "Split window vertically and search for the symbol at point in the current project."
+  (interactive)
+  (progn
+    (split-window-right-and-focus)
+    (spacemacs/helm-project-do-ag-region-or-symbol)))
+
 (defun dotspacemacs/user-init ()
   "Initialization function for user code.
 It is called immediately after `dotspacemacs/init'.  You are free to put any
@@ -783,7 +790,7 @@ layers configuration. You are free to put any user code."
       ("C-x c" persp-add-new)
       ("C-x l" delete-other-windows)
       ("C-x q" delete-window)
-      ("C-x |" split-window-right-and-focus)
+      ("C-x |" split-and-search-in-proj)
       ("M-SPC" spacemacs/shell-pop-eshell)
       ("M-[" beginning-of-defun)
       ("M-]" end-of-defun)
@@ -850,10 +857,10 @@ layers configuration. You are free to put any user code."
  '(magit-log-arguments (quote ("-n256" "--graph" "--decorate" "--color")))
  '(mu4e-view-show-images t)
  '(neo-theme (quote ascii))
- '(neo-window-width 30)
+ '(neo-window-width 32)
  '(package-selected-packages
    (quote
-    (julia-mode emms company ivy w3m restclient persp-mode org-pomodoro org-plus-contrib mu4e-alert markdown-toc ein apropospriate-theme anzu cider clojure-mode sbt-mode flycheck helm helm-core yasnippet projectile magit magit-popup ztree zenburn-theme yaml-mode ws-butler window-numbering which-key websocket web-mode web-beautify volatile-highlights vmd-mode uuidgen utop use-package twittering-mode tuareg toc-org tagedit sr-speedbar sql-indent spacemacs-theme spaceline smeargle smartparens slim-mode shell-pop scss-mode sass-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe reveal-in-osx-finder restart-emacs rcirc-notify rcirc-color rbenv rake rainbow-mode rainbow-identifiers rainbow-delimiters queue quelpa pyvenv pytest pyenv-mode py-yapf puppet-mode pip-requirements pbcopy password-generator paradox osx-trash orgit org-projectile org-present org-download org-bullets open-junk-file ocp-indent ob-sml ob-http neotree mwim multi-term mu4e-maildirs-extension move-text mmm-mode merlin markdown-mode magit-gitflow macrostep lua-mode lorem-ipsum livid-mode live-py-mode linum-relative link-hint less-css-mode launchctl know-your-http-well julia-shell json-mode js2-refactor js-doc jdee jade-mode jabber info+ indent-guide ido-vertical-mode hy-mode hungry-delete htmlize ht howdoi hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-pydoc helm-pt helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-emms helm-descbinds helm-dash helm-css-scss helm-company helm-c-yasnippet helm-ag gruvbox-theme google-translate golden-ratio go-playground go-errcheck go-eldoc go-direx gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md fzf flycheck-pos-tip flycheck-mix flycheck-gometalinter flx-ido floobits fish-mode find-file-in-project fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil eshell-z eshell-prompt-extras esh-help ensime engine-mode emms-mode-line-cycle emmet-mode elisp-slime-nav elfeed-web elfeed-org elfeed-goodies diff-hl dictionary deft define-word dash-at-point dart-mode darktooth-theme cython-mode csv-mode company-web company-tern company-statistics company-shell company-quickhelp company-go company-anaconda column-enforce-mode color-identifiers-mode coffee-mode clojure-snippets clj-refactor clean-aindent-mode cl-generic cider-eval-sexp-fu chruby bundler browse-at-remote bind-map beacon base16-theme auto-yasnippet auto-highlight-symbol auto-compile alert alchemist aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell)))
+    (org avy julia-mode emms company ivy w3m restclient persp-mode org-pomodoro org-plus-contrib mu4e-alert markdown-toc ein apropospriate-theme anzu cider clojure-mode sbt-mode flycheck helm helm-core yasnippet projectile magit magit-popup ztree zenburn-theme yaml-mode ws-butler window-numbering which-key websocket web-mode web-beautify volatile-highlights vmd-mode uuidgen utop use-package twittering-mode tuareg toc-org tagedit sr-speedbar sql-indent spacemacs-theme spaceline smeargle smartparens slim-mode shell-pop scss-mode sass-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe reveal-in-osx-finder restart-emacs rcirc-notify rcirc-color rbenv rake rainbow-mode rainbow-identifiers rainbow-delimiters queue quelpa pyvenv pytest pyenv-mode py-yapf puppet-mode pip-requirements pbcopy password-generator paradox osx-trash orgit org-projectile org-present org-download org-bullets open-junk-file ocp-indent ob-sml ob-http neotree mwim multi-term mu4e-maildirs-extension move-text mmm-mode merlin markdown-mode magit-gitflow macrostep lua-mode lorem-ipsum livid-mode live-py-mode linum-relative link-hint less-css-mode launchctl know-your-http-well julia-shell json-mode js2-refactor js-doc jdee jade-mode jabber info+ indent-guide ido-vertical-mode hy-mode hungry-delete htmlize ht howdoi hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-pydoc helm-pt helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-emms helm-descbinds helm-dash helm-css-scss helm-company helm-c-yasnippet helm-ag gruvbox-theme google-translate golden-ratio go-playground go-errcheck go-eldoc go-direx gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md fzf flycheck-pos-tip flycheck-mix flycheck-gometalinter flx-ido floobits fish-mode find-file-in-project fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil eshell-z eshell-prompt-extras esh-help ensime engine-mode emms-mode-line-cycle emmet-mode elisp-slime-nav elfeed-web elfeed-org elfeed-goodies diff-hl dictionary deft define-word dash-at-point dart-mode darktooth-theme cython-mode csv-mode company-web company-tern company-statistics company-shell company-quickhelp company-go company-anaconda column-enforce-mode color-identifiers-mode coffee-mode clojure-snippets clj-refactor clean-aindent-mode cl-generic cider-eval-sexp-fu chruby bundler browse-at-remote bind-map beacon base16-theme auto-yasnippet auto-highlight-symbol auto-compile alert alchemist aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell)))
  '(paradox-github-token t)
  '(python-shell-interpreter "ipython")
  '(python-shell-virtualenv-path "~/pyvenv")
