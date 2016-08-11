@@ -55,7 +55,9 @@ values."
      rcirc
      restclient
      (scala :variables
-            scala-auto-insert-asterisk-in-comments t)
+            scala-auto-insert-asterisk-in-comments t
+            scala-auto-start-ensime t
+            scala-use-java-doc-style t)
      search-engine
      (shell :variables
             shell-default-height 40
@@ -69,9 +71,9 @@ values."
    ;; packages then consider to create a layer, you can also put the
    ;; configuration in `dotspacemacs/config'.
    dotspacemacs-additional-packages '(anzu
-                                      apropospriate-theme
                                       base16-theme
                                       beacon
+                                      bm
                                       browse-at-remote
                                       dart-mode
                                       deft
@@ -159,11 +161,10 @@ values."
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(base16-ocean-dark
-                         apropospriate-dark
+                         darktooth
                          base16-ashes-dark
                          gruvbox
-                         zenburn
-                         darktooth)
+                         zenburn)
    ;; If non nil the cursor color matches the state color.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
@@ -414,7 +415,7 @@ layers configuration. You are free to put any user code."
   ;; Powerline: battery life
   (fancy-battery-mode t)
   ;; Powerline: separator style
-  (setq powerline-default-separator 'arrow)
+  (setq powerline-default-separator nil)
   ;; Set kill ring max size
   (setq kill-ring-max 20)
   ;; No highlight on current line (on by default)
@@ -432,9 +433,12 @@ layers configuration. You are free to put any user code."
                 ("C-l" . alchemist-iex-clear-buffer)))
   ;; Package settings: anzu
   (use-package anzu
-    :ensure t
     :init
     (global-anzu-mode))
+  ;; Package settings: bm
+  (use-package bm
+    :bind (("C-M-;" . bm-toggle)
+           ("C-M-," . bm-next)))
   ;; Package settings: deft
   (use-package deft
     :defer t
@@ -472,38 +476,7 @@ layers configuration. You are free to put any user code."
     :defer t
     :init
     (setq elfeed-feeds
-          '(("http://aliveandhealthy.com/feed/" blog)
-            ("http://blog.empathybox.com/rss" blog programming)
-            ("http://blog.josephwilk.net/atom.xml" blog emacs programming music)
-            ("http://blog.weirdx.io/feed" blog korean programming)
-            ("http://cestlaz.github.io/rss.xml" blog emacs programming)
-            ("http://emacshorrors.com/feed.atom" blog emacs programming)
-            ("http://emacsninja.com/feed.atom" blog emacs programming)
-            ("http://endlessparentheses.com/atom.xml" blog emacs programming)
-            ("http://feeds.5by5.tv/changelog" podcast programming)
-            ("http://feeds.feedburner.com/HighScalability" blog distributed-computing programming)
-            ("http://feeds.feedburner.com/WisdomAndWonder" blog emacs mech-keys programming)
-            ("http://feeds.feedburner.com/martinkl?format=xml" blog programming)
-            ("http://garbage.fm/episodes.rss" podcast programming)
-            ("http://iamprogrammer.io/" korean podcast programming)
-            ("http://lucumr.pocoo.org/feed.atom" blog programming)
-            ("http://nathan.torkington.com/blog/comments/feed/" blog)
-            ("http://nedroid.com/feed/" webcomic)
-            ("http://sachachua.com/blog/category/emacs-news/feed/" blog emacs programming)
-            ("http://softwareengineeringdaily.com/feed/podcast/" podcast programming)
-            ("http://tagide.com/blog/feed/" blog programming)
-            ("http://tech.kakao.com/rss/" blog korean programming)
-            ("http://whattheemacsd.com/atom.xml" blog emacs programming)
-            ("http://www.confluent.io/blog" bigdata blog programming)
-            ("http://www.lunaryorn.com/feed.atom" blog emacs programming)
-            ("http://www.sangkon.com/rss/" blog korean programming)
-            ("http://xkcd.com/rss.xml" webcomic)
-            ("https://blog.gopheracademy.com/index.xml" blog programming)
-            ("https://danlamanna.com/feeds/atom.xml" blog emacs programming)
-            ("https://medium.com/feed/@unbalancedparen" blog programming)
-            ("https://oden-lang.org/feed.xml" blog programming)
-            ("https://wickstrom.tech/feed.xml" blog programming)
-            ("https://www.functionalgeekery.com/feed/" podcast programming)))
+          '(("http://planet.emacsen.org/atom.xml" emacs)))
     :config
     (progn
       (global-set-key [remap elfeed-goodies/show-ace-link] 'scroll-down-command)
@@ -512,9 +485,11 @@ layers configuration. You are free to put any user code."
   ;; Package settings: ensime-mode
   (use-package ensime-mode
     :defer t
-    :bind (:map scala-mode-map
-                ("M-N" . vi-style-c-e)
-                ("M-P" . vi-style-c-y)))
+    :config
+    (progn
+      ;; TODO: Define key bindings for ensime-forward-note and ensime-backward-note
+      (global-set-key [remap ensime-forward-note] 'vi-style-c-e)
+      (global-set-key [remap ensime-backward-note] 'vi-style-c-y)))
   ;; Package settings: eww
   (use-package eww
     :defer t
@@ -630,6 +605,12 @@ layers configuration. You are free to put any user code."
 
        ;; View content using w3m
        mu4e-html2text-command 'render-html-message)))
+  (use-package markdown-mode
+    :defer t
+    :config
+    (progn
+      (global-set-key [remap markdown-next-link] 'vi-style-c-e)
+      (global-set-key [remap markdown-previous-link] 'vi-style-c-y)))
   ;; Package settings: neotree
   (use-package neotree
     :defer t
@@ -838,8 +819,9 @@ layers configuration. You are free to put any user code."
  '(beacon-color "gray32")
  '(beacon-dont-blink-major-modes
    (quote
-    (t magit-status-mode magit-popup-mode magit-log-mode magit-refs-mode magit-process-mode magit-diff-mode inf-ruby-mode gnus-summary-mode gnus-group-mode eshell-mode sbt-mode ensime-mode compilation-mode neotree-mode dired-mode fundamental-mode comint-mode spacemacs-buffer-mode Custom-mode help-mode twittering-mode elfeed-search-mode elfeed-show-mode eww-mode deft-mode org-mode calendar-mode paradox-menu-mode ibuffer-mode mu4e-view-mode mu4e-headers-mode dictionary-mode restclient-mode vc-annotate-mode ztree-mode)))
+    (t magit-status-mode magit-popup-mode magit-log-mode magit-refs-mode magit-process-mode magit-diff-mode inf-ruby-mode gnus-summary-mode gnus-group-mode eshell-mode sbt-mode ensime-mode compilation-mode neotree-mode dired-mode fundamental-mode comint-mode spacemacs-buffer-mode Custom-mode help-mode twittering-mode elfeed-search-mode elfeed-show-mode eww-mode deft-mode org-mode calendar-mode paradox-menu-mode ibuffer-mode mu4e-view-mode mu4e-headers-mode dictionary-mode restclient-mode vc-annotate-mode ztree-mode text-mode)))
  '(beacon-size 15)
+ '(bookmark-save-flag 1)
  '(emms-cache-file "~/.spacemacs.d/emms/cache")
  '(emms-mode-line-cycle-max-width 13)
  '(emms-mode-line-cycle-use-icon-p t)
@@ -853,16 +835,17 @@ layers configuration. You are free to put any user code."
     ("gotype" "aligncheck" "ineffassign" "structcheck" "unconvert" "staticcheck" "gocyclo" "goconst" "dupl")))
  '(flycheck-javascript-standard-executable "standard")
  '(fzf/window-height 30)
+ '(helm-bookmark-show-location t t)
  '(ivy-height 25)
  '(magit-log-arguments (quote ("-n256" "--graph" "--decorate" "--color")))
  '(mu4e-view-show-images t)
  '(neo-theme (quote ascii))
- '(neo-window-width 32)
+ '(neo-window-width 32 t)
  '(package-selected-packages
    (quote
-    (org avy julia-mode emms company ivy w3m restclient persp-mode org-pomodoro org-plus-contrib mu4e-alert markdown-toc ein apropospriate-theme anzu cider clojure-mode sbt-mode flycheck helm helm-core yasnippet projectile magit magit-popup ztree zenburn-theme yaml-mode ws-butler window-numbering which-key websocket web-mode web-beautify volatile-highlights vmd-mode uuidgen utop use-package twittering-mode tuareg toc-org tagedit sr-speedbar sql-indent spacemacs-theme spaceline smeargle smartparens slim-mode shell-pop scss-mode sass-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe reveal-in-osx-finder restart-emacs rcirc-notify rcirc-color rbenv rake rainbow-mode rainbow-identifiers rainbow-delimiters queue quelpa pyvenv pytest pyenv-mode py-yapf puppet-mode pip-requirements pbcopy password-generator paradox osx-trash orgit org-projectile org-present org-download org-bullets open-junk-file ocp-indent ob-sml ob-http neotree mwim multi-term mu4e-maildirs-extension move-text mmm-mode merlin markdown-mode magit-gitflow macrostep lua-mode lorem-ipsum livid-mode live-py-mode linum-relative link-hint less-css-mode launchctl know-your-http-well julia-shell json-mode js2-refactor js-doc jdee jade-mode jabber info+ indent-guide ido-vertical-mode hy-mode hungry-delete htmlize ht howdoi hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-pydoc helm-pt helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-emms helm-descbinds helm-dash helm-css-scss helm-company helm-c-yasnippet helm-ag gruvbox-theme google-translate golden-ratio go-playground go-errcheck go-eldoc go-direx gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md fzf flycheck-pos-tip flycheck-mix flycheck-gometalinter flx-ido floobits fish-mode find-file-in-project fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil eshell-z eshell-prompt-extras esh-help ensime engine-mode emms-mode-line-cycle emmet-mode elisp-slime-nav elfeed-web elfeed-org elfeed-goodies diff-hl dictionary deft define-word dash-at-point dart-mode darktooth-theme cython-mode csv-mode company-web company-tern company-statistics company-shell company-quickhelp company-go company-anaconda column-enforce-mode color-identifiers-mode coffee-mode clojure-snippets clj-refactor clean-aindent-mode cl-generic cider-eval-sexp-fu chruby bundler browse-at-remote bind-map beacon base16-theme auto-yasnippet auto-highlight-symbol auto-compile alert alchemist aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell)))
+    (elfeed swiper stickyfunc-enhance srefactor minimap helm-gtags helm-cscope xcscope ggtags emoji-cheat-sheet-plus company-emoji bm yapfify org avy julia-mode emms company ivy w3m restclient persp-mode org-pomodoro org-plus-contrib mu4e-alert markdown-toc ein apropospriate-theme anzu cider clojure-mode sbt-mode flycheck helm helm-core yasnippet projectile magit magit-popup ztree zenburn-theme yaml-mode ws-butler window-numbering which-key websocket web-mode web-beautify volatile-highlights vmd-mode uuidgen utop use-package twittering-mode tuareg toc-org tagedit sr-speedbar sql-indent spacemacs-theme spaceline smeargle smartparens slim-mode shell-pop scss-mode sass-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe reveal-in-osx-finder restart-emacs rcirc-notify rcirc-color rbenv rake rainbow-mode rainbow-identifiers rainbow-delimiters queue quelpa pyvenv pytest pyenv-mode py-yapf puppet-mode pip-requirements pbcopy password-generator paradox osx-trash orgit org-projectile org-present org-download org-bullets open-junk-file ocp-indent ob-sml ob-http neotree mwim multi-term mu4e-maildirs-extension move-text mmm-mode merlin markdown-mode magit-gitflow macrostep lua-mode lorem-ipsum livid-mode live-py-mode linum-relative link-hint less-css-mode launchctl know-your-http-well julia-shell json-mode js2-refactor js-doc jdee jade-mode jabber info+ indent-guide ido-vertical-mode hy-mode hungry-delete htmlize ht howdoi hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-pydoc helm-pt helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-emms helm-descbinds helm-dash helm-css-scss helm-company helm-c-yasnippet helm-ag gruvbox-theme google-translate golden-ratio go-playground go-errcheck go-eldoc go-direx gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md fzf flycheck-pos-tip flycheck-mix flycheck-gometalinter flx-ido floobits fish-mode find-file-in-project fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil eshell-z eshell-prompt-extras esh-help ensime engine-mode emms-mode-line-cycle emmet-mode elisp-slime-nav elfeed-web elfeed-org elfeed-goodies diff-hl dictionary deft define-word dash-at-point dart-mode darktooth-theme cython-mode csv-mode company-web company-tern company-statistics company-shell company-quickhelp company-go company-anaconda column-enforce-mode color-identifiers-mode coffee-mode clojure-snippets clj-refactor clean-aindent-mode cl-generic cider-eval-sexp-fu chruby bundler browse-at-remote bind-map beacon base16-theme auto-yasnippet auto-highlight-symbol auto-compile alert alchemist aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell)))
  '(paradox-github-token t)
- '(python-shell-interpreter "ipython")
+ '(python-shell-interpreter "ipython" t)
  '(python-shell-virtualenv-path "~/pyvenv")
  '(python-shell-virtualenv-root "~/pyvenv")
  '(sr-speedbar-right-side nil)
@@ -879,6 +862,7 @@ layers configuration. You are free to put any user code."
  '(aw-background-face ((t (:background "#2B303B" :foreground "#2B303B"))))
  '(aw-leading-char-face ((t (:foreground "#EFF1F5"))))
  '(beacon-fallback-background ((t (:background "white"))))
+ '(bm-face ((t (:background "#A3BE8C" :foreground "#2B303B"))))
  '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
  '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil))))
  '(elfeed-search-feed-face ((t (:foreground "#AEC795"))))
@@ -890,6 +874,7 @@ layers configuration. You are free to put any user code."
  '(git-gutter+-added ((t (:foreground "#448844" :weight bold))))
  '(git-gutter+-deleted ((t (:foreground "#AA4444" :weight bold))))
  '(git-gutter+-modified ((t (:foreground "#B48EAD" :weight bold))))
+ '(helm-bookmark-file ((t (:foreground "#96B5B4"))))
  '(helm-swoop-target-line-face ((t (:background "#AEC795" :foreground "#1C2023"))))
  '(helm-swoop-target-word-face ((t (:background "#95AEC7" :foreground "#1C2023"))))
  '(hi-black-b ((t (:background "#EFF1F5" :foreground "#2B303B" :weight bold))))
@@ -904,5 +889,6 @@ layers configuration. You are free to put any user code."
  '(mu4e-header-highlight-face ((t (:inherit region :weight bold))))
  '(neo-dir-link-face ((t (:foreground "#95C7AE"))))
  '(neo-vc-edited-face ((t (:foreground "#C7AE95"))))
- '(spacemacs-emacs-face ((t (:background "#66999D" :foreground "#604960" :box nil :inherit (quote mode-line)))))
- '(spacemacs-hybrid-face ((t (:inherit (quote mode-line) :box nil :foreground "#604960" :background "#66999D")))))
+ '(spacemacs-emacs-face ((t (:background "#8FA1B3" :foreground "#1D2021"))))
+ '(spacemacs-hybrid-face ((t (:background "#A3BE8C" :foreground "#1D2021"))))
+ '(which-func ((t (:foreground "#BF616A")))))
