@@ -419,7 +419,7 @@ layers configuration. You are free to put any user code."
   ;; Set kill ring max size
   (setq kill-ring-max 20)
   ;; No highlight on current line (on by default)
-  (spacemacs/toggle-highlight-current-line-globally)
+  (spacemacs/toggle-highlight-current-line-globally-off)
 
   ;; Disable auto-save
   (setq auto-save-timeout nil)
@@ -438,7 +438,8 @@ layers configuration. You are free to put any user code."
   ;; Package settings: bm
   (use-package bm
     :bind (("C-M-;" . bm-toggle)
-           ("C-M-," . bm-next)))
+           ("C-M-," . bm-next)
+           ("C-M-<" . bm-previous)))
   ;; Package settings: deft
   (use-package deft
     :defer t
@@ -784,6 +785,7 @@ layers configuration. You are free to put any user code."
     "M-m" 'avy-goto-word-or-subword-1
     "M-p" 'hydra-persp/body
     "M-v" 'er/expand-region
+    "ab" 'sr-speedbar-toggle
     "aC" 'calendar
     "ameh" 'helm-emms
     "amep" 'emms-start
@@ -835,19 +837,21 @@ layers configuration. You are free to put any user code."
     ("gotype" "aligncheck" "ineffassign" "structcheck" "unconvert" "staticcheck" "gocyclo" "goconst" "dupl")))
  '(flycheck-javascript-standard-executable "standard")
  '(fzf/window-height 30)
- '(helm-bookmark-show-location t t)
+ '(helm-bookmark-show-location t)
  '(ivy-height 25)
  '(magit-log-arguments (quote ("-n256" "--graph" "--decorate" "--color")))
  '(mu4e-view-show-images t)
  '(neo-theme (quote ascii))
- '(neo-window-width 32 t)
+ '(neo-window-width 32)
  '(package-selected-packages
    (quote
-    (elfeed swiper stickyfunc-enhance srefactor minimap helm-gtags helm-cscope xcscope ggtags emoji-cheat-sheet-plus company-emoji bm yapfify org avy julia-mode emms company ivy w3m restclient persp-mode org-pomodoro org-plus-contrib mu4e-alert markdown-toc ein apropospriate-theme anzu cider clojure-mode sbt-mode flycheck helm helm-core yasnippet projectile magit magit-popup ztree zenburn-theme yaml-mode ws-butler window-numbering which-key websocket web-mode web-beautify volatile-highlights vmd-mode uuidgen utop use-package twittering-mode tuareg toc-org tagedit sr-speedbar sql-indent spacemacs-theme spaceline smeargle smartparens slim-mode shell-pop scss-mode sass-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe reveal-in-osx-finder restart-emacs rcirc-notify rcirc-color rbenv rake rainbow-mode rainbow-identifiers rainbow-delimiters queue quelpa pyvenv pytest pyenv-mode py-yapf puppet-mode pip-requirements pbcopy password-generator paradox osx-trash orgit org-projectile org-present org-download org-bullets open-junk-file ocp-indent ob-sml ob-http neotree mwim multi-term mu4e-maildirs-extension move-text mmm-mode merlin markdown-mode magit-gitflow macrostep lua-mode lorem-ipsum livid-mode live-py-mode linum-relative link-hint less-css-mode launchctl know-your-http-well julia-shell json-mode js2-refactor js-doc jdee jade-mode jabber info+ indent-guide ido-vertical-mode hy-mode hungry-delete htmlize ht howdoi hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-pydoc helm-pt helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-emms helm-descbinds helm-dash helm-css-scss helm-company helm-c-yasnippet helm-ag gruvbox-theme google-translate golden-ratio go-playground go-errcheck go-eldoc go-direx gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md fzf flycheck-pos-tip flycheck-mix flycheck-gometalinter flx-ido floobits fish-mode find-file-in-project fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil eshell-z eshell-prompt-extras esh-help ensime engine-mode emms-mode-line-cycle emmet-mode elisp-slime-nav elfeed-web elfeed-org elfeed-goodies diff-hl dictionary deft define-word dash-at-point dart-mode darktooth-theme cython-mode csv-mode company-web company-tern company-statistics company-shell company-quickhelp company-go company-anaconda column-enforce-mode color-identifiers-mode coffee-mode clojure-snippets clj-refactor clean-aindent-mode cl-generic cider-eval-sexp-fu chruby bundler browse-at-remote bind-map beacon base16-theme auto-yasnippet auto-highlight-symbol auto-compile alert alchemist aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell)))
+    (scala-mode with-editor dash elfeed swiper stickyfunc-enhance srefactor minimap helm-gtags helm-cscope xcscope ggtags emoji-cheat-sheet-plus company-emoji bm yapfify org avy julia-mode emms company ivy w3m restclient persp-mode org-pomodoro org-plus-contrib mu4e-alert markdown-toc ein apropospriate-theme anzu cider clojure-mode sbt-mode flycheck helm helm-core yasnippet projectile magit magit-popup ztree zenburn-theme yaml-mode ws-butler window-numbering which-key websocket web-mode web-beautify volatile-highlights vmd-mode uuidgen utop use-package twittering-mode tuareg toc-org tagedit sr-speedbar sql-indent spacemacs-theme spaceline smeargle smartparens slim-mode shell-pop scss-mode sass-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe reveal-in-osx-finder restart-emacs rcirc-notify rcirc-color rbenv rake rainbow-mode rainbow-identifiers rainbow-delimiters queue quelpa pyvenv pytest pyenv-mode py-yapf puppet-mode pip-requirements pbcopy password-generator paradox osx-trash orgit org-projectile org-present org-download org-bullets open-junk-file ocp-indent ob-sml ob-http neotree mwim multi-term mu4e-maildirs-extension move-text mmm-mode merlin markdown-mode magit-gitflow macrostep lua-mode lorem-ipsum livid-mode live-py-mode linum-relative link-hint less-css-mode launchctl know-your-http-well julia-shell json-mode js2-refactor js-doc jdee jade-mode jabber info+ indent-guide ido-vertical-mode hy-mode hungry-delete htmlize ht howdoi hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-pydoc helm-pt helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-emms helm-descbinds helm-dash helm-css-scss helm-company helm-c-yasnippet helm-ag gruvbox-theme google-translate golden-ratio go-playground go-errcheck go-eldoc go-direx gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md fzf flycheck-pos-tip flycheck-mix flycheck-gometalinter flx-ido floobits fish-mode find-file-in-project fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil eshell-z eshell-prompt-extras esh-help ensime engine-mode emms-mode-line-cycle emmet-mode elisp-slime-nav elfeed-web elfeed-org elfeed-goodies diff-hl dictionary deft define-word dash-at-point dart-mode darktooth-theme cython-mode csv-mode company-web company-tern company-statistics company-shell company-quickhelp company-go company-anaconda column-enforce-mode color-identifiers-mode coffee-mode clojure-snippets clj-refactor clean-aindent-mode cl-generic cider-eval-sexp-fu chruby bundler browse-at-remote bind-map beacon base16-theme auto-yasnippet auto-highlight-symbol auto-compile alert alchemist aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell)))
  '(paradox-github-token t)
- '(python-shell-interpreter "ipython" t)
+ '(python-shell-interpreter "ipython")
  '(python-shell-virtualenv-path "~/pyvenv")
  '(python-shell-virtualenv-root "~/pyvenv")
+ '(speedbar-show-unknown-files t)
+ '(speedbar-use-images nil)
  '(sr-speedbar-right-side nil)
  '(which-key-idle-delay 1.0))
 (custom-set-faces
@@ -862,7 +866,7 @@ layers configuration. You are free to put any user code."
  '(aw-background-face ((t (:background "#2B303B" :foreground "#2B303B"))))
  '(aw-leading-char-face ((t (:foreground "#EFF1F5"))))
  '(beacon-fallback-background ((t (:background "white"))))
- '(bm-face ((t (:background "#A3BE8C" :foreground "#2B303B"))))
+ '(bm-face ((t (:background "#65737e"))))
  '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
  '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil))))
  '(elfeed-search-feed-face ((t (:foreground "#AEC795"))))
@@ -891,4 +895,8 @@ layers configuration. You are free to put any user code."
  '(neo-vc-edited-face ((t (:foreground "#C7AE95"))))
  '(spacemacs-emacs-face ((t (:background "#8FA1B3" :foreground "#1D2021"))))
  '(spacemacs-hybrid-face ((t (:background "#A3BE8C" :foreground "#1D2021"))))
+ '(speedbar-button-face ((t (:foreground "#A3BE8C"))))
+ '(speedbar-directory-face ((t (:foreground "#96B5B4"))))
+ '(speedbar-file-face ((t (:foreground "#EBCB8B"))))
+ '(speedbar-selected-face ((t (:foreground "#BF616A" :underline t))))
  '(which-func ((t (:foreground "#BF616A")))))
