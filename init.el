@@ -229,7 +229,7 @@ values."
    dotspacemacs-fullscreen-at-startup nil
    ;; If non nil `spacemacs/toggle-fullscreen' will not use native fullscreen.
    ;; Use to disable fullscreen animations in OSX. (default nil)
-   dotspacemacs-fullscreen-use-non-native nil
+   dotspacemacs-fullscreen-use-non-native t
    ;; If non nil the frame is maximized when Emacs starts up.
    ;; Takes effect only if `dotspacemacs-fullscreen-at-startup' is nil.
    ;; (default nil) (Emacs 24.4+ only)
@@ -334,15 +334,12 @@ values."
 (defun switch-to-previous-buffer ()
   "Switch to the previous buffer."
   (interactive)
-  (switch-to-buffer (other-buffer (current-buffer) 1)))
+  (switch-to-buffer (car (helm-buffer-list))))
 
 (defun switch-to-pprevious-buffer ()
   "Switch to the buffer previous to the previous buffer."
   (interactive)
-  (let* ((buffers (mapcar (function buffer-name) (buffer-list)))
-         (buffers-filtered (-filter (lambda (s) (not (string-prefix-p " " s)))
-                                    buffers)))
-    (switch-to-buffer (car (cdr (cdr buffers-filtered))))))
+  (switch-to-buffer (car (cdr (helm-buffer-list)))))
 
 (defun split-and-search-in-proj ()
   "Split window vertically and search for the symbol at point in the current project."
@@ -363,43 +360,37 @@ user code."
     (shr-insert-document dom)
     (goto-char (point-min))))
 
-(defun bg-transparent-on ()
-  (interactive)
-  (progn
-    (set-frame-parameter (selected-frame) 'alpha '(50 85))
-    (add-to-list 'default-frame-alist '(alpha 50 85))))
-
-(defun bg-transparent-off ()
-  (interactive)
-  (progn
-    (set-frame-parameter (selected-frame) 'alpha '(100 85))
-    (add-to-list 'default-frame-alist '(alpha 100 85))))
-
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
  This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
-  ;; Font for Hangul/Korean
-  (when (eq system-type 'darwin)
-    (set-fontset-font t 'hangul (font-spec :name "NanumGothicCoding" :size 12)))
-
   ;; On OS X, remap left Command to Meta
   (setq mac-option-modifier 'meta
         mac-command-modifier 'meta
         mac-right-command-modifier 'super
         mac-function-modifier 'hyper)
+
+  ;; Font for Hangul/Korean
+  (when (eq system-type 'darwin)
+    (set-fontset-font t 'hangul (font-spec :name "NanumGothicCoding" :size 12)))
+
   ;; Scroll margin
   (setq-default scroll-margin 5)
+
   ;; Fullscreen
   (set-frame-parameter nil 'fullscreen 'fullboth)
+
   ;; Overwrite highlighted
   (delete-selection-mode t)
+
   ;; Remove trailing whitespace on save
   (add-to-list 'write-file-functions 'delete-trailing-whitespace)
+
   ;; Web browser
   (setq browse-url-browser-function 'browse-url-generic
         engine/browser-function 'browse-url-generic
         browse-url-generic-program "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
+
   ;; Powerline: current time
   (setq display-time-string-forms
         '((substring year -4)
@@ -412,12 +403,16 @@ layers configuration. You are free to put any user code."
           ":"
           minutes))
   (display-time-mode t)
+
   ;; Powerline: battery life
   (fancy-battery-mode t)
+
   ;; Powerline: separator style
   (setq powerline-default-separator nil)
+
   ;; Set kill ring max size
   (setq kill-ring-max 20)
+
   ;; No highlight on current line (on by default)
   (spacemacs/toggle-highlight-current-line-globally-off)
 
@@ -427,19 +422,23 @@ layers configuration. You are free to put any user code."
   ;; Package settings: ace-window
   (use-package ace-window
     :defer t)
+
   ;; Package settings: alchemist
   (use-package alchemist
     :bind (:map alchemist-iex-mode-map
                 ("C-l" . alchemist-iex-clear-buffer)))
+
   ;; Package settings: anzu
   (use-package anzu
     :init
     (global-anzu-mode))
+
   ;; Package settings: bm
   (use-package bm
     :bind (("C-M-;" . bm-toggle)
            ("C-M-," . bm-next)
            ("C-M-<" . bm-previous)))
+
   ;; Package settings: deft
   (use-package deft
     :defer t
@@ -457,6 +456,7 @@ layers configuration. You are free to put any user code."
           ("M-q" ibuffer-quit)))))
   (advice-add 'deft :after 'deft-filter-clear)
   (advice-add 'deft :after 'deft-refresh)
+
   ;; Package settings: emms
   (use-package emms
     :defer t
@@ -472,6 +472,7 @@ layers configuration. You are free to put any user code."
       (emms-mode-line-enable)
       (emms-playing-time-disable-display)
       (emms-mode-line-cycle 1)))
+
   ;; Package settings: elfeed
   (use-package elfeed
     :defer t
@@ -483,9 +484,13 @@ layers configuration. You are free to put any user code."
       (global-set-key [remap elfeed-goodies/show-ace-link] 'scroll-down-command)
       (global-set-key [remap elfeed-goodies/split-show-next] 'next-line)
       (global-set-key [remap elfeed-goodies/split-show-prev] 'previous-line)))
+
   ;; Package settings: ensime-mode
   (use-package ensime-mode
     :defer t
+    :bind (("C-c C-b b" . sbt-command)
+           ("C-c C-b i" . ensime-sbt-switch)
+           ("C-c C-d A" . ensime-db-attach))
     :config
     (progn
       (evil-leader/set-key-for-mode 'scala-mode
@@ -493,6 +498,7 @@ layers configuration. You are free to put any user code."
       ;; TODO: Define key bindings for ensime-forward-note and ensime-backward-note
       (global-set-key [remap ensime-forward-note] 'vi-style-c-e)
       (global-set-key [remap ensime-backward-note] 'vi-style-c-y)))
+
   ;; Package settings: eww
   (use-package eww
     :defer t
@@ -500,6 +506,7 @@ layers configuration. You are free to put any user code."
     (define-keys eww-mode-map
       '(("M-n" vi-style-c-e)
         ("M-p" vi-style-c-y))))
+
   ;; Package settings: go-mode
   (use-package go-mode
     :defer t
@@ -524,11 +531,13 @@ layers configuration. You are free to put any user code."
         "mjp" 'go-direx-pop-to-buffer
         "mjs" 'go-direx-switch-to-buffer
         "mE" 'go-errcheck-project)))
+
   ;; Package settings: helm-dash
   (use-package helm-dash
     :defer t
     :init
     (setq helm-dash-browser-func 'eww))
+
   ;; Package settings: jdee
   (use-package jdee
     :defer t
@@ -540,11 +549,13 @@ layers configuration. You are free to put any user code."
       (define-keys jdee-mode-map
         '(("M-." jdee-open-class-at-point)
           ("M-," pop-tag-mark)))))
+
   ;; Package settings: js2-mode
   (use-package js2-mode
     :defer t
     :init
     (setq-default js2-basic-offset 2))
+
   ;; Package settings: julia-mode
   (use-package julia-mode
     :defer t
@@ -555,6 +566,7 @@ layers configuration. You are free to put any user code."
         '(("C-c C-z" run-julia)
           ("C-c C-c" julia-shell-run-region-or-line)
           ("C-c C-s" julia-shell-save-and-go)))))
+
   ;; Package settings: mu4e
   (use-package mu4e
     :defer t
@@ -608,12 +620,15 @@ layers configuration. You are free to put any user code."
 
        ;; View content using w3m
        mu4e-html2text-command 'render-html-message)))
+
+  ;; Packge settings: markdown-mode
   (use-package markdown-mode
     :defer t
     :config
     (progn
       (global-set-key [remap markdown-next-link] 'vi-style-c-e)
       (global-set-key [remap markdown-previous-link] 'vi-style-c-y)))
+
   ;; Package settings: neotree
   (use-package neotree
     :defer t
@@ -625,12 +640,14 @@ layers configuration. You are free to put any user code."
       (define-keys neotree-mode-map
         '(("o" neotree-enter)))
       (global-set-key [f8] 'neotree-find)))
+
   ;; Package settings: org
   (use-package org
     :defer t
     :bind (:map org-mode-map
            ("C-c C-'" . org-todo)
            ("C-c C-/" . org-sparse-tree)))
+
   ;; Package settings: projectile
   (use-package projectile
     :defer t
@@ -642,6 +659,7 @@ layers configuration. You are free to put any user code."
               (when (neo-global--window-exists-p)
                 (neotree-find)
                 (other-window 1))))))
+
   ;; Package settings: python-mode
   (use-package python
     :defer t
@@ -655,6 +673,7 @@ layers configuration. You are free to put any user code."
         "mf" 'py-yapf-buffer)
       (global-set-key [remap anaconda-mode-find-assignments] 'anaconda-mode-go-back)
       (global-set-key [remap anaconda-mode-find-definitions] 'anaconda-mode-find-assignments)))
+
   ;; Package settings: smartparens
   (use-package smartparens
     :defer t
@@ -673,16 +692,19 @@ layers configuration. You are free to put any user code."
     :config
     (apply-fn-to-modes 'smartparens-strict-mode
                        sp--lisp-modes))
+
   ;; Package settings: yaml-mode
   (use-package yaml-mode
     :defer t
     :config
     (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode)))
+
   ;; Package settings: yasnippet
   (use-package yasnippet
     :defer t
     :init
     (setq yas-before-expand-snippet-hook nil))
+
   ;; Package settings: ztree-dir
   (use-package ztree-dir
     :defer t
@@ -717,11 +739,7 @@ layers configuration. You are free to put any user code."
              '(epa-mail-mode))
   ;; Hooks added: sbt
   (add-hooks 'sbt-mode-hook
-             '(scala-mode
-               smartparens-mode))
-
-  ;; Transparency on by default
-  (bg-transparent-on)
+             '(smartparens-mode))
 
   ;; Colorise compilation buffer
   (require 'ansi-color)
@@ -751,6 +769,12 @@ layers configuration. You are free to put any user code."
   (advice-add 'sr-speedbar-open :after (lambda ()
                                          (with-current-buffer sr-speedbar-buffer-name
                                            (setq window-size-fixed 'width))))
+  ;; FIXME: Interim workaround
+  (use-package sr-speedbar
+    :config
+    (progn
+      (advice-add 'persp-next :before 'sr-speedbar-close)
+      (advice-add 'persp-prev :before 'sr-speedbar-close)))
 
   ;; Keep the same font in new frames (OS X issue)
   (add-hook 'after-make-frame-functions '(lambda (frame) (set-frame-font "Source Code Pro-10" nil t)))
@@ -761,11 +785,18 @@ layers configuration. You are free to put any user code."
   ;; Use org-mode for encrypted org file
   (add-to-list 'auto-mode-alist '("\\.org.gpg\\'" . org-mode))
 
+  ;; Newsticker
+  (add-hook 'newsticker-mode-hook 'imenu-add-menubar-index)
+
   ;; Hydra settings for persp-mode
   (defhydra hydra-persp ()
     "persp-mode"
     ("n" persp-next)
     ("p" persp-prev))
+  (defhydra hydra-persp-2 ()
+    "persp-mode"
+    ("N" persp-next)
+    ("P" persp-prev))
 
   ;; Custom key bindings: global
   (define-keys global-map
@@ -777,7 +808,9 @@ layers configuration. You are free to put any user code."
       ("C-x M-'" switch-to-pprevious-buffer)
       ("C-x M-d" ztree-dir)
       ("C-x M-n" make-frame)
+      ("C-x N" hydra-persp-2/body)
       ("C-x O" previous-multiframe-window)
+      ("C-x P" hydra-persp-2/body)
       ("C-x \"" switch-to-pprevious-buffer)
       ("C-x \\" split-window-right-and-focus)
       ("C-x c" persp-add-new)
@@ -826,15 +859,17 @@ layers configuration. You are free to put any user code."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(beacon-blink-delay 0.2)
- '(beacon-blink-duration 0.3)
+ '(beacon-blink-delay 0.15)
+ '(beacon-blink-duration 0.15)
  '(beacon-blink-when-focused t)
  '(beacon-color "gray32")
  '(beacon-dont-blink-major-modes
    (quote
     (t magit-status-mode magit-popup-mode magit-log-mode magit-refs-mode magit-process-mode magit-diff-mode inf-ruby-mode gnus-summary-mode gnus-group-mode eshell-mode sbt-mode ensime-mode compilation-mode neotree-mode dired-mode fundamental-mode comint-mode spacemacs-buffer-mode Custom-mode help-mode twittering-mode elfeed-search-mode elfeed-show-mode eww-mode deft-mode org-mode calendar-mode paradox-menu-mode ibuffer-mode mu4e-view-mode mu4e-headers-mode dictionary-mode restclient-mode vc-annotate-mode ztree-mode text-mode speedbar-mode)))
  '(beacon-size 15)
- '(bookmark-save-flag 1 t)
+ '(blink-cursor-mode t)
+ '(bookmark-save-flag 1)
+ '(cursor-type (quote box))
  '(emms-cache-file "~/.spacemacs.d/emms/cache")
  '(emms-mode-line-cycle-max-width 13)
  '(emms-mode-line-cycle-use-icon-p t)
@@ -848,15 +883,15 @@ layers configuration. You are free to put any user code."
     ("gotype" "aligncheck" "ineffassign" "structcheck" "unconvert" "staticcheck" "gocyclo" "goconst" "dupl")))
  '(flycheck-javascript-standard-executable "standard")
  '(fzf/window-height 30)
- '(helm-bookmark-show-location t t)
+ '(helm-bookmark-show-location t)
  '(ivy-height 25)
  '(magit-log-arguments (quote ("-n256" "--graph" "--decorate" "--color")))
  '(mu4e-view-show-images t)
  '(neo-theme (quote ascii))
- '(neo-window-width 32 t)
+ '(neo-window-width 32)
  '(package-selected-packages
    (quote
-    (tern f scala-mode with-editor dash elfeed swiper stickyfunc-enhance srefactor minimap helm-gtags helm-cscope xcscope ggtags emoji-cheat-sheet-plus company-emoji bm yapfify org avy julia-mode emms company ivy w3m restclient persp-mode org-pomodoro org-plus-contrib mu4e-alert markdown-toc ein apropospriate-theme anzu cider clojure-mode sbt-mode flycheck helm helm-core yasnippet projectile magit magit-popup ztree zenburn-theme yaml-mode ws-butler window-numbering which-key websocket web-mode web-beautify volatile-highlights vmd-mode uuidgen utop use-package twittering-mode tuareg toc-org tagedit sr-speedbar sql-indent spacemacs-theme spaceline smeargle smartparens slim-mode shell-pop scss-mode sass-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe reveal-in-osx-finder restart-emacs rcirc-notify rcirc-color rbenv rake rainbow-mode rainbow-identifiers rainbow-delimiters queue quelpa pyvenv pytest pyenv-mode py-yapf puppet-mode pip-requirements pbcopy password-generator paradox osx-trash orgit org-projectile org-present org-download org-bullets open-junk-file ocp-indent ob-sml ob-http neotree mwim multi-term mu4e-maildirs-extension move-text mmm-mode merlin markdown-mode magit-gitflow macrostep lua-mode lorem-ipsum livid-mode live-py-mode linum-relative link-hint less-css-mode launchctl know-your-http-well julia-shell json-mode js2-refactor js-doc jdee jade-mode jabber info+ indent-guide ido-vertical-mode hy-mode hungry-delete htmlize ht howdoi hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-pydoc helm-pt helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-emms helm-descbinds helm-dash helm-css-scss helm-company helm-c-yasnippet helm-ag gruvbox-theme google-translate golden-ratio go-playground go-errcheck go-eldoc go-direx gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md fzf flycheck-pos-tip flycheck-mix flycheck-gometalinter flx-ido floobits fish-mode find-file-in-project fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil eshell-z eshell-prompt-extras esh-help ensime engine-mode emms-mode-line-cycle emmet-mode elisp-slime-nav elfeed-web elfeed-org elfeed-goodies diff-hl dictionary deft define-word dash-at-point dart-mode darktooth-theme cython-mode csv-mode company-web company-tern company-statistics company-shell company-quickhelp company-go company-anaconda column-enforce-mode color-identifiers-mode coffee-mode clojure-snippets clj-refactor clean-aindent-mode cl-generic cider-eval-sexp-fu chruby bundler browse-at-remote bind-map beacon base16-theme auto-yasnippet auto-highlight-symbol auto-compile alert alchemist aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell)))
+    (pcre2el spinner log4e gntp skewer-mode json-snatcher json-reformat multiple-cursors js2-mode fsm hydra parent-mode haml-mode gotest direx gitignore-mode fringe-helper git-gutter+ git-gutter git-commit flx goto-chg undo-tree eval-sexp-fu highlight simple-httpd ace-jump-mode noflet powerline popwin request diminish link connection web-completion-data dash-functional pos-tip go-mode inf-ruby bind-key seq packed anaconda-mode pythonic s elixir-mode pkg-info epl async auto-complete popup package-build tern f scala-mode with-editor dash elfeed swiper stickyfunc-enhance srefactor minimap helm-gtags helm-cscope xcscope ggtags emoji-cheat-sheet-plus company-emoji bm yapfify org avy julia-mode emms company ivy w3m restclient persp-mode org-pomodoro org-plus-contrib mu4e-alert markdown-toc ein apropospriate-theme anzu cider clojure-mode sbt-mode flycheck helm helm-core yasnippet projectile magit magit-popup ztree zenburn-theme yaml-mode ws-butler window-numbering which-key websocket web-mode web-beautify volatile-highlights vmd-mode uuidgen utop use-package twittering-mode tuareg toc-org tagedit sr-speedbar sql-indent spacemacs-theme spaceline smeargle smartparens slim-mode shell-pop scss-mode sass-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe reveal-in-osx-finder restart-emacs rcirc-notify rcirc-color rbenv rake rainbow-mode rainbow-identifiers rainbow-delimiters queue quelpa pyvenv pytest pyenv-mode py-yapf puppet-mode pip-requirements pbcopy password-generator paradox osx-trash orgit org-projectile org-present org-download org-bullets open-junk-file ocp-indent ob-sml ob-http neotree mwim multi-term mu4e-maildirs-extension move-text mmm-mode merlin markdown-mode magit-gitflow macrostep lua-mode lorem-ipsum livid-mode live-py-mode linum-relative link-hint less-css-mode launchctl know-your-http-well julia-shell json-mode js2-refactor js-doc jdee jade-mode jabber info+ indent-guide ido-vertical-mode hy-mode hungry-delete htmlize ht howdoi hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-pydoc helm-pt helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-emms helm-descbinds helm-dash helm-css-scss helm-company helm-c-yasnippet helm-ag gruvbox-theme google-translate golden-ratio go-playground go-errcheck go-eldoc go-direx gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md fzf flycheck-pos-tip flycheck-mix flycheck-gometalinter flx-ido floobits fish-mode find-file-in-project fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil eshell-z eshell-prompt-extras esh-help ensime engine-mode emms-mode-line-cycle emmet-mode elisp-slime-nav elfeed-web elfeed-org elfeed-goodies diff-hl dictionary deft define-word dash-at-point dart-mode darktooth-theme cython-mode csv-mode company-web company-tern company-statistics company-shell company-quickhelp company-go company-anaconda column-enforce-mode color-identifiers-mode coffee-mode clojure-snippets clj-refactor clean-aindent-mode cl-generic cider-eval-sexp-fu chruby bundler browse-at-remote bind-map beacon base16-theme auto-yasnippet auto-highlight-symbol auto-compile alert alchemist aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell)))
  '(paradox-github-token t)
  '(python-shell-interpreter "ipython" t)
  '(python-shell-virtualenv-path "~/pyvenv")
@@ -864,7 +899,6 @@ layers configuration. You are free to put any user code."
  '(speedbar-show-unknown-files t)
  '(speedbar-use-images nil)
  '(sr-speedbar-default-width 35)
- '(sr-speedbar-delete-windows nil)
  '(sr-speedbar-max-width 35)
  '(sr-speedbar-right-side nil)
  '(which-key-idle-delay 1.0))
