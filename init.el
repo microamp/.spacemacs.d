@@ -386,6 +386,9 @@ layers configuration. You are free to put any user code."
   ;; Remove trailing whitespace on save
   (add-to-list 'write-file-functions 'delete-trailing-whitespace)
 
+  ;; Split vertically by default
+  (setq split-width-threshold nil)
+
   ;; Web browser
   (setq browse-url-browser-function 'browse-url-generic
         engine/browser-function 'browse-url-generic
@@ -413,8 +416,8 @@ layers configuration. You are free to put any user code."
   ;; Set kill ring max size
   (setq kill-ring-max 20)
 
-  ;; No highlight on current line (on by default)
-  (spacemacs/toggle-highlight-current-line-globally-off)
+  ;; Highlight current line (on by default)
+  (spacemacs/toggle-highlight-current-line-globally-on)
 
   ;; Disable auto-save
   (setq auto-save-timeout nil)
@@ -717,6 +720,7 @@ layers configuration. You are free to put any user code."
   (add-hooks 'prog-mode-hook
              '(beacon-mode
                eldoc-mode
+               electric-pair-mode ;; NOTE: Is this needed?
                hl-todo-mode
                linum-mode
                rainbow-delimiters-mode
@@ -914,7 +918,7 @@ layers configuration. You are free to put any user code."
  '(aw-background-face ((t (:background "#2B303B" :foreground "#2B303B"))))
  '(aw-leading-char-face ((t (:foreground "#EFF1F5"))))
  '(beacon-fallback-background ((t (:background "white"))))
- '(bm-face ((t (:background "#8FA1B3" :foreground "#EFF1F5" :box nil :overline nil :underline nil))))
+ '(bm-face ((t (:inherit highlight))))
  '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
  '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil))))
  '(cursor ((t (:background "#96B5B4"))))
