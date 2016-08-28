@@ -57,7 +57,8 @@ values."
      (scala :variables
             scala-auto-insert-asterisk-in-comments t
             scala-auto-start-ensime t
-            scala-use-java-doc-style t)
+            scala-use-java-doc-style t
+            scala-use-unicode-arrows nil)
      search-engine
      (shell :variables
             shell-default-height 40
@@ -152,7 +153,7 @@ values."
    ;; directory. A string value must be a path to an image format supported
    ;; by your Emacs build.
    ;; If the value is nil then no banner is displayed. (default 'official)
-   dotspacemacs-startup-banner 'official
+   dotspacemacs-startup-banner nil
    ;; List of items to show in the startup buffer. If nil it is disabled.
    ;; Possible values are: `recents' `bookmarks' `projects'.
    ;; (default '(recents projects))
@@ -160,9 +161,9 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(base16-ocean-dark
+   dotspacemacs-themes '(base16-ocean
                          darktooth
-                         base16-ashes-dark
+                         base16-ashes
                          gruvbox
                          zenburn)
    ;; If non nil the cursor color matches the state color.
@@ -226,7 +227,7 @@ values."
    dotspacemacs-loading-progress-bar t
    ;; If non nil the frame is fullscreen when Emacs starts up. (default nil)
    ;; (Emacs 24.4+ only)
-   dotspacemacs-fullscreen-at-startup nil
+   dotspacemacs-fullscreen-at-startup t
    ;; If non nil `spacemacs/toggle-fullscreen' will not use native fullscreen.
    ;; Use to disable fullscreen animations in OSX. (default nil)
    dotspacemacs-fullscreen-use-non-native t
@@ -370,15 +371,11 @@ layers configuration. You are free to put any user code."
         mac-right-command-modifier 'super
         mac-function-modifier 'hyper)
 
-  ;; Font for Hangul/Korean
-  (when (eq system-type 'darwin)
-    (set-fontset-font t 'hangul (font-spec :name "NanumGothicCoding" :size 12)))
-
   ;; Scroll margin
   (setq-default scroll-margin 5)
 
   ;; Fullscreen
-  (set-frame-parameter nil 'fullscreen 'fullboth)
+  ;;(set-frame-parameter nil 'fullscreen 'fullboth)
 
   ;; Overwrite highlighted
   (delete-selection-mode t)
@@ -926,6 +923,7 @@ layers configuration. You are free to put any user code."
  '(elfeed-search-tag-face ((t (:foreground "#95C7AE"))))
  '(elfeed-search-title-face ((t (:foreground "#F3F4F5"))))
  '(elfeed-search-unread-title-face ((t (:foreground "#95AEC7" :weight bold))))
+ '(ensime-implicit-highlight ((t (:underline "#343d46"))))
  '(eval-sexp-fu-flash ((t (:background "#66999D" :foreground "#560E60" :weight bold))))
  '(face-of-god ((t (:background "#66999D" :foreground "#560E60" :box nil :inherit (quote mode-line)))))
  '(git-gutter+-added ((t (:foreground "#448844" :weight bold))))
