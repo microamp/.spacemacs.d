@@ -56,9 +56,7 @@ values."
      restclient
      (scala :variables
             scala-auto-insert-asterisk-in-comments t
-            scala-auto-start-ensime t
-            scala-use-java-doc-style t
-            scala-use-unicode-arrows nil)
+            scala-auto-start-ensime t)
      search-engine
      (shell :variables
             shell-default-height 40
@@ -251,7 +249,7 @@ values."
    dotspacemacs-smooth-scrolling t
    ;; If non-nil smartparens-strict-mode will be enabled in programming modes.
    ;; (default nil)
-   dotspacemacs-smartparens-strict-mode nil
+   dotspacemacs-smartparens-strict-mode t
    ;; Select a scope to highlight delimiters. Possible values are `any',
    ;; `current', `all' or `nil'. Default is `all' (highlight any scope and
    ;; emphasis the current one). (default 'all)
@@ -373,9 +371,6 @@ layers configuration. You are free to put any user code."
 
   ;; Scroll margin
   (setq-default scroll-margin 5)
-
-  ;; Fullscreen
-  ;;(set-frame-parameter nil 'fullscreen 'fullboth)
 
   ;; Overwrite highlighted
   (delete-selection-mode t)
@@ -688,10 +683,7 @@ layers configuration. You are free to put any user code."
                 ("C-M-n" . sp-next-sexp)
                 ("C-M-p" . sp-previous-sexp)
                 ("C-M-u" . sp-backward-up-sexp)
-                ("C-]" . sp-select-next-thing-exchange))
-    :config
-    (apply-fn-to-modes 'smartparens-strict-mode
-                       sp--lisp-modes))
+                ("C-]" . sp-select-next-thing-exchange)))
 
   ;; Package settings: yaml-mode
   (use-package yaml-mode
@@ -717,11 +709,13 @@ layers configuration. You are free to put any user code."
   (add-hooks 'prog-mode-hook
              '(beacon-mode
                eldoc-mode
-               electric-pair-mode ;; NOTE: Is this needed?
                hl-todo-mode
                linum-mode
                rainbow-delimiters-mode
                smartparens-mode))
+  ;; Hooks added: conf mode (unix)
+  (add-hooks 'conf-unix-mode
+             '(smartparens-mode))
   ;; Hooks added: auto-save
   (add-hooks 'auto-save-hook
              '(delete-trailing-whitespace))
