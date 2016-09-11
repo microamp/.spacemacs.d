@@ -64,7 +64,8 @@ values."
      shell-scripts
      sql
      syntax-checking
-     version-control)
+     version-control
+     yaml)
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages then consider to create a layer, you can also put the
@@ -98,7 +99,6 @@ values."
                                       sr-speedbar
                                       twittering-mode
                                       w3m
-                                      yaml-mode
                                       ztree)
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '(evil-anzu
@@ -684,12 +684,6 @@ layers configuration. You are free to put any user code."
                 ("C-M-p" . sp-previous-sexp)
                 ("C-M-u" . sp-backward-up-sexp)
                 ("C-]" . sp-select-next-thing-exchange)))
-
-  ;; Package settings: yaml-mode
-  (use-package yaml-mode
-    :defer t
-    :config
-    (add-to-list 'auto-mode-alist '("\\.yml$" . yaml-mode)))
 
   ;; Package settings: yasnippet
   (use-package yasnippet
