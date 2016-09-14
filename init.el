@@ -869,7 +869,7 @@ layers configuration. You are free to put any user code."
  '(flycheck-disabled-checkers nil)
  '(flycheck-gometalinter-disable-linters
    (quote
-    ("gotype" "aligncheck" "ineffassign" "structcheck" "unconvert" "staticcheck" "gocyclo" "goconst" "dupl")))
+    ("gotype" "aligncheck" "ineffassign" "structcheck" "unconvert" "staticcheck" "gocyclo" "goconst" "dupl" "varcheck" "errcheck")))
  '(flycheck-javascript-standard-executable "standard")
  '(fzf/window-height 30)
  '(helm-bookmark-show-location t)
