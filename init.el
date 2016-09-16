@@ -503,6 +503,13 @@ layers configuration. You are free to put any user code."
       '(("M-n" vi-style-c-e)
         ("M-p" vi-style-c-y))))
 
+  ;; Package settings: cc-mode
+  (use-package cc-mode
+    :defer t
+    :config
+    (progn
+      (add-hook 'before-save-hook 'clang-format-buffer)))
+
   ;; Package settings: go-mode
   (use-package go-mode
     :defer t
