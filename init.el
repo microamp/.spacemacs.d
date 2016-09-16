@@ -24,6 +24,7 @@ values."
      ;; ----------------------------------------------------------------
      auto-completion
      better-defaults
+     c-c++
      colors
      csv
      (dash :variables
@@ -370,7 +371,7 @@ layers configuration. You are free to put any user code."
         mac-function-modifier 'hyper)
 
   ;; Scroll margin
-  (setq-default scroll-margin 5)
+  (setq-default scroll-margin 0)
 
   ;; Overwrite highlighted
   (delete-selection-mode t)
@@ -765,9 +766,6 @@ layers configuration. You are free to put any user code."
       (advice-add 'persp-next :before 'sr-speedbar-close)
       (advice-add 'persp-prev :before 'sr-speedbar-close)))
 
-  ;; Keep the same font in new frames (OS X issue)
-  (add-hook 'after-make-frame-functions '(lambda (frame) (set-frame-font "Source Code Pro-10" nil t)))
-
   ;; DocView for PDF files
   (add-to-list 'auto-mode-alist '("\\.pdf\\'" . doc-view-mode))
 
@@ -804,6 +802,7 @@ layers configuration. You are free to put any user code."
       ("C-x \\" split-window-right-and-focus)
       ("C-x c" persp-add-new)
       ("C-x l" delete-other-windows)
+      ("C-x p" delete-window)
       ("C-x q" delete-window)
       ("C-x |" split-and-search-in-proj)
       ("M-SPC" spacemacs/shell-pop-eshell)
