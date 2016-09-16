@@ -59,6 +59,7 @@ values."
             scala-auto-insert-asterisk-in-comments t
             scala-auto-start-ensime t)
      search-engine
+     semantic
      (shell :variables
             shell-default-height 40
             shell-default-position 'bottom)
