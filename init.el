@@ -509,7 +509,10 @@ layers configuration. You are free to put any user code."
     :defer t
     :config
     (progn
-      (add-hook 'before-save-hook 'clang-format-buffer)))
+      (add-hook 'before-save-hook (lambda ()
+                                    (when (eq major-mode 'c-mode)
+                                      (clang-format-buffer))))
+      (global-set-key [remap xref-find-definitions] 'dumb-jump-go)))
 
   ;; Package settings: go-mode
   (use-package go-mode
