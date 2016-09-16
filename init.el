@@ -798,7 +798,8 @@ layers configuration. You are free to put any user code."
 
   ;; Custom key bindings: global
   (define-keys global-map
-    '(("C-c C-j" helm-semantic-or-imenu)
+    '(("C-M-<tab>" company-yasnippet)
+      ("C-c C-j" helm-semantic-or-imenu)
       ("C-x '" switch-to-previous-buffer)
       ("C-x -" split-window-below-and-focus)
       ("C-x C" persp-kill)
