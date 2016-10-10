@@ -521,11 +521,21 @@ layers configuration. You are free to put any user code."
                                       (clang-format-buffer))))
       (global-set-key [remap xref-find-definitions] 'dumb-jump-go)))
 
+  ;; Load godoctor manually
+  (add-to-list 'load-path "~/src/godoctor.el")
+
   ;; Package settings: go-mode
   (use-package go-mode
     :defer t
     :config
     (progn
+      (use-package godoctor
+        :config
+        (evil-leader/set-key-for-mode 'go-mode
+          "dd" 'godoctor-godoc
+          "de" 'godoctor-extract
+          "dr" 'godoctor-rename
+          "dt" 'godoctor-toggle))
       (require 'go-errcheck)
       (push '("^\*go-direx:"
               :regexp t
@@ -799,7 +809,7 @@ layers configuration. You are free to put any user code."
 
   ;; Load helm-rg manually
   (add-to-list 'load-path "~/src/helm-rg")
-  (load-library "helm-rg")
+  (require 'helm-rg)
 
   ;; Hydra settings for persp-mode
   (defhydra hydra-persp ()
