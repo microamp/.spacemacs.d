@@ -80,14 +80,17 @@ values."
                                       dart-mode
                                       deft
                                       dictionary
+                                      doom-themes
                                       emms
                                       emms-mode-line-cycle
                                       find-file-in-project
                                       floobits
+                                      focus
                                       fzf
                                       go-direx
                                       go-errcheck
                                       go-playground
+                                      godoctor
                                       gruvbox-theme
                                       helm-emms
                                       helm-pt
@@ -99,6 +102,7 @@ values."
                                       know-your-http-well
                                       magithub
                                       password-generator
+                                      sourcerer-theme
                                       sr-speedbar
                                       twittering-mode
                                       w3m
@@ -164,6 +168,7 @@ values."
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(base16-ocean
+                         sourcerer
                          darktooth
                          base16-ashes
                          gruvbox
@@ -456,8 +461,8 @@ layers configuration. You are free to put any user code."
         '(("C-g" ibuffer-quit)
           ("C-k" deft-filter-clear)
           ("M-q" ibuffer-quit)))))
-  (advice-add 'deft :after 'deft-filter-clear)
-  (advice-add 'deft :after 'deft-refresh)
+  (advice-add 'deft :after #'deft-filter-clear)
+  (advice-add 'deft :after #'deft-refresh)
 
   ;; Package settings: emms
   (use-package emms
@@ -520,9 +525,6 @@ layers configuration. You are free to put any user code."
                                     (when (eq major-mode 'c-mode)
                                       (clang-format-buffer))))
       (global-set-key [remap xref-find-definitions] 'dumb-jump-go)))
-
-  ;; Load godoctor manually
-  (add-to-list 'load-path "~/src/godoctor.el")
 
   ;; Package settings: go-mode
   (use-package go-mode
@@ -734,8 +736,8 @@ layers configuration. You are free to put any user code."
 
   ;; Hooks added: programming modes
   (add-hooks 'prog-mode-hook
-             '(beacon-mode
-               eldoc-mode
+             '(eldoc-mode
+               ;beacon
                hl-todo-mode
                linum-mode
                rainbow-delimiters-mode
@@ -774,29 +776,23 @@ layers configuration. You are free to put any user code."
 
   ;; Occupy entire frame
   (advice-add 'gh-md-render-buffer :after (apply-partially 'focus-then-maximise "*gh-md*"))
-  (advice-add 'helm-projectile-switch-project :after 'go-set-oracle-scope)
-  (advice-add 'magit-log-all :after 'delete-other-windows)
-  (advice-add 'magit-log-buffer-file :after 'delete-other-windows)
-  (advice-add 'magit-log-head :after 'delete-other-windows)
-  (advice-add 'magit-show-refs-head :after 'delete-other-windows)
-  (advice-add 'vc-annotate-current-buffer-head :after 'delete-other-windows)
+  (advice-add 'helm-projectile-switch-project :after #'go-set-oracle-scope)
+  (advice-add 'magit-log-all :after #'delete-other-windows)
+  (advice-add 'magit-log-buffer-file :after #'delete-other-windows)
+  (advice-add 'magit-log-head :after #'delete-other-windows)
+  (advice-add 'magit-show-refs-head :after #'delete-other-windows)
+  (advice-add 'vc-annotate-current-buffer-head :after #'delete-other-windows)
 
   ;; Move point to the beginning of the line before opening a new line
   (advice-add 'open-line :before 'beginning-of-line)
 
   ;; Make sure vertical windows are split evenly
-  (advice-add 'split-window-right :after 'balance-windows)
+  (advice-add 'split-window-right :after #'balance-windows)
 
   ;; Make sure the speedbar buffer's width stays the same
   (advice-add 'sr-speedbar-open :after (lambda ()
                                          (with-current-buffer sr-speedbar-buffer-name
                                            (setq window-size-fixed 'width))))
-  ;; FIXME: Interim workaround
-  (use-package sr-speedbar
-    :config
-    (progn
-      (advice-add 'persp-next :before 'sr-speedbar-close)
-      (advice-add 'persp-prev :before 'sr-speedbar-close)))
 
   ;; DocView for PDF files
   (add-to-list 'auto-mode-alist '("\\.pdf\\'" . doc-view-mode))
@@ -811,33 +807,30 @@ layers configuration. You are free to put any user code."
   (add-to-list 'load-path "~/src/helm-rg")
   (require 'helm-rg)
 
-  ;; Hydra settings for persp-mode
-  (defhydra hydra-persp ()
-    "persp-mode"
-    ("n" persp-next)
-    ("p" persp-prev))
-  (defhydra hydra-persp-2 ()
-    "persp-mode"
-    ("N" persp-next)
-    ("P" persp-prev))
+  ;; Hydra settings for eyebrowse-mode
+  (use-package eyebrowse-mode
+    :init (defhydra hydra-eyebrowse ()
+            "eyebrowse-mode"
+            ("." eyebrowse-switch-to-window-config)
+            ("n" eyebrowse-next-window-config)
+            ("p" eyebrowse-prev-window-config)))
 
   ;; Custom key bindings: global
   (define-keys global-map
     '(("C-M-<tab>" company-yasnippet)
+      ("C-c C-," dumb-jump-back)
+      ("C-c C-." dumb-jump-go)
       ("C-c C-j" helm-semantic-or-imenu)
       ("C-x '" switch-to-previous-buffer)
+      ("C-x ," eyebrowse-rename-window-config)
       ("C-x -" split-window-below-and-focus)
-      ("C-x C" persp-kill)
       ("C-x C-b" ibuffer-list-buffers)
       ("C-x M-'" switch-to-pprevious-buffer)
       ("C-x M-d" ztree-dir)
       ("C-x M-n" make-frame)
-      ("C-x N" hydra-persp-2/body)
       ("C-x O" previous-multiframe-window)
-      ("C-x P" hydra-persp-2/body)
       ("C-x \"" switch-to-pprevious-buffer)
       ("C-x \\" split-window-right-and-focus)
-      ("C-x c" persp-add-new)
       ("C-x k" kill-this-buffer)
       ("C-x l" delete-other-windows)
       ("C-x p" delete-window)
@@ -851,9 +844,9 @@ layers configuration. You are free to put any user code."
       ("RET" newline-and-indent)))
   ;; Custom key bindings: SPC shortcuts
   (spacemacs/set-leader-keys
+    "M-e" 'hydra-eyebrowse/body
     "M-f" 'helm-mini
     "M-m" 'avy-goto-word-or-subword-1
-    "M-p" 'hydra-persp/body
     "M-v" 'er/expand-region
     "ab" 'sr-speedbar-toggle
     "aC" 'calendar
@@ -869,7 +862,6 @@ layers configuration. You are free to put any user code."
     "gM" 'magit-show-refs-head
     "ga" 'vc-annotate-current-buffer-head
     "gw" 'browse-at-remote
-    "hP" 'spacemacs/helm-perspectives
     "hb" 'helm-filtered-bookmarks
     "hl" 'helm-resume
     "ho" 'helm-occur
@@ -900,7 +892,7 @@ layers configuration. You are free to put any user code."
     (t magit-status-mode magit-popup-mode magit-log-mode magit-refs-mode magit-process-mode magit-diff-mode inf-ruby-mode gnus-summary-mode gnus-group-mode eshell-mode sbt-mode ensime-mode compilation-mode neotree-mode dired-mode fundamental-mode comint-mode spacemacs-buffer-mode Custom-mode help-mode twittering-mode elfeed-search-mode elfeed-show-mode eww-mode deft-mode org-mode calendar-mode paradox-menu-mode ibuffer-mode mu4e-view-mode mu4e-headers-mode dictionary-mode restclient-mode vc-annotate-mode ztree-mode text-mode speedbar-mode)))
  '(beacon-size 15)
  '(blink-cursor-mode t)
- '(bookmark-save-flag 1)
+ '(bookmark-save-flag 1 t)
  '(cursor-type (quote box))
  '(emms-cache-file "~/.spacemacs.d/emms/cache")
  '(emms-mode-line-cycle-max-width 13)
@@ -913,19 +905,19 @@ layers configuration. You are free to put any user code."
  '(flycheck-disabled-checkers nil)
  '(flycheck-gometalinter-disable-linters
    (quote
-    ("gotype" "aligncheck" "ineffassign" "structcheck" "unconvert" "staticcheck" "gocyclo" "goconst" "dupl" "varcheck" "errcheck")))
+    ("gotype" "aligncheck" "ineffassign" "structcheck" "unconvert" "staticcheck" "gocyclo" "goconst" "dupl" "varcheck" "errcheck" "golint")))
  '(flycheck-javascript-standard-executable "standard")
  '(fzf/window-height 30)
- '(helm-bookmark-show-location t)
+ '(helm-bookmark-show-location t t)
  '(helm-rg-smart-case t)
  '(ivy-height 25)
  '(magit-log-arguments (quote ("-n256" "--graph" "--decorate" "--color")))
  '(mu4e-view-show-images t)
  '(neo-theme (quote ascii))
- '(neo-window-width 32)
+ '(neo-window-width 32 t)
  '(package-selected-packages
    (quote
-    (clang-format pug-mode hamburger-menu zone-nyan dumb-jump cmake-mode py-isort smyx-theme magithub pcre2el spinner log4e gntp skewer-mode json-snatcher json-reformat multiple-cursors js2-mode fsm hydra parent-mode haml-mode gotest direx gitignore-mode fringe-helper git-gutter+ git-gutter git-commit flx goto-chg undo-tree eval-sexp-fu highlight simple-httpd ace-jump-mode noflet powerline popwin request diminish link connection web-completion-data dash-functional pos-tip go-mode inf-ruby bind-key seq packed anaconda-mode pythonic s elixir-mode pkg-info epl async auto-complete popup package-build tern f scala-mode with-editor dash elfeed swiper stickyfunc-enhance srefactor minimap helm-gtags helm-cscope xcscope ggtags emoji-cheat-sheet-plus company-emoji bm yapfify org avy julia-mode emms company ivy w3m restclient persp-mode org-pomodoro org-plus-contrib mu4e-alert markdown-toc ein apropospriate-theme anzu cider clojure-mode sbt-mode flycheck helm helm-core yasnippet projectile magit magit-popup ztree zenburn-theme yaml-mode ws-butler window-numbering which-key websocket web-mode web-beautify volatile-highlights vmd-mode uuidgen utop use-package twittering-mode tuareg toc-org tagedit sr-speedbar sql-indent spacemacs-theme spaceline smeargle smartparens slim-mode shell-pop scss-mode sass-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe reveal-in-osx-finder restart-emacs rcirc-notify rcirc-color rbenv rake rainbow-mode rainbow-identifiers rainbow-delimiters queue quelpa pyvenv pytest pyenv-mode py-yapf puppet-mode pip-requirements pbcopy password-generator paradox osx-trash orgit org-projectile org-present org-download org-bullets open-junk-file ocp-indent ob-sml ob-http neotree mwim multi-term mu4e-maildirs-extension move-text mmm-mode merlin markdown-mode magit-gitflow macrostep lua-mode lorem-ipsum livid-mode live-py-mode linum-relative link-hint less-css-mode launchctl know-your-http-well julia-shell json-mode js2-refactor js-doc jdee jade-mode jabber info+ indent-guide ido-vertical-mode hy-mode hungry-delete htmlize ht howdoi hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-pydoc helm-pt helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-emms helm-descbinds helm-dash helm-css-scss helm-company helm-c-yasnippet helm-ag gruvbox-theme google-translate golden-ratio go-playground go-errcheck go-eldoc go-direx gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md fzf flycheck-pos-tip flycheck-mix flycheck-gometalinter flx-ido floobits fish-mode find-file-in-project fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil eshell-z eshell-prompt-extras esh-help ensime engine-mode emms-mode-line-cycle emmet-mode elisp-slime-nav elfeed-web elfeed-org elfeed-goodies diff-hl dictionary deft define-word dash-at-point dart-mode darktooth-theme cython-mode csv-mode company-web company-tern company-statistics company-shell company-quickhelp company-go company-anaconda column-enforce-mode color-identifiers-mode coffee-mode clojure-snippets clj-refactor clean-aindent-mode cl-generic cider-eval-sexp-fu chruby bundler browse-at-remote bind-map beacon base16-theme auto-yasnippet auto-highlight-symbol auto-compile alert alchemist aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell)))
+    (sourcerer-theme focus 2048-game doom-themes all-the-icons font-lock+ doom-dark-theme doom-theme minitest godoctor spotify helm-spotify multi clang-format pug-mode hamburger-menu zone-nyan dumb-jump cmake-mode py-isort smyx-theme magithub pcre2el spinner log4e gntp skewer-mode json-snatcher json-reformat multiple-cursors js2-mode fsm hydra parent-mode haml-mode gotest direx gitignore-mode fringe-helper git-gutter+ git-gutter git-commit flx goto-chg undo-tree eval-sexp-fu highlight simple-httpd ace-jump-mode noflet powerline popwin request diminish link connection web-completion-data dash-functional pos-tip go-mode inf-ruby bind-key seq packed anaconda-mode pythonic s elixir-mode pkg-info epl async auto-complete popup package-build tern f scala-mode with-editor dash elfeed swiper stickyfunc-enhance srefactor minimap helm-gtags helm-cscope xcscope ggtags emoji-cheat-sheet-plus company-emoji bm yapfify org avy julia-mode emms company ivy w3m restclient persp-mode org-pomodoro org-plus-contrib mu4e-alert markdown-toc ein apropospriate-theme anzu cider clojure-mode sbt-mode flycheck helm helm-core yasnippet projectile magit magit-popup ztree zenburn-theme yaml-mode ws-butler window-numbering which-key websocket web-mode web-beautify volatile-highlights vmd-mode uuidgen utop use-package twittering-mode tuareg toc-org tagedit sr-speedbar sql-indent spacemacs-theme spaceline smeargle smartparens slim-mode shell-pop scss-mode sass-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe reveal-in-osx-finder restart-emacs rcirc-notify rcirc-color rbenv rake rainbow-mode rainbow-identifiers rainbow-delimiters queue quelpa pyvenv pytest pyenv-mode py-yapf puppet-mode pip-requirements pbcopy password-generator paradox osx-trash orgit org-projectile org-present org-download org-bullets open-junk-file ocp-indent ob-sml ob-http neotree mwim multi-term mu4e-maildirs-extension move-text mmm-mode merlin markdown-mode magit-gitflow macrostep lua-mode lorem-ipsum livid-mode live-py-mode linum-relative link-hint less-css-mode launchctl know-your-http-well julia-shell json-mode js2-refactor js-doc jdee jade-mode jabber info+ indent-guide ido-vertical-mode hy-mode hungry-delete htmlize ht howdoi hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-pydoc helm-pt helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-emms helm-descbinds helm-dash helm-css-scss helm-company helm-c-yasnippet helm-ag gruvbox-theme google-translate golden-ratio go-playground go-errcheck go-eldoc go-direx gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md fzf flycheck-pos-tip flycheck-mix flycheck-gometalinter flx-ido floobits fish-mode find-file-in-project fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil eshell-z eshell-prompt-extras esh-help ensime engine-mode emms-mode-line-cycle emmet-mode elisp-slime-nav elfeed-web elfeed-org elfeed-goodies diff-hl dictionary deft define-word dash-at-point dart-mode darktooth-theme cython-mode csv-mode company-web company-tern company-statistics company-shell company-quickhelp company-go company-anaconda column-enforce-mode color-identifiers-mode coffee-mode clojure-snippets clj-refactor clean-aindent-mode cl-generic cider-eval-sexp-fu chruby bundler browse-at-remote bind-map beacon base16-theme auto-yasnippet auto-highlight-symbol auto-compile alert alchemist aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell)))
  '(paradox-github-token t)
  '(python-shell-interpreter "ipython" t)
  '(python-shell-virtualenv-path "~/pyvenv")
