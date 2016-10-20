@@ -103,7 +103,9 @@ values."
                                       magithub
                                       password-generator
                                       sourcerer-theme
+                                      gotham-theme
                                       sr-speedbar
+                                      tao-theme
                                       twittering-mode
                                       w3m
                                       zone-nyan
@@ -167,7 +169,9 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(base16-ocean
+   dotspacemacs-themes '(tao-yang
+                         base16-ocean
+                         gotham
                          sourcerer
                          darktooth
                          base16-ashes
@@ -892,12 +896,13 @@ layers configuration. You are free to put any user code."
     (t magit-status-mode magit-popup-mode magit-log-mode magit-refs-mode magit-process-mode magit-diff-mode inf-ruby-mode gnus-summary-mode gnus-group-mode eshell-mode sbt-mode ensime-mode compilation-mode neotree-mode dired-mode fundamental-mode comint-mode spacemacs-buffer-mode Custom-mode help-mode twittering-mode elfeed-search-mode elfeed-show-mode eww-mode deft-mode org-mode calendar-mode paradox-menu-mode ibuffer-mode mu4e-view-mode mu4e-headers-mode dictionary-mode restclient-mode vc-annotate-mode ztree-mode text-mode speedbar-mode)))
  '(beacon-size 15)
  '(blink-cursor-mode t)
- '(bookmark-save-flag 1 t)
+ '(bookmark-save-flag 1)
  '(cursor-type (quote box))
  '(emms-cache-file "~/.spacemacs.d/emms/cache")
  '(emms-mode-line-cycle-max-width 13)
  '(emms-mode-line-cycle-use-icon-p t)
  '(emms-stream-bookmarks-file "~/.spacemacs.d/emms/streams")
+ '(evil-want-Y-yank-to-eol nil)
  '(expand-region-smart-cursor t)
  '(flycheck-checkers
    (quote
@@ -908,16 +913,16 @@ layers configuration. You are free to put any user code."
     ("gotype" "aligncheck" "ineffassign" "structcheck" "unconvert" "staticcheck" "gocyclo" "goconst" "dupl" "varcheck" "errcheck" "golint")))
  '(flycheck-javascript-standard-executable "standard")
  '(fzf/window-height 30)
- '(helm-bookmark-show-location t t)
+ '(helm-bookmark-show-location t)
  '(helm-rg-smart-case t)
  '(ivy-height 25)
  '(magit-log-arguments (quote ("-n256" "--graph" "--decorate" "--color")))
  '(mu4e-view-show-images t)
  '(neo-theme (quote ascii))
- '(neo-window-width 32 t)
+ '(neo-window-width 32)
  '(package-selected-packages
    (quote
-    (sourcerer-theme focus 2048-game doom-themes all-the-icons font-lock+ doom-dark-theme doom-theme minitest godoctor spotify helm-spotify multi clang-format pug-mode hamburger-menu zone-nyan dumb-jump cmake-mode py-isort smyx-theme magithub pcre2el spinner log4e gntp skewer-mode json-snatcher json-reformat multiple-cursors js2-mode fsm hydra parent-mode haml-mode gotest direx gitignore-mode fringe-helper git-gutter+ git-gutter git-commit flx goto-chg undo-tree eval-sexp-fu highlight simple-httpd ace-jump-mode noflet powerline popwin request diminish link connection web-completion-data dash-functional pos-tip go-mode inf-ruby bind-key seq packed anaconda-mode pythonic s elixir-mode pkg-info epl async auto-complete popup package-build tern f scala-mode with-editor dash elfeed swiper stickyfunc-enhance srefactor minimap helm-gtags helm-cscope xcscope ggtags emoji-cheat-sheet-plus company-emoji bm yapfify org avy julia-mode emms company ivy w3m restclient persp-mode org-pomodoro org-plus-contrib mu4e-alert markdown-toc ein apropospriate-theme anzu cider clojure-mode sbt-mode flycheck helm helm-core yasnippet projectile magit magit-popup ztree zenburn-theme yaml-mode ws-butler window-numbering which-key websocket web-mode web-beautify volatile-highlights vmd-mode uuidgen utop use-package twittering-mode tuareg toc-org tagedit sr-speedbar sql-indent spacemacs-theme spaceline smeargle smartparens slim-mode shell-pop scss-mode sass-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe reveal-in-osx-finder restart-emacs rcirc-notify rcirc-color rbenv rake rainbow-mode rainbow-identifiers rainbow-delimiters queue quelpa pyvenv pytest pyenv-mode py-yapf puppet-mode pip-requirements pbcopy password-generator paradox osx-trash orgit org-projectile org-present org-download org-bullets open-junk-file ocp-indent ob-sml ob-http neotree mwim multi-term mu4e-maildirs-extension move-text mmm-mode merlin markdown-mode magit-gitflow macrostep lua-mode lorem-ipsum livid-mode live-py-mode linum-relative link-hint less-css-mode launchctl know-your-http-well julia-shell json-mode js2-refactor js-doc jdee jade-mode jabber info+ indent-guide ido-vertical-mode hy-mode hungry-delete htmlize ht howdoi hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-pydoc helm-pt helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-emms helm-descbinds helm-dash helm-css-scss helm-company helm-c-yasnippet helm-ag gruvbox-theme google-translate golden-ratio go-playground go-errcheck go-eldoc go-direx gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md fzf flycheck-pos-tip flycheck-mix flycheck-gometalinter flx-ido floobits fish-mode find-file-in-project fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil eshell-z eshell-prompt-extras esh-help ensime engine-mode emms-mode-line-cycle emmet-mode elisp-slime-nav elfeed-web elfeed-org elfeed-goodies diff-hl dictionary deft define-word dash-at-point dart-mode darktooth-theme cython-mode csv-mode company-web company-tern company-statistics company-shell company-quickhelp company-go company-anaconda column-enforce-mode color-identifiers-mode coffee-mode clojure-snippets clj-refactor clean-aindent-mode cl-generic cider-eval-sexp-fu chruby bundler browse-at-remote bind-map beacon base16-theme auto-yasnippet auto-highlight-symbol auto-compile alert alchemist aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell)))
+    (tao-yan-theme ob-elixir insert-shebang hide-comnt helm-purpose window-purpose imenu-list sourcerer-theme focus 2048-game doom-themes all-the-icons font-lock+ doom-dark-theme doom-theme minitest godoctor spotify helm-spotify multi clang-format pug-mode hamburger-menu zone-nyan dumb-jump cmake-mode py-isort smyx-theme magithub pcre2el spinner log4e gntp skewer-mode json-snatcher json-reformat multiple-cursors js2-mode fsm hydra parent-mode haml-mode gotest direx gitignore-mode fringe-helper git-gutter+ git-gutter git-commit flx goto-chg undo-tree eval-sexp-fu highlight simple-httpd ace-jump-mode noflet powerline popwin request diminish link connection web-completion-data dash-functional pos-tip go-mode inf-ruby bind-key seq packed anaconda-mode pythonic s elixir-mode pkg-info epl async auto-complete popup package-build tern f scala-mode with-editor dash elfeed swiper stickyfunc-enhance srefactor minimap helm-gtags helm-cscope xcscope ggtags emoji-cheat-sheet-plus company-emoji bm yapfify org avy julia-mode emms company ivy w3m restclient persp-mode org-pomodoro org-plus-contrib mu4e-alert markdown-toc ein apropospriate-theme anzu cider clojure-mode sbt-mode flycheck helm helm-core yasnippet projectile magit magit-popup ztree zenburn-theme yaml-mode ws-butler window-numbering which-key websocket web-mode web-beautify volatile-highlights vmd-mode uuidgen utop use-package twittering-mode tuareg toc-org tagedit sr-speedbar sql-indent spacemacs-theme spaceline smeargle smartparens slim-mode shell-pop scss-mode sass-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe reveal-in-osx-finder restart-emacs rcirc-notify rcirc-color rbenv rake rainbow-mode rainbow-identifiers rainbow-delimiters queue quelpa pyvenv pytest pyenv-mode py-yapf puppet-mode pip-requirements pbcopy password-generator paradox osx-trash orgit org-projectile org-present org-download org-bullets open-junk-file ocp-indent ob-sml ob-http neotree mwim multi-term mu4e-maildirs-extension move-text mmm-mode merlin markdown-mode magit-gitflow macrostep lua-mode lorem-ipsum livid-mode live-py-mode linum-relative link-hint less-css-mode launchctl know-your-http-well julia-shell json-mode js2-refactor js-doc jdee jade-mode jabber info+ indent-guide ido-vertical-mode hy-mode hungry-delete htmlize ht howdoi hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-pydoc helm-pt helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-emms helm-descbinds helm-dash helm-css-scss helm-company helm-c-yasnippet helm-ag gruvbox-theme google-translate golden-ratio go-playground go-errcheck go-eldoc go-direx gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md fzf flycheck-pos-tip flycheck-mix flycheck-gometalinter flx-ido floobits fish-mode find-file-in-project fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil eshell-z eshell-prompt-extras esh-help ensime engine-mode emms-mode-line-cycle emmet-mode elisp-slime-nav elfeed-web elfeed-org elfeed-goodies diff-hl dictionary deft define-word dash-at-point dart-mode darktooth-theme cython-mode csv-mode company-web company-tern company-statistics company-shell company-quickhelp company-go company-anaconda column-enforce-mode color-identifiers-mode coffee-mode clojure-snippets clj-refactor clean-aindent-mode cl-generic cider-eval-sexp-fu chruby bundler browse-at-remote bind-map beacon base16-theme auto-yasnippet auto-highlight-symbol auto-compile alert alchemist aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell)))
  '(paradox-github-token t)
  '(python-shell-interpreter "ipython" t)
  '(python-shell-virtualenv-path "~/pyvenv")
@@ -933,46 +938,7 @@ layers configuration. You are free to put any user code."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ahs-plugin-whole-buffer-face ((t (:background "#95AEC7" :foreground "#1C2023"))))
- '(anzu-mode-line ((t (:foreground "#B48EAD" :weight bold))))
- '(avy-lead-face ((t (:background "#AEC795" :foreground "#1C2023"))))
- '(avy-lead-face-0 ((t (:background "#95AEC7" :foreground "#1C2023"))))
  '(aw-background-face ((t (:background "#2B303B" :foreground "#2B303B"))))
  '(aw-leading-char-face ((t (:foreground "#EFF1F5"))))
- '(beacon-fallback-background ((t (:background "white"))))
- '(bm-face ((t (:inherit highlight))))
- '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
- '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil))))
- '(cursor ((t (:background "#96B5B4"))))
- '(elfeed-search-feed-face ((t (:foreground "#AEC795"))))
- '(elfeed-search-tag-face ((t (:foreground "#95C7AE"))))
- '(elfeed-search-title-face ((t (:foreground "#F3F4F5"))))
- '(elfeed-search-unread-title-face ((t (:foreground "#95AEC7" :weight bold))))
- '(ensime-implicit-highlight ((t (:underline "#343d46"))))
- '(eval-sexp-fu-flash ((t (:background "#66999D" :foreground "#560E60" :weight bold))))
  '(face-of-god ((t (:background "#66999D" :foreground "#560E60" :box nil :inherit (quote mode-line)))))
- '(git-gutter+-added ((t (:inherit magit-diffstat-added))))
- '(git-gutter+-deleted ((t (:inherit magit-diffstat-removed))))
- '(git-gutter+-modified ((t (:inherit magit-diff-base))))
- '(helm-bookmark-file ((t (:foreground "#96B5B4"))))
- '(helm-swoop-target-line-face ((t (:background "#AEC795" :foreground "#1C2023"))))
- '(helm-swoop-target-word-face ((t (:background "#95AEC7" :foreground "#1C2023"))))
- '(hi-black-b ((t (:background "#EFF1F5" :foreground "#2B303B" :weight bold))))
- '(hi-black-hb ((t (:background "DarkGray" :foreground "#2B303B"))))
- '(hi-blue ((t (:background "#8FA1B3" :foreground "#2B303B"))))
- '(hi-blue-b ((t (:background "#96B5B4" :foreground "#2B303B" :weight bold))))
- '(hi-green ((t (:background "#A3BE8C" :foreground "#2B303B"))))
- '(hi-green-b ((t (:foreground "PaleGreen1" :weight bold))))
- '(hi-red-b ((t (:background "#BF616A" :foreground "#2B303B" :weight bold))))
- '(hi-yellow ((t (:background "#EBCB8B" :foreground "#2B303B"))))
- '(highlight-indentation-face ((t (:background "gray22"))))
- '(mu4e-header-highlight-face ((t (:inherit region :weight bold))))
- '(neo-dir-link-face ((t (:foreground "#95C7AE"))))
- '(neo-vc-edited-face ((t (:foreground "#C7AE95"))))
- '(spacemacs-emacs-face ((t (:background "#8FA1B3" :foreground "#1D2021"))))
- '(spacemacs-hybrid-face ((t (:background "#A3BE8C" :foreground "#1D2021"))))
- '(speedbar-button-face ((t (:foreground "#A3BE8C"))))
- '(speedbar-directory-face ((t (:foreground "#96B5B4"))))
- '(speedbar-file-face ((t (:foreground "#EBCB8B"))))
- '(speedbar-selected-face ((t (:foreground "#BF616A" :underline t))))
- '(which-func ((t (:foreground "#BF616A")))))
+ '(org-level-1 ((t (:foreground "#080808" :height 1.0)))))
