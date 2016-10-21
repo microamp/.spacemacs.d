@@ -902,7 +902,7 @@ layers configuration. You are free to put any user code."
  '(emms-mode-line-cycle-max-width 13)
  '(emms-mode-line-cycle-use-icon-p t)
  '(emms-stream-bookmarks-file "~/.spacemacs.d/emms/streams")
- '(evil-want-Y-yank-to-eol nil)
+ '(evil-want-Y-yank-to-eol t)
  '(expand-region-smart-cursor t)
  '(flycheck-checkers
    (quote
@@ -910,7 +910,7 @@ layers configuration. You are free to put any user code."
  '(flycheck-disabled-checkers nil)
  '(flycheck-gometalinter-disable-linters
    (quote
-    ("gotype" "aligncheck" "ineffassign" "structcheck" "unconvert" "staticcheck" "gocyclo" "goconst" "dupl" "varcheck" "errcheck" "golint")))
+    ("gotype" "aligncheck" "ineffassign" "structcheck" "unconvert" "staticcheck" "gocyclo" "goconst" "varcheck" "errcheck")))
  '(flycheck-javascript-standard-executable "standard")
  '(fzf/window-height 30)
  '(helm-bookmark-show-location t)
@@ -938,7 +938,6 @@ layers configuration. You are free to put any user code."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(aw-background-face ((t (:background "#2B303B" :foreground "#2B303B"))))
- '(aw-leading-char-face ((t (:foreground "#EFF1F5"))))
- '(face-of-god ((t (:background "#66999D" :foreground "#560E60" :box nil :inherit (quote mode-line)))))
- '(org-level-1 ((t (:foreground "#080808" :height 1.0)))))
+ '(markdown-header-face-1 ((t (:inherit markdown-header-face :height 1.0))))
+ '(markdown-header-face-2 ((t (:inherit markdown-header-face :height 1.0))))
+ '(markdown-header-face-3 ((t (:inherit markdown-header-face :underline t :height 1.0)))))
