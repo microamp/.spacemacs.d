@@ -52,7 +52,8 @@ values."
      org
      osx
      puppet
-     python
+     (python :variables
+             python-enable-yapf-format-on-save t)
      rcirc
      restclient
      (scala :variables
@@ -91,7 +92,6 @@ values."
                                       go-errcheck
                                       go-playground
                                       godoctor
-                                      gruvbox-theme
                                       helm-emms
                                       helm-pt
                                       hl-todo
@@ -102,8 +102,7 @@ values."
                                       know-your-http-well
                                       magithub
                                       password-generator
-                                      sourcerer-theme
-                                      gotham-theme
+                                      smmry
                                       sr-speedbar
                                       tao-theme
                                       twittering-mode
@@ -170,13 +169,7 @@ values."
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(tao-yang
-                         base16-ocean
-                         gotham
-                         sourcerer
-                         darktooth
-                         base16-ashes
-                         gruvbox
-                         zenburn)
+                         base16-ocean)
    ;; If non nil the cursor color matches the state color.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
@@ -699,8 +692,6 @@ layers configuration. You are free to put any user code."
                 ("C-c C-j" . helm-semantic-or-imenu))
     :config
     (progn
-      (evil-leader/set-key-for-mode 'python-mode
-        "mf" 'py-yapf-buffer)
       (global-set-key [remap anaconda-mode-find-assignments] 'anaconda-mode-go-back)
       (global-set-key [remap anaconda-mode-find-definitions] 'anaconda-mode-find-assignments)))
 
@@ -855,6 +846,8 @@ layers configuration. You are free to put any user code."
     "ab" 'sr-speedbar-toggle
     "aC" 'calendar
     "aD" 'dictionary
+    "aSu" 'smmry-by-url
+    "aSr" 'smmry-by-region
     "ameh" 'helm-emms
     "amep" 'emms-start
     "ames" 'emms-stop
@@ -904,9 +897,6 @@ layers configuration. You are free to put any user code."
  '(emms-stream-bookmarks-file "~/.spacemacs.d/emms/streams")
  '(evil-want-Y-yank-to-eol t)
  '(expand-region-smart-cursor t)
- '(flycheck-checkers
-   (quote
-    (gometalinter ada-gnat asciidoc c/c++-clang c/c++-gcc c/c++-cppcheck cfengine chef-foodcritic coffee coffee-coffeelint coq css-csslint d-dmd emacs-lisp emacs-lisp-checkdoc erlang eruby-erubis fortran-gfortran go-gofmt go-build go-test groovy haml handlebars haskell-stack-ghc haskell-ghc haskell-hlint html-tidy jade javascript-standard json-jsonlint json-python-json less luacheck lua perl perl-perlcritic php php-phpmd php-phpcs processing puppet-parser puppet-lint python-flake8 python-pylint python-pycompile r-lintr racket rpm-rpmlint markdown-mdl rst-sphinx rst ruby-rubocop ruby-rubylint ruby ruby-jruby rust-cargo rust sass scala scala-scalastyle scss-lint scss sh-bash sh-posix-dash sh-posix-bash sh-zsh sh-shellcheck slim sql-sqlint tex-chktex tex-lacheck texinfo verilog-verilator xml-xmlstarlet xml-xmllint yaml-jsyaml yaml-ruby)))
  '(flycheck-disabled-checkers nil)
  '(flycheck-gometalinter-disable-linters
    (quote
@@ -922,7 +912,7 @@ layers configuration. You are free to put any user code."
  '(neo-window-width 32)
  '(package-selected-packages
    (quote
-    (tao-yan-theme ob-elixir insert-shebang hide-comnt helm-purpose window-purpose imenu-list sourcerer-theme focus 2048-game doom-themes all-the-icons font-lock+ doom-dark-theme doom-theme minitest godoctor spotify helm-spotify multi clang-format pug-mode hamburger-menu zone-nyan dumb-jump cmake-mode py-isort smyx-theme magithub pcre2el spinner log4e gntp skewer-mode json-snatcher json-reformat multiple-cursors js2-mode fsm hydra parent-mode haml-mode gotest direx gitignore-mode fringe-helper git-gutter+ git-gutter git-commit flx goto-chg undo-tree eval-sexp-fu highlight simple-httpd ace-jump-mode noflet powerline popwin request diminish link connection web-completion-data dash-functional pos-tip go-mode inf-ruby bind-key seq packed anaconda-mode pythonic s elixir-mode pkg-info epl async auto-complete popup package-build tern f scala-mode with-editor dash elfeed swiper stickyfunc-enhance srefactor minimap helm-gtags helm-cscope xcscope ggtags emoji-cheat-sheet-plus company-emoji bm yapfify org avy julia-mode emms company ivy w3m restclient persp-mode org-pomodoro org-plus-contrib mu4e-alert markdown-toc ein apropospriate-theme anzu cider clojure-mode sbt-mode flycheck helm helm-core yasnippet projectile magit magit-popup ztree zenburn-theme yaml-mode ws-butler window-numbering which-key websocket web-mode web-beautify volatile-highlights vmd-mode uuidgen utop use-package twittering-mode tuareg toc-org tagedit sr-speedbar sql-indent spacemacs-theme spaceline smeargle smartparens slim-mode shell-pop scss-mode sass-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe reveal-in-osx-finder restart-emacs rcirc-notify rcirc-color rbenv rake rainbow-mode rainbow-identifiers rainbow-delimiters queue quelpa pyvenv pytest pyenv-mode py-yapf puppet-mode pip-requirements pbcopy password-generator paradox osx-trash orgit org-projectile org-present org-download org-bullets open-junk-file ocp-indent ob-sml ob-http neotree mwim multi-term mu4e-maildirs-extension move-text mmm-mode merlin markdown-mode magit-gitflow macrostep lua-mode lorem-ipsum livid-mode live-py-mode linum-relative link-hint less-css-mode launchctl know-your-http-well julia-shell json-mode js2-refactor js-doc jdee jade-mode jabber info+ indent-guide ido-vertical-mode hy-mode hungry-delete htmlize ht howdoi hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-pydoc helm-pt helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-emms helm-descbinds helm-dash helm-css-scss helm-company helm-c-yasnippet helm-ag gruvbox-theme google-translate golden-ratio go-playground go-errcheck go-eldoc go-direx gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md fzf flycheck-pos-tip flycheck-mix flycheck-gometalinter flx-ido floobits fish-mode find-file-in-project fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil eshell-z eshell-prompt-extras esh-help ensime engine-mode emms-mode-line-cycle emmet-mode elisp-slime-nav elfeed-web elfeed-org elfeed-goodies diff-hl dictionary deft define-word dash-at-point dart-mode darktooth-theme cython-mode csv-mode company-web company-tern company-statistics company-shell company-quickhelp company-go company-anaconda column-enforce-mode color-identifiers-mode coffee-mode clojure-snippets clj-refactor clean-aindent-mode cl-generic cider-eval-sexp-fu chruby bundler browse-at-remote bind-map beacon base16-theme auto-yasnippet auto-highlight-symbol auto-compile alert alchemist aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell)))
+    (websocket flycheck helm go-mode yasnippet ivy multiple-cursors smmry elfeed helm-core magit paradox ztree zone-nyan yapfify yaml-mode ws-butler window-numbering which-key web-mode web-beautify w3m volatile-highlights vmd-mode uuidgen use-package twittering-mode toc-org tao-theme tagedit stickyfunc-enhance srefactor sr-speedbar sql-indent spinner spacemacs-theme spaceline sourcerer-theme smeargle smartparens slim-mode shell-pop scss-mode sass-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe reveal-in-osx-finder restclient restart-emacs rcirc-notify rcirc-color rbenv rake rainbow-mode rainbow-identifiers rainbow-delimiters quelpa pyvenv pytest pyenv-mode py-isort puppet-mode pug-mode pip-requirements persp-mode pbcopy password-generator osx-trash osx-dictionary orgit org-projectile org-present org-pomodoro org-plus-contrib org-download org-bullets open-junk-file ob-http ob-elixir neotree mwim multi-term mu4e-maildirs-extension mu4e-alert move-text mmm-mode minitest markdown-toc magithub magit-gitflow macrostep lua-mode lorem-ipsum livid-mode live-py-mode linum-relative link-hint less-css-mode launchctl know-your-http-well julia-shell json-mode js2-refactor js-doc jdee jabber insert-shebang info+ indent-guide ido-vertical-mode hydra hy-mode hungry-delete htmlize howdoi hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-pydoc helm-purpose helm-pt helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-emms helm-descbinds helm-dash helm-css-scss helm-company helm-c-yasnippet helm-ag gruvbox-theme gotham-theme google-translate golden-ratio godoctor go-playground go-errcheck go-eldoc go-direx gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md fzf focus flycheck-pos-tip flycheck-mix flycheck-gometalinter flx-ido floobits fish-mode find-file-in-project fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil eval-sexp-fu eshell-z eshell-prompt-extras esh-help ensime engine-mode emms-mode-line-cycle emmet-mode elisp-slime-nav elfeed-web elfeed-org elfeed-goodies ein dumb-jump doom-themes disaster diff-hl dictionary deft dash-at-point dart-mode cython-mode csv-mode company-web company-tern company-statistics company-shell company-go company-c-headers company-anaconda column-enforce-mode color-identifiers-mode coffee-mode cmake-mode clean-aindent-mode clang-format chruby bundler browse-at-remote bm bind-map beacon base16-theme auto-yasnippet auto-highlight-symbol auto-compile anzu alchemist aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell)))
  '(paradox-github-token t)
  '(python-shell-interpreter "ipython" t)
  '(python-shell-virtualenv-path "~/pyvenv")
@@ -938,6 +928,12 @@ layers configuration. You are free to put any user code."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(hi-black-b ((t (:box (:line-width 2 :color "grey75" :style released-button) :weight extra-bold))))
+ '(hi-black-hb ((t (:foreground "SlateGray4"))))
+ '(hi-green-b ((t (:foreground "dark green" :weight bold))))
  '(markdown-header-face-1 ((t (:inherit markdown-header-face :height 1.0))))
  '(markdown-header-face-2 ((t (:inherit markdown-header-face :height 1.0))))
- '(markdown-header-face-3 ((t (:inherit markdown-header-face :underline t :height 1.0)))))
+ '(markdown-header-face-3 ((t (:inherit markdown-header-face :underline t :height 1.0))))
+ '(org-level-1 ((t (:height 1.0))))
+ '(org-level-2 ((t (:height 1.0))))
+ '(org-level-3 ((t (:height 1.0)))))
