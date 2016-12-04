@@ -527,6 +527,13 @@ layers configuration. You are free to put any user code."
       (global-set-key [remap ensime-forward-note] 'vi-style-c-e)
       (global-set-key [remap ensime-backward-note] 'vi-style-c-y)))
 
+  ;; Package settings: w3m
+  (use-package w3m
+    :defer t
+    :config
+    (progn
+      (global-set-key [remap w3m-copy-buffer] 'vi-style-c-e)))
+
   ;; Package settings: eww
   (use-package eww
     :defer t
