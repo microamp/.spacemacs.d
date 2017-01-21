@@ -257,7 +257,7 @@ values."
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's active or selected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
-   dotspacemacs-active-transparency 65
+   dotspacemacs-active-transparency 40
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's inactive or deselected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
@@ -1014,95 +1014,13 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ansi-term-color-vector
-   [unspecified "#131513" "#e6193c" "#29a329" "#98981b" "#3d62f5" "#ad2bee" "#3d62f5" "#8ca68c"] t)
- '(beacon-blink-delay 0.15)
- '(beacon-blink-duration 0.15)
- '(beacon-blink-when-focused t)
- '(beacon-dont-blink-major-modes
-   (quote
-    (t magit-status-mode magit-popup-mode magit-log-mode magit-refs-mode magit-process-mode magit-diff-mode inf-ruby-mode gnus-summary-mode gnus-group-mode eshell-mode sbt-mode ensime-mode compilation-mode neotree-mode dired-mode fundamental-mode comint-mode spacemacs-buffer-mode Custom-mode help-mode twittering-mode elfeed-search-mode elfeed-show-mode eww-mode deft-mode org-mode calendar-mode paradox-menu-mode ibuffer-mode mu4e-view-mode mu4e-headers-mode dictionary-mode restclient-mode vc-annotate-mode ztree-mode text-mode speedbar-mode)))
- '(beacon-size 15)
- '(blink-cursor-mode t)
- '(bookmark-save-flag 1)
- '(cursor-type (quote box))
- '(emms-cache-file "~/.spacemacs.d/emms/cache")
- '(emms-mode-line-cycle-max-width 13)
- '(emms-mode-line-cycle-use-icon-p t)
- '(emms-stream-bookmarks-file "~/.spacemacs.d/emms/streams")
- '(evil-want-Y-yank-to-eol t)
- '(expand-region-smart-cursor nil)
- '(fill-column 100)
- '(flycheck-disabled-checkers nil)
- '(flycheck-gometalinter-disable-linters
-   (quote
-    ("gotype" "aligncheck" "ineffassign" "structcheck" "unconvert" "staticcheck" "gocyclo" "goconst" "varcheck" "errcheck" "golint")))
- '(flycheck-javascript-standard-executable "standard")
- '(fzf/window-height 30)
- '(global-spacemacs-leader-override-mode t)
- '(helm-ag-show-status-function (quote spaceline--helm-ag-update) t)
- '(helm-always-two-windows t)
- '(helm-bookmark-show-location t)
- '(helm-descbinds-mode t)
- '(helm-descbinds-window-style (quote split))
- '(helm-display-function (quote spacemacs//display-helm-window))
- '(helm-display-header-line nil)
- '(helm-echo-input-in-header-line t)
- '(helm-flx-for-helm-find-files nil)
- '(helm-flx-mode t)
- '(helm-fuzzy-matching-highlight-fn (quote helm-flx-fuzzy-highlight-match))
- '(helm-fuzzy-sort-fn (quote helm-flx-fuzzy-matching-sort))
- '(helm-imenu-execute-action-at-once-if-one nil t)
- '(helm-locate-command "mdfind -name %s %s")
- '(helm-mode t)
- '(helm-rg-smart-case t)
- '(helm-split-window-in-side-p t)
- '(ivy-height 25)
- '(magit-log-arguments (quote ("-n256" "--graph" "--decorate" "--color")))
- '(mu4e-view-show-images t)
- '(neo-theme (quote ascii))
- '(neo-window-width 32 t)
  '(package-selected-packages
    (quote
-    (adoc-mode markup-faces spotify helm-spotify multi skewer-mode powerline anaconda-mode pcre2el request spacemacs-theme-dark-theme spaemacs-theme-dark-theme hydra js2-mode spinner railscasts-reloaded-theme websocket company go-mode sbt-mode yasnippet with-editor memoize ivy emms git-commit speed-type restclient-helm ob-restclient company-restclient punpun-light-theme org highlight flycheck projectile helm-core window-purpose imenu-list zenburn-theme all-the-icons dash pcache git-gutter helm magit async ztree zone-nyan yapfify yaml-mode ws-butler window-numbering which-key web-mode web-beautify w3m volatile-highlights vmd-mode uuidgen use-package twittering-mode toc-org tao-theme tagedit stickyfunc-enhance srefactor sr-speedbar sql-indent spacemacs-theme spaceline smmry smeargle smartparens slim-mode shell-pop seoul256-theme scss-mode sass-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe reveal-in-osx-finder restclient restart-emacs rcirc-notify rcirc-color rbenv rake rainbow-mode rainbow-identifiers rainbow-delimiters quelpa pyvenv pytest pyenv-mode py-isort puppet-mode punpun-theme pug-mode pip-requirements persp-mode pbcopy password-generator paradox osx-trash osx-dictionary orgit org-projectile org-present org-pomodoro org-plus-contrib org-download org-bullets open-junk-file ob-http ob-elixir neotree mwim multi-term mu4e-maildirs-extension mu4e-alert move-text mmm-mode minitest markdown-toc magithub magit-gitflow macrostep lua-mode lorem-ipsum livid-mode live-py-mode linum-relative link-hint less-css-mode launchctl labburn-theme know-your-http-well julia-shell json-mode js2-refactor js-doc jdee jabber insert-shebang info+ indent-guide ido-vertical-mode hy-mode hungry-delete htmlize howdoi hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-pydoc helm-purpose helm-pt helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-emms helm-descbinds helm-dash helm-css-scss helm-company helm-c-yasnippet helm-ag google-translate golden-ratio godoctor go-playground go-guru go-errcheck go-eldoc go-direx gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md fzf focus flycheck-pos-tip flycheck-mix flycheck-gometalinter flx-ido floobits fish-mode find-file-in-project fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil eval-sexp-fu eshell-z eshell-prompt-extras esh-help ensime engine-mode emms-mode-line-cycle emmet-mode elisp-slime-nav elfeed-web elfeed-org elfeed-goodies ein dumb-jump doom-themes disaster diff-hl dictionary deft dash-at-point dart-mode cython-mode csv-mode company-web company-tern company-statistics company-shell company-go company-c-headers company-anaconda column-enforce-mode color-identifiers-mode coffee-mode cmake-mode clean-aindent-mode clang-format chruby bundler browse-at-remote bm bind-map beacon base16-theme auto-yasnippet auto-highlight-symbol auto-compile anzu alchemist aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell)))
- '(paradox-github-token t)
- '(python-shell-interpreter "ipython" t)
- '(python-shell-virtualenv-path "~/pyvenv")
- '(python-shell-virtualenv-root "~/pyvenv")
- '(rainbow-identifiers-choose-face-function (quote rainbow-identifiers-cie-l*a*b*-choose-face) t)
- '(rainbow-identifiers-cie-l*a*b*-color-count 1024 t)
- '(rainbow-identifiers-cie-l*a*b*-lightness 80 t)
- '(rainbow-identifiers-cie-l*a*b*-saturation 25 t)
- '(spaceline-helm-mode t)
- '(speedbar-show-unknown-files t)
- '(speedbar-use-images nil)
- '(sr-speedbar-default-width 35)
- '(sr-speedbar-max-width 35)
- '(sr-speedbar-right-side nil)
- '(vc-annotate-very-old-color nil)
- '(which-key-idle-delay 1.0))
+    (vi-tilde-fringe evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu define-word ztree zone-nyan zenburn-theme yapfify yaml-mode ws-butler winum which-key web-mode web-beautify w3m volatile-highlights vmd-mode uuidgen use-package unfill twittering-mode toc-org tao-theme tagedit stickyfunc-enhance srefactor sr-speedbar sql-indent spacemacs-theme spaceline smmry smeargle smartparens slim-mode shell-pop seoul256-theme scss-mode sass-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe reveal-in-osx-finder restclient-helm restart-emacs rcirc-notify rcirc-color rbenv rake rainbow-mode rainbow-identifiers rainbow-delimiters quelpa pyvenv pytest pyenv-mode py-isort puppet-mode punpun-theme pug-mode pip-requirements persp-mode pbcopy password-generator paradox osx-trash osx-dictionary orgit org-projectile org-present org-pomodoro org-plus-contrib org-download org-bullets open-junk-file ob-restclient ob-http ob-elixir neotree mwim multi-term mu4e-maildirs-extension mu4e-alert move-text mmm-mode minitest markdown-toc magithub magit-gitflow macrostep lua-mode lorem-ipsum livid-mode live-py-mode linum-relative link-hint less-css-mode launchctl labburn-theme julia-shell json-mode js2-refactor js-doc jdee jabber insert-shebang info+ indent-guide ido-vertical-mode hy-mode hungry-delete htmlize howdoi hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-pydoc helm-purpose helm-pt helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-emms helm-descbinds helm-dash helm-css-scss helm-company helm-c-yasnippet helm-ag google-translate golden-ratio godoctor go-playground go-guru go-errcheck go-eldoc go-direx gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md fzf focus flycheck-pos-tip flycheck-mix flycheck-gometalinter flx-ido floobits fish-mode find-file-in-project fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil eval-sexp-fu eshell-z eshell-prompt-extras esh-help ensime engine-mode emms-mode-line-cycle emmet-mode elisp-slime-nav elfeed-web elfeed-org elfeed-goodies ein dumb-jump doom-themes disaster diff-hl dictionary deft dash-at-point dart-mode cython-mode csv-mode creamsody-theme company-web company-tern company-statistics company-shell company-restclient company-go company-c-headers company-anaconda column-enforce-mode color-identifiers-mode coffee-mode cmake-mode clean-aindent-mode clang-format chruby bundler browse-at-remote bm bind-map beacon base16-theme auto-yasnippet auto-highlight-symbol auto-compile anzu alchemist aggressive-indent adoc-mode adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(fancy-battery-charging ((t (:inherit font-lock-keyword-face))))
- '(fancy-battery-critical ((t (:inherit font-lock-builtin-face))))
- '(fancy-battery-discharging ((t (:inherit font-lock-variable-name-face))))
- '(hi-black-b ((t (:box (:line-width 2 :color "grey75" :style released-button) :weight extra-bold))))
- '(hi-black-hb ((t (:foreground "SlateGray4"))))
- '(hi-green-b ((t (:foreground "dark green" :weight bold))))
- '(linum ((t (:height 1.0))))
- '(markdown-header-face-1 ((t (:inherit markdown-header-face :height 1.0))))
- '(markdown-header-face-2 ((t (:inherit markdown-header-face :height 1.0))))
- '(markdown-header-face-3 ((t (:inherit markdown-header-face :underline t :height 1.0))))
- '(markdown-pre-face ((t (:height 1.0))))
- '(org-level-1 ((t (:height 1.0))))
- '(org-level-2 ((t (:height 1.0))))
- '(org-level-3 ((t (:height 1.0))))
- '(speedbar-button-face ((t (:inherit font-lock-string-face))))
- '(speedbar-directory-face ((t (:inherit font-lock-function-face))))
- '(speedbar-file-face ((t (:inherit font-lock-keyword-face))))
- '(speedbar-selected-face ((t (:inherit font-lock-type-face))))
- '(which-func ((t (:inherit font-lock-string-face)))))
+ )
 )
