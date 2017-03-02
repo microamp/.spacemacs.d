@@ -99,6 +99,7 @@ values."
                                       go-playground
                                       godoctor
                                       groovy-mode
+                                      helm-aws
                                       helm-emms
                                       helm-pt
                                       hl-todo
@@ -889,6 +890,7 @@ layers configuration. You are free to put any user code."
     "gM" 'magit-show-refs-head
     "ga" 'vc-annotate-current-buffer-head
     "gw" 'browse-at-remote
+    "ha" 'helm-aws
     "hb" 'helm-filtered-bookmarks
     "hl" 'helm-resume
     "ho" 'helm-occur
