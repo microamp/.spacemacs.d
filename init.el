@@ -98,6 +98,7 @@ values."
                                       go-errcheck
                                       go-playground
                                       godoctor
+                                      groovy-mode
                                       helm-emms
                                       helm-pt
                                       hl-todo
@@ -607,7 +608,8 @@ layers configuration. You are free to put any user code."
   (use-package js2-mode
     :defer t
     :init
-    (setq-default js2-basic-offset 2))
+    (setq-default js2-basic-offset 2)
+    (setq-default js2-indent-level 2))
 
   ;; Package settings: julia-mode
   (use-package julia-mode
@@ -779,7 +781,6 @@ layers configuration. You are free to put any user code."
   ;; Hooks added: Python mode
   (add-hooks 'python-mode-hook
              '(fci-mode
-               highlight-indentation-mode
                which-function-mode))
   ;; Hooks added: mu4e with gpg
   (add-hooks 'mu4e-compose-mode-hook
@@ -830,10 +831,6 @@ layers configuration. You are free to put any user code."
 
   ;; Newsticker
   (add-hook 'newsticker-mode-hook 'imenu-add-menubar-index)
-
-  ;; Load helm-rg manually
-  (add-to-list 'load-path "~/src/helm-rg")
-  (require 'helm-rg)
 
   ;; Hydra settings for eyebrowse-mode
   (use-package eyebrowse-mode
@@ -902,8 +899,6 @@ layers configuration. You are free to put any user code."
     "psR" 'helm-projectile-rg
     "pu" 'projectile-run-project
     "sq" 'howdoi-query
-    "sr" 'helm-rg-at-point
-    "sR" 'helm-rg
     ",cm" 'mc/mark-all-like-this))
 
 ;; Do not write anything past this comment. This is where Emacs will
