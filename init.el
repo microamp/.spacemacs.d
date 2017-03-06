@@ -701,8 +701,10 @@ layers configuration. You are free to put any user code."
   (use-package org
     :defer t
     :bind (:map org-mode-map
-           ("C-c C-'" . org-todo)
-           ("C-c C-/" . org-sparse-tree)))
+                ("C-c i" . org-clock-in)
+                ("C-c o" . org-clock-out)
+                ("C-c C-'" . org-todo)
+                ("C-c C-/" . org-sparse-tree)))
 
   ;; Package settings: projectile
   (use-package projectile
