@@ -105,6 +105,7 @@ values."
                                       hl-todo
                                       howdoi
                                       jdee
+                                      jinja2-mode
                                       julia-mode
                                       julia-shell
                                       know-your-http-well
@@ -115,6 +116,7 @@ values."
                                       seoul256-theme
                                       smmry
                                       sr-speedbar
+                                      syslog-mode
                                       tao-theme
                                       twittering-mode
                                       w3m
@@ -180,10 +182,10 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(base16-ocean
+   dotspacemacs-themes '(seoul256
+                         base16-ocean
                          spacemacs-dark
                          base16-grayscale-dark
-                         seoul256
                          tao-yang
                          base16-hopscotch
                          labburn)
@@ -259,7 +261,7 @@ values."
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's active or selected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
-   dotspacemacs-active-transparency 40
+   dotspacemacs-active-transparency 60
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's inactive or deselected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
@@ -457,11 +459,13 @@ layers configuration. You are free to put any user code."
 
   ;; Package settings: anzu
   (use-package anzu
+    :defer t
     :init
     (global-anzu-mode))
 
   ;; Package settings: bm
   (use-package bm
+    :defer t
     :bind (("C-M-;" . bm-toggle)
            ("C-M-," . bm-next)
            ("C-M-<" . bm-previous)))
@@ -469,6 +473,10 @@ layers configuration. You are free to put any user code."
   ;; Package settings: deft
   (use-package deft
     :defer t
+    :bind (:map deft-mode-map
+                ("C-g" . ibuffer-quit)
+                ("C-k" . deft-filter-clear)
+                ("M-q" . ibuffer-quit))
     :init
     (setq deft-recursive t
           deft-use-filename-as-title t
@@ -476,29 +484,30 @@ layers configuration. You are free to put any user code."
           deft-directory "~/Dropbox/.deft"
           deft-extensions (quote ("txt" "text" "md" "markdown" "org" "gpg")))
     :config
-    (progn
-      (define-keys deft-mode-map
-        '(("C-g" ibuffer-quit)
-          ("C-k" deft-filter-clear)
-          ("M-q" ibuffer-quit)))))
-  (advice-add 'deft :after #'deft-filter-clear)
-  (advice-add 'deft :after #'deft-refresh)
+    (advice-add 'deft :after #'deft-filter-clear)
+    (advice-add 'deft :after #'deft-refresh))
 
   ;; Package settings: emms
   (use-package emms
     :defer t
     :init
-    (setq emms-source-file-default-directory "~/Music")
+    (setq emms-source-file-default-directory "~/Music"
+          emms-cache-file "~/.spacemacs.d/emms/cache"
+          emms-stream-bookmarks-file "~/.spacemacs.d/emms/streams")
     :config
-    (progn
-      (require 'emms-setup)
-      (require 'emms-mode-line-cycle)
-      (require 'emms-mode-line-icon)
-      (emms-all)
-      (emms-default-players)
-      (emms-mode-line-enable)
-      (emms-playing-time-disable-display)
-      (emms-mode-line-cycle 1)))
+    (use-package emms-mode-line-cycle
+      :init
+      (setq emms-mode-line-cycle-max-width 13)
+      :config
+      (use-package emms-mode-line-icon
+        :init
+        (setq emms-mode-line-cycle-use-icon-p t)
+        :config
+        (progn (emms-all)
+               (emms-default-players)
+               (emms-mode-line-enable)
+               (emms-playing-time-disable-display)
+               (emms-mode-line-cycle 1)))))
 
   ;; Package settings: elfeed
   (use-package elfeed
@@ -533,16 +542,14 @@ layers configuration. You are free to put any user code."
   (use-package w3m
     :defer t
     :config
-    (progn
-      (global-set-key [remap w3m-copy-buffer] 'vi-style-c-e)))
+    (global-set-key [remap w3m-copy-buffer] 'vi-style-c-e))
 
   ;; Package settings: eww
   (use-package eww
     :defer t
-    :config
-    (define-keys eww-mode-map
-      '(("M-n" vi-style-c-e)
-        ("M-p" vi-style-c-y))))
+    :bind (:map eww-mode-map
+                ("M-n" . vi-style-c-e)
+                ("M-p" . vi-style-c-y)))
 
   ;; Package settings: cc-mode
   (use-package cc-mode
@@ -596,32 +603,30 @@ layers configuration. You are free to put any user code."
   ;; Package settings: jdee
   (use-package jdee
     :defer t
+    :bind (:map jdee-mode-map
+                ("M-." . jdee-open-class-at-point)
+                ("M-," . pop-tag-mark))
     :init
     (setq jdee-server-dir "~/src/jdee-server/target")
-    :load-path "~/src/jdee-server/target"
-    :config
-    (progn
-      (define-keys jdee-mode-map
-        '(("M-." jdee-open-class-at-point)
-          ("M-," pop-tag-mark)))))
+    :load-path "~/src/jdee-server/target")
 
   ;; Package settings: js2-mode
   (use-package js2-mode
     :defer t
     :init
-    (setq-default js2-basic-offset 2)
-    (setq-default js2-indent-level 2))
+    (setq js2-basic-offset 2
+          js2-indent-level 2
+          flycheck-javascript-standard-executable "standard"))
 
   ;; Package settings: julia-mode
   (use-package julia-mode
     :defer t
     :config
-    (progn
-      (require 'julia-shell)
-      (define-keys julia-mode-map
-        '(("C-c C-z" run-julia)
-          ("C-c C-c" julia-shell-run-region-or-line)
-          ("C-c C-s" julia-shell-save-and-go)))))
+    (use-package julia-shell
+      :bind (:map julia-mode-map
+                  ("C-c C-z" . run-julia)
+                  ("C-c C-c" . julia-shell-run-region-or-line)
+                  ("C-c C-s" . julia-shell-save-and-go))))
 
   ;; Package settings: mu4e
   (use-package mu4e
@@ -632,6 +637,9 @@ layers configuration. You are free to put any user code."
       (when (fboundp 'imagemagick-register-types)
         (imagemagick-register-types))
       (setq
+       ;; Show images
+       mu4e-view-show-images t
+
        ;; Path to Maildir directory
        mu4e-maildir "~/Maildir"
 
@@ -688,14 +696,15 @@ layers configuration. You are free to put any user code."
   ;; Package settings: neotree
   (use-package neotree
     :defer t
+    :bind (:map neotree-mode-map
+                ("o" . neotree-enter))
     :init
-    (setq-default neo-show-hidden-files nil
-                  neo-persist-show t)
+    (setq neo-show-hidden-files nil
+          neo-persist-show t
+          neo-theme '(ascii)
+          neo-window-width 32)
     :config
-    (progn
-      (define-keys neotree-mode-map
-        '(("o" neotree-enter)))
-      (global-set-key [f8] 'neotree-find)))
+    (global-set-key [f8] 'neotree-find))
 
   ;; Package settings: org
   (use-package org
@@ -722,7 +731,10 @@ layers configuration. You are free to put any user code."
   (use-package python
     :defer t
     :init
-    (setq fci-rule-column 99)
+    (setq fci-rule-column 99
+          python-shell-interpreter "ipython"
+          python-shell-virtualenv-path "~/pyvenv"
+          python-shell-virtualenv-root "~/pyvenv")
     :bind (:map python-mode-map
                 ("C-c C-j" . helm-semantic-or-imenu))
     :config
@@ -747,8 +759,15 @@ layers configuration. You are free to put any user code."
                 ("C-]" . sp-select-next-thing-exchange)))
 
   ;; Package settings: magit
-  ;;(use-package magit
-  ;;  :config (use-package magithub))
+  (use-package magit
+    :defer t
+    :init
+    (setq magit-log-arguments (quote ("-n256" "--graph" "--decorate" "--color")))
+    :config
+    (advice-add 'magit-log-all :after #'delete-other-windows)
+    (advice-add 'magit-log-buffer-file :after #'delete-other-windows)
+    (advice-add 'magit-log-head :after #'delete-other-windows)
+    (advice-add 'magit-show-refs-head :after #'delete-other-windows))
 
   ;; Package settings: yasnippet
   (use-package yasnippet
@@ -767,7 +786,6 @@ layers configuration. You are free to put any user code."
   ;; Hooks added: programming modes
   (add-hooks 'prog-mode-hook
              '(eldoc-mode
-               ;beacon
                hl-todo-mode
                linum-mode
                rainbow-delimiters-mode
@@ -804,16 +822,13 @@ layers configuration. You are free to put any user code."
   (add-hook 'compilation-mode-hook 'colorise-compilation-buffer)
 
   ;; Occupy entire frame
-  (advice-add 'gh-md-render-buffer :after (apply-partially 'focus-then-maximise "*gh-md*"))
-  (advice-add 'helm-projectile-switch-project :after #'go-set-oracle-scope)
-  (advice-add 'magit-log-all :after #'delete-other-windows)
-  (advice-add 'magit-log-buffer-file :after #'delete-other-windows)
-  (advice-add 'magit-log-head :after #'delete-other-windows)
-  (advice-add 'magit-show-refs-head :after #'delete-other-windows)
-  (advice-add 'vc-annotate-current-buffer-head :after #'delete-other-windows)
+  ;;(advice-add 'helm-projectile-switch-project :after #'go-set-oracle-scope)
 
-  ;; Recenter after jump to definition
-  (advice-add 'dumb-jump-go :after (lambda (&rest args) (recenter-top-bottom)))
+  (use-package dumb-jump
+    :defer t
+    :config
+    ;; Recenter after jump to definition
+    (advice-add 'dumb-jump-go :after (lambda (&rest args) (recenter-top-bottom))))
 
   ;; Move point to the beginning of the line before opening a new line
   (advice-add 'open-line :before 'beginning-of-line)
@@ -821,16 +836,14 @@ layers configuration. You are free to put any user code."
   ;; Make sure vertical windows are split evenly
   (advice-add 'split-window-right :after #'balance-windows)
 
-  ;; Make sure the speedbar buffer's width stays the same
-  (advice-add 'sr-speedbar-open :after (lambda ()
-                                         (with-current-buffer sr-speedbar-buffer-name
-                                           (setq window-size-fixed 'width))))
-
   ;; DocView for PDF files
   (add-to-list 'auto-mode-alist '("\\.pdf\\'" . doc-view-mode))
 
   ;; Use org-mode for encrypted org file
   (add-to-list 'auto-mode-alist '("\\.org.gpg\\'" . org-mode))
+
+  ;; Use syslog-mode for .log files
+  (add-to-list 'auto-mode-alist '("\\.log\\'" . syslog-mode))
 
   ;; Newsticker
   (add-hook 'newsticker-mode-hook 'imenu-add-menubar-index)
@@ -904,110 +917,6 @@ layers configuration. You are free to put any user code."
     "pu" 'projectile-run-project
     "sq" 'howdoi-query
     ",cm" 'mc/mark-all-like-this))
-
-;; Do not write anything past this comment. This is where Emacs will
-;; auto-generate custom variable definitions.
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(ansi-term-color-vector
-   [unspecified "#131513" "#e6193c" "#29a329" "#98981b" "#3d62f5" "#ad2bee" "#3d62f5" "#8ca68c"] t)
- '(beacon-blink-delay 0.15)
- '(beacon-blink-duration 0.15)
- '(beacon-blink-when-focused t)
- '(beacon-dont-blink-major-modes
-   (quote
-    (t magit-status-mode magit-popup-mode magit-log-mode magit-refs-mode magit-process-mode magit-diff-mode inf-ruby-mode gnus-summary-mode gnus-group-mode eshell-mode sbt-mode ensime-mode compilation-mode neotree-mode dired-mode fundamental-mode comint-mode spacemacs-buffer-mode Custom-mode help-mode twittering-mode elfeed-search-mode elfeed-show-mode eww-mode deft-mode org-mode calendar-mode paradox-menu-mode ibuffer-mode mu4e-view-mode mu4e-headers-mode dictionary-mode restclient-mode vc-annotate-mode ztree-mode text-mode speedbar-mode)))
- '(beacon-size 15)
- '(blink-cursor-mode t)
- '(bookmark-save-flag 1)
- '(cursor-type (quote box))
- '(emms-cache-file "~/.spacemacs.d/emms/cache")
- '(emms-mode-line-cycle-max-width 13)
- '(emms-mode-line-cycle-use-icon-p t)
- '(emms-stream-bookmarks-file "~/.spacemacs.d/emms/streams")
- '(evil-want-Y-yank-to-eol t)
- '(expand-region-smart-cursor nil)
- '(fill-column 100)
- '(flycheck-disabled-checkers nil)
- '(flycheck-gometalinter-disable-linters
-   (quote
-    ("gotype" "aligncheck" "ineffassign" "structcheck" "unconvert" "staticcheck" "gocyclo" "goconst" "varcheck" "errcheck" "golint")))
- '(flycheck-javascript-standard-executable "standard")
- '(fzf/window-height 30)
- '(global-spacemacs-leader-override-mode t)
- '(helm-ag-show-status-function (quote spaceline--helm-ag-update) t)
- '(helm-always-two-windows t)
- '(helm-bookmark-show-location t)
- '(helm-descbinds-mode t)
- '(helm-descbinds-window-style (quote split))
- '(helm-display-function (quote spacemacs//display-helm-window))
- '(helm-display-header-line nil)
- '(helm-echo-input-in-header-line t)
- '(helm-flx-for-helm-find-files nil)
- '(helm-flx-mode t)
- '(helm-fuzzy-matching-highlight-fn (quote helm-flx-fuzzy-highlight-match))
- '(helm-fuzzy-sort-fn (quote helm-flx-fuzzy-matching-sort))
- '(helm-imenu-execute-action-at-once-if-one nil t)
- '(helm-locate-command "mdfind -name %s %s")
- '(helm-mode t)
- '(helm-rg-smart-case t)
- '(helm-split-window-in-side-p t)
- '(ivy-height 25)
- '(magit-log-arguments (quote ("-n256" "--graph" "--decorate" "--color")))
- '(mu4e-view-show-images t)
- '(neo-theme (quote ascii))
- '(neo-window-width 32 t)
- '(package-selected-packages
-   (quote
-    (spotify helm-spotify multi skewer-mode powerline anaconda-mode pcre2el request spacemacs-theme-dark-theme spaemacs-theme-dark-theme hydra js2-mode spinner railscasts-reloaded-theme websocket company go-mode sbt-mode yasnippet with-editor memoize ivy emms git-commit speed-type restclient-helm ob-restclient company-restclient punpun-light-theme org highlight flycheck projectile helm-core window-purpose imenu-list zenburn-theme all-the-icons dash pcache git-gutter helm magit async ztree zone-nyan yapfify yaml-mode ws-butler window-numbering which-key web-mode web-beautify w3m volatile-highlights vmd-mode uuidgen use-package twittering-mode toc-org tao-theme tagedit stickyfunc-enhance srefactor sr-speedbar sql-indent spacemacs-theme spaceline smmry smeargle smartparens slim-mode shell-pop seoul256-theme scss-mode sass-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe reveal-in-osx-finder restclient restart-emacs rcirc-notify rcirc-color rbenv rake rainbow-mode rainbow-identifiers rainbow-delimiters quelpa pyvenv pytest pyenv-mode py-isort puppet-mode punpun-theme pug-mode pip-requirements persp-mode pbcopy password-generator paradox osx-trash osx-dictionary orgit org-projectile org-present org-pomodoro org-plus-contrib org-download org-bullets open-junk-file ob-http ob-elixir neotree mwim multi-term mu4e-maildirs-extension mu4e-alert move-text mmm-mode minitest markdown-toc magithub magit-gitflow macrostep lua-mode lorem-ipsum livid-mode live-py-mode linum-relative link-hint less-css-mode launchctl labburn-theme know-your-http-well julia-shell json-mode js2-refactor js-doc jdee jabber insert-shebang info+ indent-guide ido-vertical-mode hy-mode hungry-delete htmlize howdoi hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-pydoc helm-purpose helm-pt helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-emms helm-descbinds helm-dash helm-css-scss helm-company helm-c-yasnippet helm-ag google-translate golden-ratio godoctor go-playground go-guru go-errcheck go-eldoc go-direx gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md fzf focus flycheck-pos-tip flycheck-mix flycheck-gometalinter flx-ido floobits fish-mode find-file-in-project fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil eval-sexp-fu eshell-z eshell-prompt-extras esh-help ensime engine-mode emms-mode-line-cycle emmet-mode elisp-slime-nav elfeed-web elfeed-org elfeed-goodies ein dumb-jump doom-themes disaster diff-hl dictionary deft dash-at-point dart-mode cython-mode csv-mode company-web company-tern company-statistics company-shell company-go company-c-headers company-anaconda column-enforce-mode color-identifiers-mode coffee-mode cmake-mode clean-aindent-mode clang-format chruby bundler browse-at-remote bm bind-map beacon base16-theme auto-yasnippet auto-highlight-symbol auto-compile anzu alchemist aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell)))
- '(paradox-github-token t)
- '(python-shell-interpreter "ipython" t)
- '(python-shell-virtualenv-path "~/pyvenv")
- '(python-shell-virtualenv-root "~/pyvenv")
- '(rainbow-identifiers-choose-face-function (quote rainbow-identifiers-cie-l*a*b*-choose-face) t)
- '(rainbow-identifiers-cie-l*a*b*-color-count 1024 t)
- '(rainbow-identifiers-cie-l*a*b*-lightness 80 t)
- '(rainbow-identifiers-cie-l*a*b*-saturation 25 t)
- '(spaceline-helm-mode t)
- '(speedbar-show-unknown-files t)
- '(speedbar-use-images nil)
- '(sr-speedbar-default-width 35)
- '(sr-speedbar-max-width 35)
- '(sr-speedbar-right-side nil)
- '(vc-annotate-very-old-color nil)
- '(which-key-idle-delay 1.0))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(fancy-battery-charging ((t (:inherit font-lock-keyword-face))))
- '(fancy-battery-critical ((t (:inherit font-lock-builtin-face))))
- '(fancy-battery-discharging ((t (:inherit font-lock-variable-name-face))))
- '(hi-black-b ((t (:box (:line-width 2 :color "grey75" :style released-button) :weight extra-bold))))
- '(hi-black-hb ((t (:foreground "SlateGray4"))))
- '(hi-green-b ((t (:foreground "dark green" :weight bold))))
- '(linum ((t (:height 1.0))))
- '(markdown-header-face-1 ((t (:inherit markdown-header-face :height 1.0))))
- '(markdown-header-face-2 ((t (:inherit markdown-header-face :height 1.0))))
- '(markdown-header-face-3 ((t (:inherit markdown-header-face :underline t :height 1.0))))
- '(markdown-pre-face ((t (:height 1.0))))
- '(org-level-1 ((t (:height 1.0))))
- '(org-level-2 ((t (:height 1.0))))
- '(org-level-3 ((t (:height 1.0))))
- '(speedbar-button-face ((t (:inherit font-lock-string-face))))
- '(speedbar-directory-face ((t (:inherit font-lock-function-face))))
- '(speedbar-file-face ((t (:inherit font-lock-keyword-face))))
- '(speedbar-selected-face ((t (:inherit font-lock-type-face))))
- '(which-func ((t (:inherit font-lock-string-face)))))
-(defun dotspacemacs/emacs-custom-settings ()
-  "Emacs custom settings.
-This is an auto-generated function, do not modify its content directly, use
-Emacs customize menu instead.
-This function is called at the very end of Spacemacs initialization."
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -1015,11 +924,11 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (vi-tilde-fringe evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu define-word ztree zone-nyan zenburn-theme yapfify yaml-mode ws-butler winum which-key web-mode web-beautify w3m volatile-highlights vmd-mode uuidgen use-package unfill twittering-mode toc-org tao-theme tagedit stickyfunc-enhance srefactor sr-speedbar sql-indent spacemacs-theme spaceline smmry smeargle smartparens slim-mode shell-pop seoul256-theme scss-mode sass-mode rvm ruby-tools ruby-test-mode rubocop rspec-mode robe reveal-in-osx-finder restclient-helm restart-emacs rcirc-notify rcirc-color rbenv rake rainbow-mode rainbow-identifiers rainbow-delimiters quelpa pyvenv pytest pyenv-mode py-isort puppet-mode punpun-theme pug-mode pip-requirements persp-mode pbcopy password-generator paradox osx-trash osx-dictionary orgit org-projectile org-present org-pomodoro org-plus-contrib org-download org-bullets open-junk-file ob-restclient ob-http ob-elixir neotree mwim multi-term mu4e-maildirs-extension mu4e-alert move-text mmm-mode minitest markdown-toc magithub magit-gitflow macrostep lua-mode lorem-ipsum livid-mode live-py-mode linum-relative link-hint less-css-mode launchctl labburn-theme julia-shell json-mode js2-refactor js-doc jdee jabber insert-shebang info+ indent-guide ido-vertical-mode hy-mode hungry-delete htmlize howdoi hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-pydoc helm-purpose helm-pt helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-emms helm-descbinds helm-dash helm-css-scss helm-company helm-c-yasnippet helm-ag google-translate golden-ratio godoctor go-playground go-guru go-errcheck go-eldoc go-direx gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md fzf focus flycheck-pos-tip flycheck-mix flycheck-gometalinter flx-ido floobits fish-mode find-file-in-project fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil eval-sexp-fu eshell-z eshell-prompt-extras esh-help ensime engine-mode emms-mode-line-cycle emmet-mode elisp-slime-nav elfeed-web elfeed-org elfeed-goodies ein dumb-jump doom-themes disaster diff-hl dictionary deft dash-at-point dart-mode cython-mode csv-mode creamsody-theme company-web company-tern company-statistics company-shell company-restclient company-go company-c-headers company-anaconda column-enforce-mode color-identifiers-mode coffee-mode cmake-mode clean-aindent-mode clang-format chruby bundler browse-at-remote bm bind-map beacon base16-theme auto-yasnippet auto-highlight-symbol auto-compile anzu alchemist aggressive-indent adoc-mode adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell))))
+    (ztree zone-nyan esxml zenburn-theme yaml-mode ws-butler window-numbering web-mode web-beautify w3m volatile-highlights twittering-mode toc-org tao-theme tagedit syslog-mode hide-lines stickyfunc-enhance srefactor sr-speedbar sql-indent spacemacs-theme spaceline smooth-scrolling smmry smeargle smartparens slim-mode shell-pop scss-mode sass-mode ruby-end reveal-in-osx-finder restclient restart-emacs rcirc-notify rcirc-color rainbow-mode rainbow-identifiers rainbow-delimiters pyvenv pytest pyenv-mode py-yapf puppet-mode punpun-theme pip-requirements persp-mode pcre2el pbcopy password-generator paradox hydra spinner page-break-lines osx-trash orgit org-repo-todo org-present org-pomodoro alert log4e gntp org-plus-contrib org-bullets open-junk-file neotree multi-term move-text mmm-mode markdown-toc markdown-mode magithub magit-gitflow magit magit-popup macrostep lua-mode lorem-ipsum linum-relative leuven-theme less-css-mode launchctl labburn-theme know-your-http-well julia-shell julia-mode json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc jinja2-mode jdee memoize jade-mode jabber fsm info+ indent-guide iedit ido-vertical-mode hy-mode hungry-delete htmlize howdoi hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation help-fns+ helm-themes helm-swoop helm-pydoc helm-pt helm-projectile helm-mode-manager helm-make projectile helm-gitignore helm-flx helm-emms helm-descbinds helm-dash helm-css-scss helm-company helm-c-yasnippet helm-aws helm-ag haml-mode groovy-mode google-translate golden-ratio godoctor go-playground gotest go-errcheck go-eldoc go-direx direx gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter git-commit with-editor gh-md fzf focus flycheck-pos-tip flx-ido flx floobits fish-mode find-file-in-project ivy fill-column-indicator fancy-battery expand-region exec-path-from-shell eval-sexp-fu highlight eshell-prompt-extras esh-help ensime sbt-mode scala-mode engine-mode emms-mode-line-cycle emms emmet-mode elisp-slime-nav elfeed-web simple-httpd elfeed-org elfeed-goodies ace-jump-mode noflet powerline popwin elfeed ein request websocket doom-themes all-the-icons font-lock+ disaster diff-hl dictionary link connection deft define-word dash-at-point dart-mode flycheck cython-mode company-web web-completion-data company-tern dash-functional tern company-statistics company-quickhelp pos-tip company-go go-mode company-c-headers company-anaconda coffee-mode cmake-mode clean-aindent-mode clang-format buffer-move browse-at-remote bracketed-paste bm beacon base16-theme auto-yasnippet yasnippet auto-highlight-symbol auto-compile packed anzu anaconda-mode pythonic f s alchemist company dash elixir-mode pkg-info epl aggressive-indent adoc-mode markup-faces adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core async ac-ispell auto-complete popup quelpa package-build use-package which-key bind-key bind-map evil seoul256-theme))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
-)
+ '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
+ '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))
