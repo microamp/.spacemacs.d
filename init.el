@@ -33,8 +33,7 @@ values."
      c-c++
      colors
      csv
-     (dash :variables
-           helm-dash-docset-newpath "/Users/microamp/Library/Application Support/Dash/DocSets")
+     dash
      elfeed
      elixir
      emacs-lisp
@@ -47,9 +46,7 @@ values."
      html
      ipython-notebook
      jabber
-     (javascript :variables
-                 js2-basic-offset 2
-                 js-indent-level 2)
+     javascript
      lua
      (markdown :variables
                markdown-live-preview-engine 'vmd)
@@ -610,13 +607,19 @@ layers configuration. You are free to put any user code."
     (setq jdee-server-dir "~/src/jdee-server/target")
     :load-path "~/src/jdee-server/target")
 
+  ;; Package settings: helm-dash
+  (use-package helm-dash
+    :defer t
+    :init (setq helm-dash-browser-func 'w3m))
+
   ;; Package settings: js2-mode
   (use-package js2-mode
     :defer t
     :init
-    (setq js2-basic-offset 2
-          js2-indent-level 2
-          flycheck-javascript-standard-executable "standard"))
+    (progn
+      (setq-default js2-basic-offset 2
+                    js2-indent-level 2)
+      (setq flycheck-javascript-standard-executable "standard")))
 
   ;; Package settings: julia-mode
   (use-package julia-mode
@@ -885,6 +888,7 @@ layers configuration. You are free to put any user code."
       ("RET" newline-and-indent)))
   ;; Custom key bindings: SPC shortcuts
   (spacemacs/set-leader-keys
+    "M-d" 'helm-dash-at-point
     "M-e" 'hydra-eyebrowse/body
     "M-f" 'helm-mini
     "M-m" 'avy-goto-word-or-subword-1
