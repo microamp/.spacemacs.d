@@ -454,6 +454,10 @@ layers configuration. You are free to put any user code."
     :bind (:map alchemist-iex-mode-map
                 ("C-l" . alchemist-iex-clear-buffer)))
 
+  (add-hook 'elixir-mode-hook (lambda ()
+                                (interactive)
+                                (setq-local helm-dash-docsets '("Elixir" "Erlang"))))
+
   ;; Package settings: anzu
   (use-package anzu
     :defer t
@@ -535,9 +539,15 @@ layers configuration. You are free to put any user code."
       (global-set-key [remap ensime-forward-note] 'vi-style-c-e)
       (global-set-key [remap ensime-backward-note] 'vi-style-c-y)))
 
+  (add-hook 'scala-mode-hook (lambda ()
+                               (interactive)
+                               (setq-local helm-dash-docsets '("Scala"))))
+
   ;; Package settings: w3m
   (use-package w3m
     :defer t
+    :init
+    (setq w3m-session-crash-recovery nil)
     :config
     (global-set-key [remap w3m-copy-buffer] 'vi-style-c-e))
 
@@ -591,11 +601,17 @@ layers configuration. You are free to put any user code."
         "mjs" 'go-direx-switch-to-buffer
         "mE" 'go-errcheck-project)))
 
+  (add-hook 'go-mode-hook (lambda ()
+                            (interactive)
+                            (setq-local helm-dash-docsets '("Go"))))
+
   ;; Package settings: helm-dash
   (use-package helm-dash
     :defer t
     :init
-    (setq helm-dash-browser-func 'eww))
+    (setq helm-dash-browser-func 'w3m
+          helm-dash-docsets-path "~/.docsets"
+          helm-dash-docset-newpath "~/.docsets"))
 
   ;; Package settings: jdee
   (use-package jdee
@@ -607,11 +623,6 @@ layers configuration. You are free to put any user code."
     (setq jdee-server-dir "~/src/jdee-server/target")
     :load-path "~/src/jdee-server/target")
 
-  ;; Package settings: helm-dash
-  (use-package helm-dash
-    :defer t
-    :init (setq helm-dash-browser-func 'w3m))
-
   ;; Package settings: js2-mode
   (use-package js2-mode
     :defer t
@@ -620,6 +631,10 @@ layers configuration. You are free to put any user code."
       (setq-default js2-basic-offset 2
                     js2-indent-level 2)
       (setq flycheck-javascript-standard-executable "standard")))
+
+  (add-hook 'js2-mode-hook (lambda ()
+                             (interactive)
+                             (setq-local helm-dash-docsets '("Express" "NodeJS" "JavaScript"))))
 
   ;; Package settings: julia-mode
   (use-package julia-mode
@@ -630,6 +645,10 @@ layers configuration. You are free to put any user code."
                   ("C-c C-z" . run-julia)
                   ("C-c C-c" . julia-shell-run-region-or-line)
                   ("C-c C-s" . julia-shell-save-and-go))))
+
+  (add-hook 'julia-mode-hook (lambda ()
+                               (interactive)
+                               (setq-local helm-dash-docsets '("Julia"))))
 
   ;; Package settings: mu4e
   (use-package mu4e
@@ -737,13 +756,18 @@ layers configuration. You are free to put any user code."
     (setq fci-rule-column 99
           python-shell-interpreter "ipython"
           python-shell-virtualenv-path "~/pyvenv"
-          python-shell-virtualenv-root "~/pyvenv")
+          python-shell-virtualenv-root "~/pyvenv"
+          python-shell-completion-native-disabled-interpreters '("ipython" "pypy"))
     :bind (:map python-mode-map
                 ("C-c C-j" . helm-semantic-or-imenu))
     :config
     (progn
       (global-set-key [remap anaconda-mode-find-assignments] 'anaconda-mode-go-back)
       (global-set-key [remap anaconda-mode-find-definitions] 'anaconda-mode-find-assignments)))
+
+  (add-hook 'python-mode-hook (lambda ()
+                                (interactive)
+                                (setq-local helm-dash-docsets '("Python 2" "Python 3"))))
 
   ;; Package settings: smartparens
   (use-package smartparens
@@ -785,6 +809,10 @@ layers configuration. You are free to put any user code."
                 ("n" . next-line)
                 ("p" . previous-line)
                 ("o" . ztree-perform-action)))
+
+  (add-hook 'emacs-lisp-mode-hook (lambda ()
+                                    (interactive)
+                                    (setq-local helm-dash-docsets '("Emacs Lisp"))))
 
   ;; Hooks added: programming modes
   (add-hooks 'prog-mode-hook
