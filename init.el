@@ -179,8 +179,8 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(seoul256
-                         base16-ocean
+   dotspacemacs-themes '(base16-ocean
+                         seoul256
                          spacemacs-dark
                          base16-grayscale-dark
                          tao-yang
@@ -380,6 +380,12 @@ user code."
     (erase-buffer)
     (shr-insert-document dom)
     (goto-char (point-min))))
+
+(defun tramp-cleanup-all-connections-and-buffers ()
+  (interactive)
+  (progn
+    (tramp-cleanup-all-connections)
+    (tramp-cleanup-all-buffers)))
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
@@ -628,9 +634,10 @@ layers configuration. You are free to put any user code."
     :defer t
     :init
     (progn
-      (setq-default js2-basic-offset 2
-                    js2-indent-level 2)
-      (setq flycheck-javascript-standard-executable "standard")))
+      (setq-default js2-indent-level 2)
+      (setq flycheck-javascript-standard-executable "standard"))
+    :config
+    (setq-default js2-basic-offset 2))
 
   (add-hook 'js2-mode-hook (lambda ()
                              (interactive)
