@@ -817,6 +817,18 @@ layers configuration. You are free to put any user code."
                 ("p" . previous-line)
                 ("o" . ztree-perform-action)))
 
+  ;; Package settings: speedbar/sr-speedbar
+  (use-package speedbar
+    :defer t
+    :init
+    (setq speedbar-use-images nil)
+    :config
+    (use-package sr-speedbar
+      :defer t
+      :init
+      (setq sr-speedbar-right-side nil)))
+
+  ;; Use Emacs Lisp docset in emacs-lisp-mode
   (add-hook 'emacs-lisp-mode-hook (lambda ()
                                     (interactive)
                                     (setq-local helm-dash-docsets '("Emacs Lisp"))))
