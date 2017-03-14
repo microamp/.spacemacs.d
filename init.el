@@ -632,6 +632,8 @@ layers configuration. You are free to put any user code."
   ;; Package settings: js2-mode
   (use-package js2-mode
     :defer t
+    :bind (:map js2-mode-map
+                ("C-c j" . helm-semantic-or-imenu))
     :init
     (progn
       (setq-default js2-indent-level 2)
@@ -940,6 +942,7 @@ layers configuration. You are free to put any user code."
     "M-f" 'helm-mini
     "M-m" 'avy-goto-word-or-subword-1
     "M-v" 'er/expand-region
+    "M-w" 'ace-window
     "ab" 'sr-speedbar-toggle
     "aC" 'calendar
     "aD" 'dictionary
