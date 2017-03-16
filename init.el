@@ -43,6 +43,7 @@ values."
          gofmt-command "goimports"
          go-tab-width 2
          go-use-gometalinter t)
+     graphviz
      html
      ipython-notebook
      jabber
@@ -881,6 +882,11 @@ layers configuration. You are free to put any user code."
     :config
     ;; Recenter after jump to definition
     (advice-add 'dumb-jump-go :after (lambda (&rest args) (recenter-top-bottom))))
+
+  (use-package ace-window
+    :defer t
+    :init
+    (setq aw-keys '(?a ?b ?c ?d ?e ?f ?g ?h)))
 
   ;; Move point to the beginning of the line before opening a new line
   (advice-add 'open-line :before 'beginning-of-line)
