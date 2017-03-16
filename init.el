@@ -931,6 +931,7 @@ layers configuration. You are free to put any user code."
       ("C-x l" delete-other-windows)
       ("C-x p" delete-window)
       ("C-x q" delete-window)
+      ("C-x r h" helm-filtered-bookmarks)
       ("C-x |" split-and-search-in-proj)
       ("M-SPC" spacemacs/shell-pop-eshell)
       ("M-[" beginning-of-defun)
@@ -966,6 +967,10 @@ layers configuration. You are free to put any user code."
     "hb" 'helm-filtered-bookmarks
     "hl" 'helm-resume
     "ho" 'helm-occur
+    "kh" 'helm-filtered-bookmarks
+    "kk" 'bookmark-delete
+    "kl" 'bookmark-bmenu-list
+    "km" 'bookmark-set
     "pP" 'projectile-test-project
     "psp" 'spacemacs/helm-project-do-ag-region-or-symbol
     "pss" 'helm-projectile-ag
