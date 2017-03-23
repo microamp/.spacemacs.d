@@ -57,7 +57,7 @@ values."
      osx
      puppet
      (python :variables
-             python-enable-yapf-format-on-save t)
+             python-enable-yapf-format-on-save nil)
      rcirc
      restclient
      (scala :variables
@@ -580,6 +580,8 @@ layers configuration. You are free to put any user code."
   ;; Package settings: go-mode
   (use-package go-mode
     :defer t
+    :init
+    (setq flycheck-gometalinter-disable-linters '("gotype"))
     :config
     (progn
       (use-package godoctor
