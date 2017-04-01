@@ -55,6 +55,7 @@ values."
            mu4e-installation-path "/usr/local/Cellar/mu/HEAD/share/emacs/site-lisp/mu/mu4e")
      org
      osx
+     php
      puppet
      (python :variables
              python-enable-yapf-format-on-save nil)
@@ -641,10 +642,9 @@ layers configuration. You are free to put any user code."
                 ("C-c j" . helm-semantic-or-imenu))
     :init
     (progn
-      (setq-default js2-indent-level 2)
-      (setq flycheck-javascript-standard-executable "standard"))
-    :config
-    (setq-default js2-basic-offset 2))
+      (setq-default js2-basic-offset 2
+                    js-indent-level 2)
+      (setq flycheck-javascript-standard-executable "standard")))
 
   (add-hook 'js2-mode-hook (lambda ()
                              (interactive)
@@ -898,6 +898,9 @@ layers configuration. You are free to put any user code."
 
   ;; Use org-mode for encrypted org file
   (add-to-list 'auto-mode-alist '("\\.org.gpg\\'" . org-mode))
+
+  ;; Use JSON mode for .template files
+  (add-to-list 'auto-mode-alist '("\\.template\\'" . json-mode))
 
   ;; Use syslog-mode for .log files
   (add-to-list 'auto-mode-alist '("\\.log\\'" . syslog-mode))
