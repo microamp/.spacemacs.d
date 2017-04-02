@@ -355,14 +355,8 @@ values."
     (delete-other-windows)))
 
 (defun switch-to-previous-buffer ()
-  "Switch to the previous buffer."
   (interactive)
-  (switch-to-buffer (car (helm-buffer-list))))
-
-(defun switch-to-pprevious-buffer ()
-  "Switch to the buffer previous to the previous buffer."
-  (interactive)
-  (switch-to-buffer (car (cdr (helm-buffer-list)))))
+  (switch-to-buffer (other-buffer (current-buffer) 1)))
 
 (defun split-and-search-in-proj ()
   "Split window vertically and search for the symbol at point in the current project."
@@ -634,6 +628,13 @@ layers configuration. You are free to put any user code."
     :init
     (setq jdee-server-dir "~/src/jdee-server/target")
     :load-path "~/src/jdee-server/target")
+
+  ;; Package settings: json-mode
+  (use-package json-mode
+    :defer t
+    :init
+    (setq json-reformat:indent-width 2
+          json-reformat:pretty-string? t))
 
   ;; Package settings: js2-mode
   (use-package js2-mode
@@ -926,11 +927,9 @@ layers configuration. You are free to put any user code."
       ("C-x ," eyebrowse-rename-window-config)
       ("C-x -" split-window-below-and-focus)
       ("C-x C-b" ibuffer-list-buffers)
-      ("C-x M-'" switch-to-pprevious-buffer)
       ("C-x M-d" ztree-dir)
       ("C-x M-n" make-frame)
       ("C-x O" previous-multiframe-window)
-      ("C-x \"" switch-to-pprevious-buffer)
       ("C-x \\" split-window-right-and-focus)
       ("C-x k" kill-this-buffer)
       ("C-x l" delete-other-windows)
