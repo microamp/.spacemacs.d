@@ -577,7 +577,18 @@ layers configuration. You are free to put any user code."
   (use-package go-mode
     :defer t
     :init
-    (setq flycheck-gometalinter-disable-linters '("gotype"))
+    (setq flycheck-gometalinter-disable-linters '("aligncheck"
+                                                  "deadcode"
+                                                  "errcheck"
+                                                  "goconst"
+                                                  "gocyclo"
+                                                  "golint"
+                                                  "gosimple"
+                                                  "gotype"
+                                                  "staticcheck"
+                                                  "structcheck"
+                                                  "unconvert"
+                                                  "vetshadow"))
     :config
     (progn
       (use-package godoctor
@@ -646,7 +657,18 @@ layers configuration. You are free to put any user code."
     (progn
       (setq-default js2-basic-offset 2
                     js-indent-level 2)
-      (setq flycheck-javascript-standard-executable "standard")))
+      (setq flycheck-javascript-standard-executable "standard"))
+    :config
+    (use-package prettier-js
+      :load-path "~/.spacemacs.d/prettier/editors/emacs/"
+      :init
+      (setq prettier-target-mode "js2-mode"
+            prettier-args '("--trailing-comma" "none"
+                            "--bracket-spacing" "false"))
+      :config
+      (add-hook 'js2-mode-hook (lambda ()
+                                 (interactive)
+                                 (add-hook 'before-save-hook 'prettier-before-save)))))
 
   (add-hook 'js2-mode-hook (lambda ()
                              (interactive)
@@ -669,6 +691,9 @@ layers configuration. You are free to put any user code."
   ;; Package settings: mu4e
   (use-package mu4e
     :defer t
+    :bind (:map mu4e-main-mode-map
+                ("n" . next-line)
+                ("p" . previous-line))
     :init
     (progn
       ;; use imagemagick, if available
@@ -687,7 +712,7 @@ layers configuration. You are free to put any user code."
 
        ;; Maildirs you use frequently; access them with 'j' (jump)
        mu4e-maildir-shortcuts
-       '(("/[Gmail].All Mail"  . ?i)
+       '(("/INBOX"             . ?i)
          ("/[Gmail].Sent Mail" . ?s)
          ("/[Gmail].Drafts"    . ?d)
          ("/[Gmail].Trash"     . ?t))
@@ -704,8 +729,8 @@ layers configuration. You are free to put any user code."
        ;; Program to fetch mail (offlineimap)
        mu4e-get-mail-command "offlineimap"
 
-       ;; Update every 5 minutes
-       mu4e-update-interval (* 60 5)
+       ;; Update every minute
+       mu4e-update-interval (* 60 1)
 
        mu4e-reply-to-address "microamplifier@gmail.com"
        user-mail-address     "microamplifier@gmail.com"
@@ -716,6 +741,10 @@ layers configuration. You are free to put any user code."
        smtpmail-default-smtp-server "smtp.gmail.com"
        smtpmail-smtp-server         "smtp.gmail.com"
        smtpmail-local-domain        "gmail.com"
+
+       ;;mu4e-enable-notifications t
+       mu4e-hide-index-messages t
+       mu4e-enable-mode-line t
 
        ;; Don't keep message buffers around
        message-kill-buffer-on-exit t
@@ -941,6 +970,7 @@ layers configuration. You are free to put any user code."
       ("M-SPC" spacemacs/shell-pop-eshell)
       ("M-[" beginning-of-defun)
       ("M-]" end-of-defun)
+      ("M-g M-c" goto-char)
       ("M-n" vi-style-c-e)
       ("M-p" vi-style-c-y)
       ("RET" newline-and-indent)))
