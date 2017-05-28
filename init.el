@@ -402,9 +402,6 @@ layers configuration. You are free to put any user code."
   ;; Scroll margin
   (setq-default scroll-margin 0)
 
-  ;; Cursor to blink!
-  (blink-cursor-mode)
-
   ;; Overwrite highlighted
   (delete-selection-mode t)
 
@@ -750,7 +747,7 @@ layers configuration. You are free to put any user code."
 
   (use-package projectile
     :defer t
-    :init
+    :config
     (setq projectile-switch-project-action
           (lambda ()
             (magit-show-refs-head)
@@ -789,6 +786,21 @@ layers configuration. You are free to put any user code."
                 ("C-M-p" . sp-previous-sexp)
                 ("C-M-u" . sp-backward-up-sexp)
                 ("C-]" . sp-select-next-thing-exchange)))
+
+  (use-package god-mode
+    :commands god-mode-all god-local-mode
+    :bind (:map god-local-mode-map
+                ("i" . god-local-mode))
+    :init
+    ;;(setq god-mod-alist '((nil . "C-")
+    ;;                      ("g" . "M-")
+    ;;                      ("G" . "C-M-")))
+    (setq god-mod-alist '((nil . "C-M-")))
+    (global-set-key (kbd "<escape>") 'god-mode-all)
+    (god-mode-all)
+    :config
+    (add-hook 'god-mode-enabled-hook #'blink-cursor-end)
+    (add-hook 'god-mode-disabled-hook #'blink-cursor-start))
 
   (use-package magit
     :ensure t
