@@ -71,6 +71,8 @@ values."
             shell-default-position 'bottom)
      shell-scripts
      sql
+     (typescript :variables
+                 typescript-fmt-on-save t)
      syntax-checking
      version-control
      yaml)
@@ -78,11 +80,13 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages then consider to create a layer, you can also put the
    ;; configuration in `dotspacemacs/config'.
-   dotspacemacs-additional-packages '(anzu
+   dotspacemacs-additional-packages '(add-node-modules-path
+                                      anzu
                                       base16-theme
                                       beacon
                                       bm
                                       browse-at-remote
+                                      centered-cursor-mode
                                       dart-mode
                                       deft
                                       dictionary
@@ -96,7 +100,7 @@ values."
                                       go-direx
                                       go-errcheck
                                       go-playground
-                                      godoctor
+                                      god-mode
                                       groovy-mode
                                       helm-aws
                                       helm-emms
@@ -182,7 +186,8 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(nord
+   dotspacemacs-themes '(base16-ocean
+                         nord
                          seoul256
                          spacemacs-dark
                          base16-grayscale-dark
@@ -195,7 +200,7 @@ values."
    ;; size to make separators look not too crappy.
    dotspacemacs-default-font '("Office Code Pro"
                                :size 10
-                               :weight normal
+                               :weight light
                                :width normal
                                :powerline-scale 1.0)
    ;; The leader key
@@ -445,38 +450,38 @@ layers configuration. You are free to put any user code."
   ;; Disable auto-save
   (setq auto-save-timeout nil)
 
+  (use-package centred-cursor-mode
+    :defer t
+    :init
+    (global-centered-cursor-mode))
+
   ;; "Dark variants range from 233 to 239 and light variants range from 252 to 256"
   ;;(setq seoul256-background 239)
 
-  ;; Package settings: ace-window
   (use-package ace-window
     :defer t
     :init
     (setq aw-keys '(?a ?b ?c ?d ?e ?f ?g ?h)))
 
-  ;; Package settings: alchemist
   (use-package alchemist
     :bind (:map alchemist-iex-mode-map
-                ("C-l" . alchemist-iex-clear-buffer)))
+                ("C-l" . alchemist-iex-clear-buffer))
+    :config
+    (add-hook 'elixir-mode-hook (lambda ()
+                                  (interactive)
+                                  (setq-local helm-dash-docsets '("Elixir" "Erlang")))))
 
-  (add-hook 'elixir-mode-hook (lambda ()
-                                (interactive)
-                                (setq-local helm-dash-docsets '("Elixir" "Erlang"))))
-
-  ;; Package settings: anzu
   (use-package anzu
     :defer t
     :init
     (global-anzu-mode))
 
-  ;; Package settings: bm
   (use-package bm
     :defer t
     :bind (("C-M-;" . bm-toggle)
            ("C-M-," . bm-next)
            ("C-M-<" . bm-previous)))
 
-  ;; Package settings: deft
   (use-package deft
     :defer t
     :bind (:map deft-mode-map
@@ -489,91 +494,76 @@ layers configuration. You are free to put any user code."
           deft-auto-save-interval 0.0
           deft-directory "~/Dropbox/.deft"
           deft-extensions (quote ("txt" "text" "md" "markdown" "org" "gpg")))
-    :config
     (advice-add 'deft :after #'deft-filter-clear)
     (advice-add 'deft :after #'deft-refresh))
 
-  ;; Package settings: emms
   (use-package emms
     :defer t
     :init
     (setq emms-source-file-default-directory "~/Music"
           emms-cache-file "~/.spacemacs.d/emms/cache"
           emms-stream-bookmarks-file "~/.spacemacs.d/emms/streams")
-    :config
     (use-package emms-mode-line-cycle
       :init
       (setq emms-mode-line-cycle-max-width 13)
-      :config
       (use-package emms-mode-line-icon
         :init
         (setq emms-mode-line-cycle-use-icon-p t)
         :config
-        (progn (emms-all)
-               (emms-default-players)
-               (emms-mode-line-enable)
-               (emms-playing-time-disable-display)
-               (emms-mode-line-cycle 1)))))
+        (emms-all)
+        (emms-default-players)
+        (emms-mode-line-enable)
+        (emms-playing-time-disable-display)
+        (emms-mode-line-cycle 1))))
 
-  ;; Package settings: elfeed
   (use-package elfeed
     :defer t
     :init
     (setq elfeed-feeds
           '(("http://planet.emacsen.org/atom.xml" emacs)
             ("http://feeds.feedburner.com/ClPlBl" gcp)))
-    :config
-    (progn
-      (global-set-key [remap elfeed-goodies/show-ace-link] 'scroll-down-command)
-      (global-set-key [remap elfeed-goodies/split-show-next] 'next-line)
-      (global-set-key [remap elfeed-goodies/split-show-prev] 'previous-line)))
+    (global-set-key [remap elfeed-goodies/show-ace-link] 'scroll-down-command)
+    (global-set-key [remap elfeed-goodies/split-show-next] 'next-line)
+    (global-set-key [remap elfeed-goodies/split-show-prev] 'previous-line))
 
-  ;; Package settings: ensime-mode
   (use-package ensime-mode
     :defer t
     :init
     (setq ensime-startup-snapshot-notification nil)
+    (evil-leader/set-key-for-mode 'scala-mode
+      "bs" 'sbt-send-region)
+    ;; TODO: Define key bindings for ensime-forward-note and ensime-backward-note
+    (global-set-key [remap ensime-forward-note] 'vi-style-c-e)
+    (global-set-key [remap ensime-backward-note] 'vi-style-c-y)
     :bind (("C-c C-b b" . sbt-command)
            ("C-c C-b i" . ensime-sbt-switch)
            ("C-c C-d A" . ensime-db-attach))
     :config
-    (progn
-      (evil-leader/set-key-for-mode 'scala-mode
-        "bs" 'sbt-send-region)
-      ;; TODO: Define key bindings for ensime-forward-note and ensime-backward-note
-      (global-set-key [remap ensime-forward-note] 'vi-style-c-e)
-      (global-set-key [remap ensime-backward-note] 'vi-style-c-y)))
+    (add-hook 'scala-mode-hook (lambda ()
+                                 (interactive)
+                                 (setq-local helm-dash-docsets '("Scala")))))
 
-  (add-hook 'scala-mode-hook (lambda ()
-                               (interactive)
-                               (setq-local helm-dash-docsets '("Scala"))))
-
-  ;; Package settings: w3m
   (use-package w3m
     :defer t
     :init
     (setq w3m-session-crash-recovery nil)
-    :config
     (global-set-key [remap w3m-copy-buffer] 'vi-style-c-e))
 
-  ;; Package settings: eww
   (use-package eww
     :defer t
     :bind (:map eww-mode-map
                 ("M-n" . vi-style-c-e)
                 ("M-p" . vi-style-c-y)))
 
-  ;; Package settings: cc-mode
   (use-package cc-mode
     :defer t
+    :init
+    (global-set-key [remap xref-find-definitions] 'dumb-jump-go)
     :config
-    (progn
-      (add-hook 'before-save-hook (lambda ()
-                                    (when (eq major-mode 'c-mode)
-                                      (clang-format-buffer))))
-      (global-set-key [remap xref-find-definitions] 'dumb-jump-go)))
+    (add-hook 'before-save-hook (lambda ()
+                                  (when (eq major-mode 'c-mode)
+                                    (clang-format-buffer)))))
 
-  ;; Package settings: go-mode
   (use-package go-mode
     :defer t
     :init
@@ -589,41 +579,31 @@ layers configuration. You are free to put any user code."
                                                   "structcheck"
                                                   "unconvert"
                                                   "vetshadow"))
+    (use-package go-errcheck)
+    (use-package go-playground)
+    (push '("^\*go-direx:"
+            :regexp t
+            :position right
+            :width 0.5
+            :dedicated t
+            :stick t)
+          popwin:special-display-config)
+    (define-keys go-mode-map
+      '(("M-." godef-jump)
+        ("M-," pop-tag-mark)
+        ("C-c C-e" go-errcheck-project)
+        ("C-c C-p" go-playground)
+        ("C-c C-j" helm-semantic-or-imenu)
+        ("C-c j" go-direx-switch-to-buffer)))
+    (evil-leader/set-key-for-mode 'go-mode
+      "mjp" 'go-direx-pop-to-buffer
+      "mjs" 'go-direx-switch-to-buffer
+      "mE" 'go-errcheck-project)
     :config
-    (progn
-      (use-package godoctor
-        :config
-        (evil-leader/set-key-for-mode 'go-mode
-          "dd" 'godoctor-godoc
-          "de" 'godoctor-extract
-          "dr" 'godoctor-rename
-          "dt" 'godoctor-toggle))
-      (use-package go-errcheck)
-      (use-package go-playground)
-      (push '("^\*go-direx:"
-              :regexp t
-              :position right
-              :width 0.5
-              :dedicated t
-              :stick t)
-            popwin:special-display-config)
-      (define-keys go-mode-map
-        '(("M-." godef-jump)
-          ("M-," pop-tag-mark)
-          ("C-c C-e" go-errcheck-project)
-          ("C-c C-p" go-playground)
-          ("C-c C-j" helm-semantic-or-imenu)
-          ("C-c j" go-direx-switch-to-buffer)))
-      (evil-leader/set-key-for-mode 'go-mode
-        "mjp" 'go-direx-pop-to-buffer
-        "mjs" 'go-direx-switch-to-buffer
-        "mE" 'go-errcheck-project)))
+    (add-hook 'go-mode-hook (lambda ()
+                              (interactive)
+                              (setq-local helm-dash-docsets '("Go")))))
 
-  (add-hook 'go-mode-hook (lambda ()
-                            (interactive)
-                            (setq-local helm-dash-docsets '("Go"))))
-
-  ;; Package settings: helm-dash
   (use-package helm-dash
     :defer t
     :init
@@ -631,34 +611,30 @@ layers configuration. You are free to put any user code."
           helm-dash-docsets-path "~/.docsets"
           helm-dash-docset-newpath "~/.docsets"))
 
-  ;; Package settings: jdee
   (use-package jdee
     :defer t
+    :load-path "~/src/jdee-server/target"
     :bind (:map jdee-mode-map
                 ("M-." . jdee-open-class-at-point)
                 ("M-," . pop-tag-mark))
     :init
-    (setq jdee-server-dir "~/src/jdee-server/target")
-    :load-path "~/src/jdee-server/target")
+    (setq jdee-server-dir "~/src/jdee-server/target"))
 
-  ;; Package settings: json-mode
   (use-package json-mode
     :defer t
     :init
     (setq json-reformat:indent-width 2
           json-reformat:pretty-string? t))
 
-  ;; Package settings: js2-mode
   (use-package js2-mode
     :defer t
     :bind (:map js2-mode-map
                 ("C-c j" . helm-semantic-or-imenu))
     :init
-    (progn
-      (setq-default js2-basic-offset 2
-                    js-indent-level 2)
-      (setq flycheck-javascript-standard-executable "standard"))
-    :config
+    (setq-default js2-basic-offset 2
+                  js-indent-level 2)
+    (setq flycheck-javascript-standard-executable "standard")
+    (global-set-key [remap js-set-js-context] 'helm-semantic-or-imenu)
     (use-package prettier-js
       :load-path "~/.spacemacs.d/prettier/editors/emacs/"
       :init
@@ -668,13 +644,13 @@ layers configuration. You are free to put any user code."
       :config
       (add-hook 'js2-mode-hook (lambda ()
                                  (interactive)
-                                 (add-hook 'before-save-hook 'prettier-before-save)))))
+                                 (add-hook 'before-save-hook 'prettier-before-save))))
+    :config
+    (add-hook 'js2-mode-hook #'add-node-modules-path)
+    (add-hook 'js2-mode-hook (lambda ()
+                               (interactive)
+                               (setq-local helm-dash-docsets '("Express" "NodeJS" "JavaScript")))))
 
-  (add-hook 'js2-mode-hook (lambda ()
-                             (interactive)
-                             (setq-local helm-dash-docsets '("Express" "NodeJS" "JavaScript"))))
-
-  ;; Package settings: julia-mode
   (use-package julia-mode
     :defer t
     :config
@@ -682,85 +658,77 @@ layers configuration. You are free to put any user code."
       :bind (:map julia-mode-map
                   ("C-c C-z" . run-julia)
                   ("C-c C-c" . julia-shell-run-region-or-line)
-                  ("C-c C-s" . julia-shell-save-and-go))))
+                  ("C-c C-s" . julia-shell-save-and-go)))
+    :config
+    (add-hook 'julia-mode-hook (lambda ()
+                                 (interactive)
+                                 (setq-local helm-dash-docsets '("Julia")))))
 
-  (add-hook 'julia-mode-hook (lambda ()
-                               (interactive)
-                               (setq-local helm-dash-docsets '("Julia"))))
-
-  ;; Package settings: mu4e
   (use-package mu4e
     :defer t
     :bind (:map mu4e-main-mode-map
                 ("n" . next-line)
                 ("p" . previous-line))
     :init
+    ;; use imagemagick, if available
+    (when (fboundp 'imagemagick-register-types)
+      (imagemagick-register-types))
+    (setq
+     ;; Show images
+     mu4e-view-show-images t
+
+     ;; Path to Maildir directory
+     mu4e-maildir "~/Maildir"
+
+     mu4e-sent-folder   "/[Gmail].Sent Mail"
+     mu4e-drafts-folder "/[Gmail].Drafts"
+     mu4e-trash-folder  "/[Gmail].Trash"
+
+     ;; Maildirs you use frequently; access them with 'j' (jump)
+     mu4e-maildir-shortcuts
+     '(("/INBOX"             . ?i)
+       ("/[Gmail].Drafts"    . ?d)
+       ("/[Gmail].Trash"     . ?t))
+
+     mu4e-headers-fields
+     '((:date    . 25) ;; Alternatively, use :human-date
+       (:flags   .  6)
+       (:from    . 22)
+       (:subject . nil))
+
+     ;; Program to fetch mail (offlineimap)
+     mu4e-get-mail-command "offlineimap"
+
+     ;; Update five minutes
+     mu4e-update-interval (* 60 5)
+
+     ;; SMTP settings
+     message-send-mail-function   'smtpmail-send-it
+     smtpmail-default-smtp-server "smtp.gmail.com"
+     smtpmail-smtp-server         "smtp.gmail.com"
+     smtpmail-local-domain        "gmail.com"
+     ;;mu4e-enable-notifications t
+     mu4e-hide-index-messages t
+     mu4e-enable-mode-line t
+
+     ;; Don't keep message buffers around
+     message-kill-buffer-on-exit t
+
+     ;; View content using w3m
+     mu4e-html2text-command 'render-html-message)
+    :config
     (progn
-      ;; use imagemagick, if available
-      (when (fboundp 'imagemagick-register-types)
-        (imagemagick-register-types))
-      (setq
-       ;; Show images
-       mu4e-view-show-images t
-
-       ;; Path to Maildir directory
-       mu4e-maildir "~/Maildir"
-
-       mu4e-sent-folder   "/[Gmail].Sent Mail"
-       mu4e-drafts-folder "/[Gmail].Drafts"
-       mu4e-trash-folder  "/[Gmail].Trash"
-
-       ;; Maildirs you use frequently; access them with 'j' (jump)
-       mu4e-maildir-shortcuts
-       '(("/INBOX"             . ?i)
-         ("/[Gmail].Sent Mail" . ?s)
-         ("/[Gmail].Drafts"    . ?d)
-         ("/[Gmail].Trash"     . ?t))
-
-       ;; List of email addresses
-       mu4e-user-mail-address-list '("microamplifier@gmail.com")
-
-       mu4e-headers-fields
-       '((:date    . 25) ;; Alternatively, use :human-date
-         (:flags   .  6)
-         (:from    . 22)
-         (:subject . nil))
-
-       ;; Program to fetch mail (offlineimap)
-       mu4e-get-mail-command "offlineimap"
-
-       ;; Update every minute
-       mu4e-update-interval (* 60 1)
-
-       mu4e-reply-to-address "microamplifier@gmail.com"
-       user-mail-address     "microamplifier@gmail.com"
-       user-full-name        "SH N"
-
-       ;; SMTP settings
-       message-send-mail-function   'smtpmail-send-it
-       smtpmail-default-smtp-server "smtp.gmail.com"
-       smtpmail-smtp-server         "smtp.gmail.com"
-       smtpmail-local-domain        "gmail.com"
-
-       ;;mu4e-enable-notifications t
-       mu4e-hide-index-messages t
-       mu4e-enable-mode-line t
-
-       ;; Don't keep message buffers around
-       message-kill-buffer-on-exit t
-
-       ;; View content using w3m
-       mu4e-html2text-command 'render-html-message)))
+      (defun my-mu4e-maildirs-extension-always-update ()
+        (mu4e-maildirs-extension-force-update '(16)))
+      (add-hook 'mu4e-view-mode-hook 'my-mu4e-maildirs-extension-always-update)))
 
   ;; Packge settings: markdown-mode
   (use-package markdown-mode
     :defer t
-    :config
-    (progn
-      (global-set-key [remap markdown-next-link] 'vi-style-c-e)
-      (global-set-key [remap markdown-previous-link] 'vi-style-c-y)))
+    :init
+    (global-set-key [remap markdown-next-link] 'vi-style-c-e)
+    (global-set-key [remap markdown-previous-link] 'vi-style-c-y))
 
-  ;; Package settings: neotree
   (use-package neotree
     :defer t
     :bind (:map neotree-mode-map
@@ -770,10 +738,8 @@ layers configuration. You are free to put any user code."
           neo-persist-show t
           neo-theme '(ascii)
           neo-window-width 32)
-    :config
     (global-set-key [f8] 'neotree-find))
 
-  ;; Package settings: org
   (use-package org
     :defer t
     :bind (:map org-mode-map
@@ -782,19 +748,16 @@ layers configuration. You are free to put any user code."
                 ("C-c C-'" . org-todo)
                 ("C-c C-/" . org-sparse-tree)))
 
-  ;; Package settings: projectile
   (use-package projectile
     :defer t
-    :config
+    :init
     (setq projectile-switch-project-action
           (lambda ()
-            (progn
-              (magit-show-refs-head)
-              (when (neo-global--window-exists-p)
-                (neotree-find)
-                (other-window 1))))))
+            (magit-show-refs-head)
+            (when (neo-global--window-exists-p)
+              (neotree-find)
+              (other-window 1)))))
 
-  ;; Package settings: python-mode
   (use-package python
     :defer t
     :init
@@ -803,18 +766,15 @@ layers configuration. You are free to put any user code."
           python-shell-virtualenv-path "~/pyvenv"
           python-shell-virtualenv-root "~/pyvenv"
           python-shell-completion-native-disabled-interpreters '("ipython" "pypy"))
+    (global-set-key [remap anaconda-mode-find-assignments] 'anaconda-mode-go-back)
+    (global-set-key [remap anaconda-mode-find-definitions] 'anaconda-mode-find-assignments)
     :bind (:map python-mode-map
                 ("C-c C-j" . helm-semantic-or-imenu))
     :config
-    (progn
-      (global-set-key [remap anaconda-mode-find-assignments] 'anaconda-mode-go-back)
-      (global-set-key [remap anaconda-mode-find-definitions] 'anaconda-mode-find-assignments)))
+    (add-hook 'python-mode-hook (lambda ()
+                                  (interactive)
+                                  (setq-local helm-dash-docsets '("Python 2" "Python 3")))))
 
-  (add-hook 'python-mode-hook (lambda ()
-                                (interactive)
-                                (setq-local helm-dash-docsets '("Python 2" "Python 3"))))
-
-  ;; Package settings: smartparens
   (use-package smartparens
     :defer t
     :bind (:map sp-keymap
@@ -830,24 +790,21 @@ layers configuration. You are free to put any user code."
                 ("C-M-u" . sp-backward-up-sexp)
                 ("C-]" . sp-select-next-thing-exchange)))
 
-  ;; Package settings: magit
   (use-package magit
+    :ensure t
     :defer t
     :init
     (setq magit-log-arguments (quote ("-n256" "--graph" "--decorate" "--color")))
-    :config
     (advice-add 'magit-log-all :after #'delete-other-windows)
     (advice-add 'magit-log-buffer-file :after #'delete-other-windows)
     (advice-add 'magit-log-head :after #'delete-other-windows)
     (advice-add 'magit-show-refs-head :after #'delete-other-windows))
 
-  ;; Package settings: yasnippet
   (use-package yasnippet
     :defer t
     :init
     (setq yas-before-expand-snippet-hook nil))
 
-  ;; Package settings: ztree-dir
   (use-package ztree-dir
     :defer t
     :bind (:map ztreedir-mode-map
@@ -855,21 +812,22 @@ layers configuration. You are free to put any user code."
                 ("p" . previous-line)
                 ("o" . ztree-perform-action)))
 
-  ;; Package settings: speedbar/sr-speedbar
   (use-package speedbar
     :defer t
     :init
     (setq speedbar-use-images nil)
-    :config
     (use-package sr-speedbar
       :defer t
       :init
       (setq sr-speedbar-right-side nil)))
 
   ;; Use Emacs Lisp docset in emacs-lisp-mode
-  (add-hook 'emacs-lisp-mode-hook (lambda ()
-                                    (interactive)
-                                    (setq-local helm-dash-docsets '("Emacs Lisp"))))
+  (use-package emacs-lisp
+    :init
+    :config
+    (add-hook 'emacs-lisp-mode-hook (lambda ()
+                                      (interactive)
+                                      (setq-local helm-dash-docsets '("Emacs Lisp")))))
 
   ;; Hooks added: programming modes
   (add-hooks 'prog-mode-hook
@@ -878,6 +836,9 @@ layers configuration. You are free to put any user code."
                linum-mode
                rainbow-delimiters-mode
                smartparens-mode))
+  ;; Hooks added: conf mode
+  (add-hooks 'conf-mode
+             '(smartparens-mode))
   ;; Hooks added: conf mode (unix)
   (add-hooks 'conf-unix-mode
              '(smartparens-mode))
@@ -899,24 +860,40 @@ layers configuration. You are free to put any user code."
   ;; Hooks added: sbt
   (add-hooks 'sbt-mode-hook
              '(smartparens-mode))
+  ;; Hooks added: yml-mode
+  (add-hooks 'yaml-mode-hook
+             '(smartparens-mode))
 
-  ;; Colorise compilation buffer
-  (require 'ansi-color)
-  (defun colorise-compilation-buffer ()
-    (toggle-read-only)
-    (ansi-color-apply-on-region (point-min) (point-max))
-    (toggle-read-only))
-  (add-hook 'compilation-filter-hook 'colorise-compilation-buffer)
-  (add-hook 'compilation-mode-hook 'colorise-compilation-buffer)
-
-  ;; Occupy entire frame
-  ;;(advice-add 'helm-projectile-switch-project :after #'go-set-oracle-scope)
+  (use-package compile
+    :defer t
+    :init
+    (use-package ansi-color
+      :config
+      ;; Colourise compilation buffer
+      (defun colorise-compilation-buffer ()
+        (toggle-read-only)
+        (ansi-color-apply-on-region (point-min) (point-max))
+        (toggle-read-only))
+      (add-hook 'compilation-filter-hook 'colorise-compilation-buffer)
+      (add-hook 'compilation-mode-hook 'colorise-compilation-buffer)))
 
   (use-package dumb-jump
     :defer t
-    :config
+    :init
     ;; Recenter after jump to definition
     (advice-add 'dumb-jump-go :after (lambda (&rest args) (recenter-top-bottom))))
+
+  ;; Nyan nyan nyan
+  (use-package zone-nyan
+    :defer t
+    :after zone
+    :init
+    (setq zone-programs '(zone-nyan))
+    :config
+    (zone-when-idle (* 60 5)))
+
+  (use-package typescript-mode
+    :mode "\\.ts\\'")
 
   ;; Move point to the beginning of the line before opening a new line
   (advice-add 'open-line :before 'beginning-of-line)
