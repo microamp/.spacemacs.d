@@ -447,8 +447,7 @@ layers configuration. You are free to put any user code."
   ;; Disable auto-save
   (setq auto-save-timeout nil)
 
-  (use-package centred-cursor-mode
-    :defer t
+  (use-package centered-cursor-mode
     :init
     (global-centered-cursor-mode))
 
@@ -630,10 +629,10 @@ layers configuration. You are free to put any user code."
     :init
     (setq-default js2-basic-offset 2
                   js-indent-level 2)
-    (setq flycheck-javascript-standard-executable "standard")
     (global-set-key [remap js-set-js-context] 'helm-semantic-or-imenu)
     (use-package prettier-js
       :load-path "~/.spacemacs.d/prettier/editors/emacs/"
+      :after js2-mode
       :init
       (setq prettier-target-mode "js2-mode"
             prettier-args '("--trailing-comma" "none"
@@ -795,12 +794,26 @@ layers configuration. You are free to put any user code."
     ;;(setq god-mod-alist '((nil . "C-")
     ;;                      ("g" . "M-")
     ;;                      ("G" . "C-M-")))
-    (setq god-mod-alist '((nil . "C-M-")))
+    (setq god-mod-alist '((nil . "C-M-"))
+          god-exempt-major-modes '(debugger-mode
+                                   dired-mode
+                                   eshell-mode
+                                   git-commit-mode
+                                   grep-mode
+                                   magit-popup-mode
+                                   org-mode
+                                   vc-annotate-mode))
     (global-set-key (kbd "<escape>") 'god-mode-all)
     (god-mode-all)
     :config
     (add-hook 'god-mode-enabled-hook #'blink-cursor-end)
-    (add-hook 'god-mode-disabled-hook #'blink-cursor-start))
+    (add-hook 'god-mode-enabled-hook (lambda ()
+                                       (set-face-background 'cursor "#8FA1B3")
+                                       (set-face-background 'spacemacs-emacs-face "#8FA1B3")))
+    (add-hook 'god-mode-disabled-hook #'blink-cursor-start)
+    (add-hook 'god-mode-disabled-hook (lambda ()
+                                        (set-face-background 'cursor "#BF616A")
+                                        (set-face-background 'spacemacs-emacs-face "#BF616A"))))
 
   (use-package magit
     :ensure t
