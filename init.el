@@ -27,7 +27,7 @@ values."
                       auto-completion-return-key-behavior 'complete
                       auto-completion-tab-key-behavior 'cycle
                       auto-completion-complete-with-key-sequence nil
-                      auto-completion-complete-with-key-sequence-delay 1.0
+                      auto-completion-complete-with-key-sequence-delay 0.5
                       auto-completion-private-snippets-directory nil)
      better-defaults
      c-c++
@@ -113,9 +113,9 @@ values."
                                       julia-shell
                                       know-your-http-well
                                       labburn-theme
-                                      magithub
                                       nord-theme
                                       password-generator
+                                      prettier-js
                                       punpun-theme
                                       seoul256-theme
                                       smmry
@@ -135,6 +135,7 @@ values."
                                     evil-exchange
                                     evil-iedit-state
                                     evil-indent-plus
+                                    evil-lion
                                     evil-lisp-state
                                     evil-local
                                     evil-magit
@@ -377,12 +378,6 @@ It is called immediately after `dotspacemacs/init'.  You are free to put any
 user code."
   )
 
-(defun render-html-message ()
-  (let ((dom (libxml-parse-html-region (point-min) (point-max))))
-    (erase-buffer)
-    (shr-insert-document dom)
-    (goto-char (point-min))))
-
 (defun tramp-cleanup-all-connections-and-buffers ()
   (interactive)
   (progn
@@ -624,28 +619,28 @@ layers configuration. You are free to put any user code."
 
   (use-package js2-mode
     :defer t
+    :mode "\\.js\\'"
     :bind (:map js2-mode-map
                 ("C-c j" . helm-semantic-or-imenu))
     :init
     (setq-default js2-basic-offset 2
                   js-indent-level 2)
+    (setq js2-strict-inconsistent-return-warning nil)
     (global-set-key [remap js-set-js-context] 'helm-semantic-or-imenu)
-    (use-package prettier-js
-      :load-path "~/.spacemacs.d/prettier/editors/emacs/"
-      :after js2-mode
-      :init
-      (setq prettier-target-mode "js2-mode"
-            prettier-args '("--trailing-comma" "none"
-                            "--bracket-spacing" "false"))
-      :config
-      (add-hook 'js2-mode-hook (lambda ()
-                                 (interactive)
-                                 (add-hook 'before-save-hook 'prettier-before-save))))
     :config
     (add-hook 'js2-mode-hook #'add-node-modules-path)
     (add-hook 'js2-mode-hook (lambda ()
                                (interactive)
                                (setq-local helm-dash-docsets '("Express" "NodeJS" "JavaScript")))))
+
+  (use-package prettier-js
+    :defer t
+    :after js2-mode
+    :init
+    (setq prettier-js-args '("--trailing-comma" "none"
+                             "--bracket-spacing" "false"))
+    :config
+    (add-hook 'js2-mode-hook 'prettier-js-mode))
 
   (use-package julia-mode
     :defer t
@@ -695,8 +690,8 @@ layers configuration. You are free to put any user code."
      ;; Program to fetch mail (offlineimap)
      mu4e-get-mail-command "offlineimap"
 
-     ;; Update five minutes
-     mu4e-update-interval (* 60 5)
+     ;; Update every 2 minutes
+     mu4e-update-interval (* 60 2)
 
      ;; SMTP settings
      message-send-mail-function   'smtpmail-send-it
@@ -711,7 +706,7 @@ layers configuration. You are free to put any user code."
      message-kill-buffer-on-exit t
 
      ;; View content using w3m
-     mu4e-html2text-command 'render-html-message)
+     mu4e-html2text-command 'mu4e-shr2text)
     :config
     (progn
       (defun my-mu4e-maildirs-extension-always-update ()
@@ -776,6 +771,7 @@ layers configuration. You are free to put any user code."
     :bind (:map sp-keymap
                 ("<C-M-backspace>" . sp-splice-sexp)
                 ("C-M-]" . sp-select-next-thing)
+                ("C-M-}" . sp-select-previous-thing)
                 ("C-M-a" . sp-backward-down-sexp)
                 ("C-M-b" . sp-backward-sexp)
                 ("C-M-d" . sp-down-sexp)
@@ -788,35 +784,41 @@ layers configuration. You are free to put any user code."
 
   (use-package god-mode
     :commands god-mode-all god-local-mode
-    :bind (:map god-local-mode-map
-                ("i" . god-local-mode))
+    :bind (("C-l" . god-mode-all)
+           :map god-local-mode-map
+           ("i" . god-local-mode))
     :init
-    ;;(setq god-mod-alist '((nil . "C-")
-    ;;                      ("g" . "M-")
-    ;;                      ("G" . "C-M-")))
     (setq god-mod-alist '((nil . "C-M-"))
-          god-exempt-major-modes '(debugger-mode
+          god-exempt-major-modes '(Custom-mode
+                                   debugger-mode
                                    dired-mode
+                                   doc-view-mode
                                    eshell-mode
                                    git-commit-mode
                                    grep-mode
                                    magit-popup-mode
+                                   mu4e-compose-mode
+                                   mu4e-headers-mode
+                                   mu4e-main-mode
+                                   mu4e-org-mode
+                                   mu4e-view-mode
                                    org-mode
                                    vc-annotate-mode))
-    (global-set-key (kbd "<escape>") 'god-mode-all)
-    (god-mode-all)
     :config
     (add-hook 'god-mode-enabled-hook #'blink-cursor-end)
     (add-hook 'god-mode-enabled-hook (lambda ()
-                                       (set-face-background 'cursor "#8FA1B3")
-                                       (set-face-background 'spacemacs-emacs-face "#8FA1B3")))
+                                       (setq cursor-type 'hollow)))
+    (add-hook 'god-mode-enabled-hook (lambda ()
+                                       (set-face-background 'cursor "#A3BE8C")
+                                       (set-face-background 'spacemacs-emacs-face "#A3BE8C")))
     (add-hook 'god-mode-disabled-hook #'blink-cursor-start)
+    (add-hook 'god-mode-disabled-hook (lambda ()
+                                        (setq cursor-type 'box)))
     (add-hook 'god-mode-disabled-hook (lambda ()
                                         (set-face-background 'cursor "#BF616A")
                                         (set-face-background 'spacemacs-emacs-face "#BF616A"))))
 
   (use-package magit
-    :ensure t
     :defer t
     :init
     (setq magit-log-arguments (quote ("-n256" "--graph" "--decorate" "--color")))
@@ -918,7 +920,9 @@ layers configuration. You are free to put any user code."
     (zone-when-idle (* 60 5)))
 
   (use-package typescript-mode
-    :mode "\\.ts\\'")
+    :mode "\\.ts\\'"
+    :config
+    (setq-local helm-dash-docsets '("TypeScript")))
 
   ;; Move point to the beginning of the line before opening a new line
   (advice-add 'open-line :before 'beginning-of-line)
@@ -959,6 +963,7 @@ layers configuration. You are free to put any user code."
       ("C-x ," eyebrowse-rename-window-config)
       ("C-x -" split-window-below-and-focus)
       ("C-x C-b" ibuffer-list-buffers)
+      ("C-x C-d" ido-dired)
       ("C-x M-d" ztree-dir)
       ("C-x M-n" make-frame)
       ("C-x O" previous-multiframe-window)
