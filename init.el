@@ -71,6 +71,7 @@ values."
             shell-default-position 'bottom)
      shell-scripts
      sql
+     twitter
      (typescript :variables
                  typescript-fmt-on-save t)
      syntax-checking
@@ -122,7 +123,6 @@ values."
                                       sr-speedbar
                                       syslog-mode
                                       tao-theme
-                                      twittering-mode
                                       w3m
                                       zenburn-theme
                                       zone-nyan
@@ -827,6 +827,13 @@ layers configuration. You are free to put any user code."
     (advice-add 'magit-log-head :after #'delete-other-windows)
     (advice-add 'magit-show-refs-head :after #'delete-other-windows))
 
+  (use-package magit-gitflow
+    :defer t
+    :after magit
+    :bind (:map magit-gitflow-mode-map
+                ("C-f" . forward-char)
+                ("C-M-F" . magit-gitflow-popup)))
+
   (use-package yasnippet
     :defer t
     :init
@@ -917,7 +924,7 @@ layers configuration. You are free to put any user code."
     :init
     (setq zone-programs '(zone-nyan))
     :config
-    (zone-when-idle (* 60 5)))
+    (zone-when-idle (* 60 10)))
 
   (use-package typescript-mode
     :mode "\\.ts\\'"
