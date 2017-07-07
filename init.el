@@ -88,6 +88,8 @@ values."
                                       bm
                                       browse-at-remote
                                       centered-cursor-mode
+                                      cheat-sh
+                                      clippy
                                       dart-mode
                                       deft
                                       dictionary
@@ -179,7 +181,7 @@ values."
    ;; directory. A string value must be a path to an image format supported
    ;; by your Emacs build.
    ;; If the value is nil then no banner is displayed. (default 'official)
-   dotspacemacs-startup-banner nil
+   dotspacemacs-startup-banner 004
    ;; List of items to show in the startup buffer. If nil it is disabled.
    ;; Possible values are: `recents' `bookmarks' `projects'.
    ;; (default '(recents projects))
@@ -187,11 +189,11 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(base16-ocean
+   dotspacemacs-themes '(base16-grayscale-light
+                         base16-ocean
                          nord
                          seoul256
                          spacemacs-dark
-                         base16-grayscale-dark
                          tao-yang
                          base16-hopscotch
                          labburn)
@@ -398,10 +400,18 @@ layers configuration. You are free to put any user code."
   (setq-default scroll-margin 0)
 
   ;; Overwrite highlighted
-  (delete-selection-mode t)
+  (use-package delete-selection-mode
+    :defer t
+    :init
+    (delete-selection-mode t))
 
   ;; Remove trailing whitespace on save
   (add-to-list 'write-file-functions 'delete-trailing-whitespace)
+
+  (use-package clippy
+    :defer t
+    :init
+    (setq clippy-tip-show-function #'clippy-popup-tip-show))
 
   ;; Split vertically by default
   (setq split-width-threshold nil)
@@ -412,20 +422,26 @@ layers configuration. You are free to put any user code."
         browse-url-generic-program "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
 
   ;; Powerline: current time
-  (setq display-time-string-forms
-        '((substring year -4)
-          "-"
-          (format "%02d" (string-to-number month))
-          "-"
-          (format "%02d" (string-to-number day))
-          " "
-          24-hours
-          ":"
-          minutes))
-  (display-time-mode t)
+  (use-package display-time-mode
+    :defer t
+    :init
+    (setq display-time-string-forms
+          '((substring year -4)
+            "-"
+            (format "%02d" (string-to-number month))
+            "-"
+            (format "%02d" (string-to-number day))
+            " "
+            24-hours
+            ":"
+            minutes))
+    (display-time-mode t))
 
   ;; Powerline: battery life
-  (fancy-battery-mode t)
+  (use-package fancey-battery-mode
+    :defer t
+    :init
+    (fancy-battery-mode t))
 
   ;; Turn off purpose-mode (on by default)
   (spaceline-toggle-purpose)
@@ -443,6 +459,7 @@ layers configuration. You are free to put any user code."
   (setq auto-save-timeout nil)
 
   (use-package centered-cursor-mode
+    :defer t
     :init
     (global-centered-cursor-mode))
 
@@ -494,18 +511,25 @@ layers configuration. You are free to put any user code."
     (setq emms-source-file-default-directory "~/Music"
           emms-cache-file "~/.spacemacs.d/emms/cache"
           emms-stream-bookmarks-file "~/.spacemacs.d/emms/streams")
-    (use-package emms-mode-line-cycle
-      :init
-      (setq emms-mode-line-cycle-max-width 13)
-      (use-package emms-mode-line-icon
-        :init
-        (setq emms-mode-line-cycle-use-icon-p t)
-        :config
-        (emms-all)
-        (emms-default-players)
-        (emms-mode-line-enable)
-        (emms-playing-time-disable-display)
-        (emms-mode-line-cycle 1))))
+    :config
+    (emms-all)
+    (emms-default-players)
+    (emms-mode-line-enable)
+    (emms-playing-time-disable-display))
+
+  (use-package emms-mode-line-cycle
+    :defer t
+    :after emms
+    :init
+    (setq emms-mode-line-cycle-max-width 15)
+    :config
+    (emms-mode-line-cycle 1))
+
+  (use-package emms-mode-line-icon
+    :defer t
+    :after emms
+    :init
+    (setq emms-mode-line-cycle-use-icon-p t))
 
   (use-package elfeed
     :defer t
@@ -557,6 +581,10 @@ layers configuration. You are free to put any user code."
 
   (use-package go-mode
     :defer t
+    :bind (:map go-mode-map
+                ("M-." . godef-jump)
+                ("M-," . pop-tag-mark)
+                ("C-c C-j" . helm-semantic-or-imenu))
     :init
     (setq flycheck-gometalinter-disable-linters '("aligncheck"
                                                   "deadcode"
@@ -570,30 +598,39 @@ layers configuration. You are free to put any user code."
                                                   "structcheck"
                                                   "unconvert"
                                                   "vetshadow"))
-    (use-package go-errcheck)
-    (use-package go-playground)
+    :config
+    (add-hook 'go-mode-hook (lambda ()
+                              (interactive)
+                              (setq-local helm-dash-docsets '("Go")))))
+
+  (use-package go-errcheck
+    :defer t
+    :after go-mode
+    :commands go-errcheck-project
+    :bind (:map go-mode-map
+                ("C-c C-e" . go-errcheck-project)))
+
+  (use-package go-playground
+    :defer t
+    :after go-mode
+    :commands go-playground
+    :bind (:map go-mode-map
+                ("C-c C-p" . go-playground)))
+
+  (use-package go-direx
+    :defer t
+    :after go-mode
+    :commands go-direx-pop-to-buffer go-direx-switch-to-buffer
+    :bind (:map go-mode-map
+           ("C-c j" . go-direx-switch-to-buffer))
+    :init
     (push '("^\*go-direx:"
             :regexp t
             :position right
             :width 0.5
             :dedicated t
             :stick t)
-          popwin:special-display-config)
-    (define-keys go-mode-map
-      '(("M-." godef-jump)
-        ("M-," pop-tag-mark)
-        ("C-c C-e" go-errcheck-project)
-        ("C-c C-p" go-playground)
-        ("C-c C-j" helm-semantic-or-imenu)
-        ("C-c j" go-direx-switch-to-buffer)))
-    (evil-leader/set-key-for-mode 'go-mode
-      "mjp" 'go-direx-pop-to-buffer
-      "mjs" 'go-direx-switch-to-buffer
-      "mE" 'go-errcheck-project)
-    :config
-    (add-hook 'go-mode-hook (lambda ()
-                              (interactive)
-                              (setq-local helm-dash-docsets '("Go")))))
+          popwin:special-display-config))
 
   (use-package helm-dash
     :defer t
@@ -621,17 +658,22 @@ layers configuration. You are free to put any user code."
     :defer t
     :mode "\\.js\\'"
     :bind (:map js2-mode-map
-                ("C-c j" . helm-semantic-or-imenu))
+                ("C-c C-j" . helm-semantic-or-imenu))
     :init
     (setq-default js2-basic-offset 2
                   js-indent-level 2)
     (setq js2-strict-inconsistent-return-warning nil)
-    (global-set-key [remap js-set-js-context] 'helm-semantic-or-imenu)
     :config
-    (add-hook 'js2-mode-hook #'add-node-modules-path)
     (add-hook 'js2-mode-hook (lambda ()
                                (interactive)
                                (setq-local helm-dash-docsets '("Express" "NodeJS" "JavaScript")))))
+
+  (use-package add-node-modules-path
+    :ensure t
+    :defer t
+    :after js2-mode
+    :config
+    (add-hook 'js2-mode-hook #'add-node-modules-path))
 
   (use-package prettier-js
     :defer t
@@ -665,6 +707,9 @@ layers configuration. You are free to put any user code."
     (when (fboundp 'imagemagick-register-types)
       (imagemagick-register-types))
     (setq
+     ;; Limit the number of headers to show
+     mu4e-headers-results-limit 150
+
      ;; Show images
      mu4e-view-show-images t
 
@@ -737,7 +782,13 @@ layers configuration. You are free to put any user code."
                 ("C-c i" . org-clock-in)
                 ("C-c o" . org-clock-out)
                 ("C-c C-'" . org-todo)
-                ("C-c C-/" . org-sparse-tree)))
+                ("C-c C-/" . org-sparse-tree))
+    :init
+    (setq org-todo-keywords '("TODO" "STARTED" "DONE"))
+    (add-hook 'org-after-todo-state-change-hook
+              (lambda ()
+                (when (string= org-state "STARTED")
+                  (org-clock-in)))))
 
   (use-package projectile
     :defer t
@@ -783,6 +834,7 @@ layers configuration. You are free to put any user code."
                 ("C-]" . sp-select-next-thing-exchange)))
 
   (use-package god-mode
+    :defer t
     :commands god-mode-all god-local-mode
     :bind (("C-l" . god-mode-all)
            :map god-local-mode-map
@@ -863,6 +915,12 @@ layers configuration. You are free to put any user code."
                                       (interactive)
                                       (setq-local helm-dash-docsets '("Emacs Lisp")))))
 
+  (use-package twittering-mode
+    :defer t
+    :init
+    (setq twittering-active-mode nil
+          twittering-icon-mode nil))
+
   ;; Hooks added: programming modes
   (add-hooks 'prog-mode-hook
              '(eldoc-mode
@@ -930,6 +988,14 @@ layers configuration. You are free to put any user code."
     :mode "\\.ts\\'"
     :config
     (setq-local helm-dash-docsets '("TypeScript")))
+
+  (use-package spacemacs-centered-buffer-mode
+    :defer t
+    :init
+    (setq spacemacs-centered-buffer-mode-max-content-width 1000
+          spacemacs-centered-buffer-mode-min-content-width 1000
+          spacemacs-centered-buffer-mode-default-fringe-color "#7c7c7c"
+          spacemacs-centered-buffer-mode-fringe-color "#7c7c7c"))
 
   ;; Move point to the beginning of the line before opening a new line
   (advice-add 'open-line :before 'beginning-of-line)
