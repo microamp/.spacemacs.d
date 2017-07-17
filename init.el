@@ -88,12 +88,12 @@ values."
                                       bm
                                       browse-at-remote
                                       centered-cursor-mode
+                                      centered-window-mode
                                       cheat-sh
                                       clippy
                                       dart-mode
                                       deft
                                       dictionary
-                                      doom-themes
                                       emms
                                       emms-mode-line-cycle
                                       find-file-in-project
@@ -115,17 +115,13 @@ values."
                                       julia-mode
                                       julia-shell
                                       know-your-http-well
-                                      labburn-theme
-                                      nord-theme
                                       password-generator
                                       prettier-js
-                                      punpun-theme
-                                      seoul256-theme
                                       smmry
                                       sr-speedbar
                                       syslog-mode
-                                      tao-theme
                                       w3m
+                                      weechat
                                       zenburn-theme
                                       zone-nyan
                                       ztree)
@@ -189,14 +185,7 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(base16-grayscale-light
-                         base16-ocean
-                         nord
-                         seoul256
-                         spacemacs-dark
-                         tao-yang
-                         base16-hopscotch
-                         labburn)
+   dotspacemacs-themes '(base16-grayscale-dark)
    ;; If non nil the cursor color matches the state color.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
@@ -258,14 +247,14 @@ values."
    dotspacemacs-loading-progress-bar t
    ;; If non nil the frame is fullscreen when Emacs starts up. (default nil)
    ;; (Emacs 24.4+ only)
-   dotspacemacs-fullscreen-at-startup t
+   dotspacemacs-fullscreen-at-startup nil
    ;; If non nil `spacemacs/toggle-fullscreen' will not use native fullscreen.
    ;; Use to disable fullscreen animations in OSX. (default nil)
-   dotspacemacs-fullscreen-use-non-native t
+   dotspacemacs-fullscreen-use-non-native nil
    ;; If non nil the frame is maximized when Emacs starts up.
    ;; Takes effect only if `dotspacemacs-fullscreen-at-startup' is nil.
    ;; (default nil) (Emacs 24.4+ only)
-   dotspacemacs-maximized-at-startup nil
+   dotspacemacs-maximized-at-startup t
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's active or selected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
@@ -404,6 +393,11 @@ layers configuration. You are free to put any user code."
     :defer t
     :init
     (delete-selection-mode t))
+
+  (use-package blink-cursor-mode
+    :defer t
+    :init
+    (blink-cursor-start))
 
   ;; Remove trailing whitespace on save
   (add-to-list 'write-file-functions 'delete-trailing-whitespace)
@@ -751,12 +745,16 @@ layers configuration. You are free to put any user code."
      message-kill-buffer-on-exit t
 
      ;; View content using w3m
-     mu4e-html2text-command 'mu4e-shr2text)
+     mu4e-html2text-command 'mu4e-shr2text))
+
+  (use-package mu4e-maildirs-extension
+    :defer t
+    :after mu4e
     :config
-    (progn
-      (defun my-mu4e-maildirs-extension-always-update ()
-        (mu4e-maildirs-extension-force-update '(16)))
-      (add-hook 'mu4e-view-mode-hook 'my-mu4e-maildirs-extension-always-update)))
+    (defun my-mu4e-maildirs-extension-always-update ()
+      (mu4e-maildirs-extension-force-update '(16)))
+    (add-hook 'mu4e-main-mode-hook 'my-mu4e-maildirs-extension-always-update)
+    (mu4e-maildirs-extension))
 
   ;; Packge settings: markdown-mode
   (use-package markdown-mode
@@ -860,15 +858,9 @@ layers configuration. You are free to put any user code."
     (add-hook 'god-mode-enabled-hook #'blink-cursor-end)
     (add-hook 'god-mode-enabled-hook (lambda ()
                                        (setq cursor-type 'hollow)))
-    (add-hook 'god-mode-enabled-hook (lambda ()
-                                       (set-face-background 'cursor "#A3BE8C")
-                                       (set-face-background 'spacemacs-emacs-face "#A3BE8C")))
     (add-hook 'god-mode-disabled-hook #'blink-cursor-start)
     (add-hook 'god-mode-disabled-hook (lambda ()
-                                        (setq cursor-type 'box)))
-    (add-hook 'god-mode-disabled-hook (lambda ()
-                                        (set-face-background 'cursor "#BF616A")
-                                        (set-face-background 'spacemacs-emacs-face "#BF616A"))))
+                                        (setq cursor-type 'box))))
 
   (use-package magit
     :defer t
@@ -989,11 +981,16 @@ layers configuration. You are free to put any user code."
     :config
     (setq-local helm-dash-docsets '("TypeScript")))
 
+  (use-package centered-window-mode
+    :defer t
+    :init
+    (setq cwm-centered-window-width 180))
+
   (use-package spacemacs-centered-buffer-mode
     :defer t
     :init
-    (setq spacemacs-centered-buffer-mode-max-content-width 1000
-          spacemacs-centered-buffer-mode-min-content-width 1000
+    (setq spacemacs-centered-buffer-mode-max-content-width 850
+          spacemacs-centered-buffer-mode-min-content-width 850
           spacemacs-centered-buffer-mode-default-fringe-color "#7c7c7c"
           spacemacs-centered-buffer-mode-fringe-color "#7c7c7c"))
 
@@ -1025,6 +1022,21 @@ layers configuration. You are free to put any user code."
             ("." eyebrowse-switch-to-window-config)
             ("n" eyebrowse-next-window-config)
             ("p" eyebrowse-prev-window-config)))
+
+  (use-package weechat
+    :defer t
+    :init
+    (setq weechat-color-list '(unspecified "black" "dim gray" "dark red" "red"
+                                           "dark green" "green" "brown"
+                                           "orange" "dark blue" "blue"
+                                           "dark magenta" "magenta" "dark cyan"
+                                           "royal blue" "dark gray" "gray"))
+    (spacemacs/set-leader-keys
+      "awc" 'weechat-connect
+      "awm" 'weechat-monitor-buffer
+      "awq" 'weechat-disconnect)
+    :config
+    (add-hook 'weechat-mode-hook (lambda () (centered-cursor-mode -1))))
 
   ;; Custom key bindings: global
   (define-keys global-map
