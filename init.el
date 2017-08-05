@@ -55,8 +55,6 @@ values."
            mu4e-installation-path "/usr/local/Cellar/mu/HEAD/share/emacs/site-lisp/mu/mu4e")
      org
      osx
-     php
-     puppet
      (python :variables
              python-enable-yapf-format-on-save nil)
      rcirc
@@ -110,7 +108,6 @@ values."
                                       helm-pt
                                       hl-todo
                                       howdoi
-                                      jdee
                                       jinja2-mode
                                       julia-mode
                                       julia-shell
@@ -394,11 +391,6 @@ layers configuration. You are free to put any user code."
     :init
     (delete-selection-mode t))
 
-  (use-package blink-cursor-mode
-    :defer t
-    :init
-    (blink-cursor-start))
-
   ;; Remove trailing whitespace on save
   (add-to-list 'write-file-functions 'delete-trailing-whitespace)
 
@@ -447,7 +439,7 @@ layers configuration. You are free to put any user code."
   (setq kill-ring-max 20)
 
   ;; Highlight current line (on by default)
-  (spacemacs/toggle-highlight-current-line-globally-on)
+  (spacemacs/toggle-highlight-current-line-globally-off)
 
   ;; Disable auto-save
   (setq auto-save-timeout nil)
@@ -633,15 +625,6 @@ layers configuration. You are free to put any user code."
           helm-dash-docsets-path "~/.docsets"
           helm-dash-docset-newpath "~/.docsets"))
 
-  (use-package jdee
-    :defer t
-    :load-path "~/src/jdee-server/target"
-    :bind (:map jdee-mode-map
-                ("M-." . jdee-open-class-at-point)
-                ("M-," . pop-tag-mark))
-    :init
-    (setq jdee-server-dir "~/src/jdee-server/target"))
-
   (use-package json-mode
     :defer t
     :init
@@ -677,6 +660,9 @@ layers configuration. You are free to put any user code."
                              "--bracket-spacing" "false"))
     :config
     (add-hook 'js2-mode-hook 'prettier-js-mode))
+
+  (add-to-list 'custom-theme-load-path "~/.spacemacs.d/themes")
+  (load-theme 'microamp)
 
   (use-package julia-mode
     :defer t
@@ -729,6 +715,15 @@ layers configuration. You are free to put any user code."
      ;; Program to fetch mail (offlineimap)
      mu4e-get-mail-command "offlineimap"
 
+     ;; Do not bother asking
+     mu4e-confirm-quit nil
+
+     ;; Fancy chars are fancy
+     mu4e-use-fancy-chars t
+
+     mu4e-view-image-max-height 300
+     mu4e-view-image-max-width 400
+
      ;; Update every 2 minutes
      mu4e-update-interval (* 60 2)
 
@@ -755,6 +750,12 @@ layers configuration. You are free to put any user code."
       (mu4e-maildirs-extension-force-update '(16)))
     (add-hook 'mu4e-main-mode-hook 'my-mu4e-maildirs-extension-always-update)
     (mu4e-maildirs-extension))
+
+  (use-package mu4e-alert
+    :defer t
+    :after mu4e
+    :init
+    (mu4e-alert-enable-mode-line-display))
 
   ;; Packge settings: markdown-mode
   (use-package markdown-mode
@@ -806,14 +807,19 @@ layers configuration. You are free to put any user code."
           python-shell-virtualenv-path "~/pyvenv"
           python-shell-virtualenv-root "~/pyvenv"
           python-shell-completion-native-disabled-interpreters '("ipython" "pypy"))
-    (global-set-key [remap anaconda-mode-find-assignments] 'anaconda-mode-go-back)
-    (global-set-key [remap anaconda-mode-find-definitions] 'anaconda-mode-find-assignments)
     :bind (:map python-mode-map
                 ("C-c C-j" . helm-semantic-or-imenu))
     :config
     (add-hook 'python-mode-hook (lambda ()
                                   (interactive)
                                   (setq-local helm-dash-docsets '("Python 2" "Python 3")))))
+
+  (use-package anaconda-mode
+    :defer t
+    :after python
+    :init
+    (global-set-key [remap anaconda-mode-find-assignments] 'anaconda-mode-go-back)
+    (global-set-key [remap anaconda-mode-find-definitions] 'anaconda-mode-find-assignments))
 
   (use-package smartparens
     :defer t
@@ -830,6 +836,14 @@ layers configuration. You are free to put any user code."
                 ("C-M-p" . sp-previous-sexp)
                 ("C-M-u" . sp-backward-up-sexp)
                 ("C-]" . sp-select-next-thing-exchange)))
+
+  (use-package kaomoji
+    :init
+    (setq kaomoji-kill-ring-save t
+          kaomoji-insert t)
+    (spacemacs/set-leader-keys
+      "hee" 'helm-kaomoji
+      "her" 'helm-kaomoji-random))
 
   (use-package god-mode
     :defer t
@@ -965,6 +979,7 @@ layers configuration. You are free to put any user code."
     :defer t
     :init
     ;; Recenter after jump to definition
+    (setq dumb-jump-prefer-searcher 'rg)
     (advice-add 'dumb-jump-go :after (lambda (&rest args) (recenter-top-bottom))))
 
   ;; Nyan nyan nyan
@@ -991,8 +1006,8 @@ layers configuration. You are free to put any user code."
     :init
     (setq spacemacs-centered-buffer-mode-max-content-width 850
           spacemacs-centered-buffer-mode-min-content-width 850
-          spacemacs-centered-buffer-mode-default-fringe-color "#7c7c7c"
-          spacemacs-centered-buffer-mode-fringe-color "#7c7c7c"))
+          spacemacs-centered-buffer-mode-default-fringe-color "#6c7c87"
+          spacemacs-centered-buffer-mode-fringe-color "#6c7c87"))
 
   ;; Move point to the beginning of the line before opening a new line
   (advice-add 'open-line :before 'beginning-of-line)
@@ -1012,6 +1027,12 @@ layers configuration. You are free to put any user code."
   ;; Use syslog-mode for .log files
   (add-to-list 'auto-mode-alist '("\\.log\\'" . syslog-mode))
 
+  (use-package epa-file
+    :init
+    (epa-file-enable)
+    (setq epa-file-name-regexp "\\.gpg\\(~\\|\\.~[0-9]+~\\)?\\'\\|\\.gpgenc"
+          epa-armor t))
+
   ;; Newsticker
   (add-hook 'newsticker-mode-hook 'imenu-add-menubar-index)
 
@@ -1026,11 +1047,13 @@ layers configuration. You are free to put any user code."
   (use-package weechat
     :defer t
     :init
-    (setq weechat-color-list '(unspecified "black" "dim gray" "dark red" "red"
-                                           "dark green" "green" "brown"
-                                           "orange" "dark blue" "blue"
-                                           "dark magenta" "magenta" "dark cyan"
-                                           "royal blue" "dark gray" "gray"))
+    (setq weechat-color-list '(unspecified
+                               "#101010"
+                               "#464646"
+                               "#5e5e5e"
+                               "#747474"
+                               "#868686"
+                               "#999999"))
     (spacemacs/set-leader-keys
       "awc" 'weechat-connect
       "awm" 'weechat-monitor-buffer
