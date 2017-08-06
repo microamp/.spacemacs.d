@@ -1,4 +1,4 @@
-;;; microamp-theme.el --- Minimal light colour theme heavily influenced by jcs
+;;; microamp-theme.el --- Minimal light colour theme heavily influenced by jcs's vim theme
 
 ;; Copyright (C) 2017 james sangho nah <sangho.nah@gmail.com>
 
@@ -37,13 +37,14 @@
       (base7 "#bebcb4")
       (base8 "#afaea9")
       (base9 "#9d9b95")
+      (base10 "#fefef0")
       (warning "#ff0000")
       (warning2 "#d78700"))
   (custom-theme-set-faces
    'microamp
    `(default ((,class (:background ,base1 :foreground ,base2))))
 	 `(ac-completion-face ((,class (:underline t :foreground ,base2))))
-	 `(cursor ((,class (:foreground ,base1 :background ,base3))))
+	 `(cursor ((,class (:foreground ,base1 :background ,base4))))
 	 `(ffap ((,class (:foreground ,base4))))
 	 `(font-latex-bold-face ((,class (:foreground ,base2))))
 	 `(font-latex-italic-face ((,class (:foreground ,base2 :italic t))))
@@ -133,7 +134,7 @@
    `(helm-separator ((,class (:foreground ,base2 :background ,base1))))
    `(helm-source-go-package-godoc-description ((,class (:foreground ,base2))))
    `(helm-source-header ((,class (:foreground ,base2 :background ,base1 :underline nil :weight bold))))
-   `(helm-swoop-target-line-face ((,class (:foreground ,base1 :background ,warning2))))
+   `(helm-swoop-target-line-face ((,class (:foreground ,base2 :background ,base6))))
    `(helm-swoop-target-word-face ((,class (:foreground ,base1 :background ,base2))))
    `(helm-time-zone-current ((,class (:foreground ,base2 :background ,base1))))
    `(helm-time-zone-home ((,class (:foreground ,base2 :background ,base1))))
@@ -158,7 +159,7 @@
    `(js3-warning-face ((,class (:underline ,base2))))
    `(lazy-highlight ((,class (:foreground ,base3 :background ,base8))))
    `(magit-branch ((,class (:foreground ,base2 :weight bold))))
-   `(magit-diff-context-highlight ((,class (:background ,base8 :foreground ,base3))))
+   `(magit-diff-context-highlight ((,class (:background ,base10))))
    `(magit-diff-file-header ((,class (:foreground ,base3 :background ,base8))))
    `(magit-diffstat-added ((,class (:foreground ,base2))))
    `(magit-diffstat-removed ((,class (:foreground ,base2))))
@@ -170,12 +171,12 @@
    `(magit-process-ng ((,class (:foreground ,warning :weight bold))))
    `(magit-process-ok ((,class (:foreground ,base2 :weight bold))))
    `(magit-section-heading ((,class (:foreground ,base2 :weight bold))))
-   `(magit-section-highlight ((,class (:background ,base6))))
-	 `(mode-line-highlight ((,class (:foreground ,base2 :weight bold))))
+   `(magit-section-highlight ((,class (:background nil))))
    `(minibuffer-prompt ((,class (:foreground ,base2))))
    `(mode-line ((,class (:line-width 1 :color nil :foreground ,base3 :background ,base7))))
    `(mode-line-buffer-id ((,class (:foreground ,base2 :background nil))))
    `(mode-line-emphasis ((,class (:background ,base1 :foreground ,base2))))
+   `(mode-line-highlight ((,class (:foreground ,base2 :weight bold))))
    `(mode-line-inactive ((,class (:line-width 1 :color nil :style pressed-button :foreground ,base2 :background ,base1 :weight normal))))
    `(org-agenda-date ((,class (:foreground ,base2 :height 1.1 ))))
    `(org-agenda-date-today ((,class (:weight bold :foreground ,base2 :height 1.4))))
