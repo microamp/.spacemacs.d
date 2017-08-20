@@ -22,6 +22,7 @@ values."
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
+     ansible
      asciidoc
      (auto-completion :variables
                       auto-completion-return-key-behavior 'complete
@@ -53,8 +54,8 @@ values."
                markdown-live-preview-engine 'vmd)
      (mu4e :variables
            mu4e-installation-path "/usr/local/Cellar/mu/HEAD/share/emacs/site-lisp/mu/mu4e")
-     org
      osx
+     pandoc
      (python :variables
              python-enable-yapf-format-on-save nil)
      rcirc
@@ -68,7 +69,9 @@ values."
             shell-default-height 40
             shell-default-position 'bottom)
      shell-scripts
-     sql
+     (sql :variables
+          sql-capitalize-keywords t
+          sql-capitalize-keywords-blacklist '("name" "varchar" "timestamp" "type"))
      twitter
      (typescript :variables
                  typescript-fmt-on-save t)
@@ -108,10 +111,11 @@ values."
                                       helm-pt
                                       hl-todo
                                       howdoi
-                                      jinja2-mode
                                       julia-mode
                                       julia-shell
                                       know-your-http-well
+                                      org
+                                      org-plus-contrib
                                       password-generator
                                       prettier-js
                                       smmry
@@ -188,7 +192,7 @@ values."
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
    dotspacemacs-default-font '("Office Code Pro"
-                               :size 10
+                               :size 11
                                :weight light
                                :width normal
                                :powerline-scale 1.0)
@@ -244,14 +248,14 @@ values."
    dotspacemacs-loading-progress-bar t
    ;; If non nil the frame is fullscreen when Emacs starts up. (default nil)
    ;; (Emacs 24.4+ only)
-   dotspacemacs-fullscreen-at-startup nil
+   dotspacemacs-fullscreen-at-startup t
    ;; If non nil `spacemacs/toggle-fullscreen' will not use native fullscreen.
    ;; Use to disable fullscreen animations in OSX. (default nil)
-   dotspacemacs-fullscreen-use-non-native nil
+   dotspacemacs-fullscreen-use-non-native t
    ;; If non nil the frame is maximized when Emacs starts up.
    ;; Takes effect only if `dotspacemacs-fullscreen-at-startup' is nil.
    ;; (default nil) (Emacs 24.4+ only)
-   dotspacemacs-maximized-at-startup t
+   dotspacemacs-maximized-at-startup nil
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's active or selected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
@@ -302,16 +306,6 @@ values."
   (mapc (lambda (function)
           (add-hook mode-hook function))
         functions))
-
-(defun vi-style-c-e (n)
-  "Emulate vi's CTRL-E (show one more line at bottom of window)."
-  (interactive "p")
-  (scroll-up n))
-
-(defun vi-style-c-y (n)
-  "Emulate vi's CTRL-Y (show one more line at top of window.)"
-  (interactive "p")
-  (scroll-down n))
 
 (defun go-get-project-root (go-path-src go-project-root)
   "Return the name of the Go project. e.g. github.com/gorilla/context"
@@ -447,7 +441,18 @@ layers configuration. You are free to put any user code."
   (use-package centered-cursor-mode
     :defer t
     :init
-    (global-centered-cursor-mode))
+    (define-global-minor-mode my-global-centered-cursor-mode centered-cursor-mode
+      (lambda ()
+        (when (not (memq major-mode
+                         (list
+                          'eshell-mode
+                          'eww-mode
+                          'inferior-python-mode
+                          'shell-mode
+                          'sql-interactive-mode
+                          'weechat-mode)))
+          (centered-cursor-mode))))
+    (my-global-centered-cursor-mode 1))
 
   ;; "Dark variants range from 233 to 239 and light variants range from 252 to 256"
   ;;(setq seoul256-background 239)
@@ -533,9 +538,6 @@ layers configuration. You are free to put any user code."
     (setq ensime-startup-snapshot-notification nil)
     (evil-leader/set-key-for-mode 'scala-mode
       "bs" 'sbt-send-region)
-    ;; TODO: Define key bindings for ensime-forward-note and ensime-backward-note
-    (global-set-key [remap ensime-forward-note] 'vi-style-c-e)
-    (global-set-key [remap ensime-backward-note] 'vi-style-c-y)
     :bind (("C-c C-b b" . sbt-command)
            ("C-c C-b i" . ensime-sbt-switch)
            ("C-c C-d A" . ensime-db-attach))
@@ -549,12 +551,6 @@ layers configuration. You are free to put any user code."
     :init
     (setq w3m-session-crash-recovery nil)
     (global-set-key [remap w3m-copy-buffer] 'vi-style-c-e))
-
-  (use-package eww
-    :defer t
-    :bind (:map eww-mode-map
-                ("M-n" . vi-style-c-e)
-                ("M-p" . vi-style-c-y)))
 
   (use-package cc-mode
     :defer t
@@ -718,14 +714,15 @@ layers configuration. You are free to put any user code."
      ;; Do not bother asking
      mu4e-confirm-quit nil
 
-     ;; Fancy chars are fancy
-     mu4e-use-fancy-chars t
+     ;; Fancy chars are fancy (off)
+     mu4e-use-fancy-chars nil
 
      mu4e-view-image-max-height 300
      mu4e-view-image-max-width 400
 
-     ;; Update every 2 minutes
-     mu4e-update-interval (* 60 2)
+     ;; Update every 5 minutes
+     mu4e-update-interval (* 60 5)
+
 
      ;; SMTP settings
      message-send-mail-function   'smtpmail-send-it
@@ -757,13 +754,6 @@ layers configuration. You are free to put any user code."
     :init
     (mu4e-alert-enable-mode-line-display))
 
-  ;; Packge settings: markdown-mode
-  (use-package markdown-mode
-    :defer t
-    :init
-    (global-set-key [remap markdown-next-link] 'vi-style-c-e)
-    (global-set-key [remap markdown-previous-link] 'vi-style-c-y))
-
   (use-package neotree
     :defer t
     :bind (:map neotree-mode-map
@@ -780,14 +770,26 @@ layers configuration. You are free to put any user code."
     :bind (:map org-mode-map
                 ("C-c i" . org-clock-in)
                 ("C-c o" . org-clock-out)
+                ("C-c l" . org-store-link)
                 ("C-c C-'" . org-todo)
-                ("C-c C-/" . org-sparse-tree))
+                ("C-c C-/" . org-sparse-tree)
+                ("M-p" . org-metaup)
+                ("M-n" . org-metadown))
     :init
-    (setq org-todo-keywords '("TODO" "STARTED" "DONE"))
+    (setq org-todo-keywords '("TODO" "WIP" "DONE")
+          org-clock-persist 'history
+          org-log-done t)
     (add-hook 'org-after-todo-state-change-hook
               (lambda ()
-                (when (string= org-state "STARTED")
-                  (org-clock-in)))))
+                (when (string= org-state "WIP")
+                  (org-clock-in))))
+    (org-clock-persistence-insinuate))
+
+  (use-package org-agenda
+    :defer t
+    :after org
+    :bind (:map org-mode-map
+                ("C-c n" . org-agenda)))
 
   (use-package projectile
     :defer t
@@ -835,9 +837,12 @@ layers configuration. You are free to put any user code."
                 ("C-M-n" . sp-next-sexp)
                 ("C-M-p" . sp-previous-sexp)
                 ("C-M-u" . sp-backward-up-sexp)
-                ("C-]" . sp-select-next-thing-exchange)))
+                ("C-]" . sp-select-next-thing-exchange))
+    :init
+    (smartparens-global-mode 1))
 
   (use-package kaomoji
+    :load-path "/Users/microamp/src/microamp/kaomoji.el"
     :init
     (setq kaomoji-kill-ring-save t
           kaomoji-insert t)
@@ -867,6 +872,7 @@ layers configuration. You are free to put any user code."
                                    mu4e-org-mode
                                    mu4e-view-mode
                                    org-mode
+                                   sql-interactive-mode
                                    vc-annotate-mode))
     :config
     (add-hook 'god-mode-enabled-hook #'blink-cursor-end)
@@ -932,20 +938,10 @@ layers configuration. You are free to put any user code."
              '(eldoc-mode
                hl-todo-mode
                linum-mode
-               rainbow-delimiters-mode
-               smartparens-mode))
-  ;; Hooks added: conf mode
-  (add-hooks 'conf-mode
-             '(smartparens-mode))
-  ;; Hooks added: conf mode (unix)
-  (add-hooks 'conf-unix-mode
-             '(smartparens-mode))
+               rainbow-delimiters-mode))
   ;; Hooks added: auto-save
   (add-hooks 'auto-save-hook
              '(delete-trailing-whitespace))
-  ;; Hooks added: Dart mode
-  (add-hooks 'dart-mode-hook
-             '(smartparens-mode))
   ;; Hooks added: Python mode
   (add-hooks 'python-mode-hook
              '(fci-mode
@@ -955,12 +951,6 @@ layers configuration. You are free to put any user code."
              '(epa-mail-mode))
   (add-hooks 'mu4e-view-mode-hook
              '(epa-mail-mode))
-  ;; Hooks added: sbt
-  (add-hooks 'sbt-mode-hook
-             '(smartparens-mode))
-  ;; Hooks added: yml-mode
-  (add-hooks 'yaml-mode-hook
-             '(smartparens-mode))
 
   (use-package compile
     :defer t
@@ -989,7 +979,7 @@ layers configuration. You are free to put any user code."
     :init
     (setq zone-programs '(zone-nyan))
     :config
-    (zone-when-idle (* 60 10)))
+    (zone-when-idle (* 60 5)))
 
   (use-package typescript-mode
     :mode "\\.ts\\'"
@@ -1004,10 +994,12 @@ layers configuration. You are free to put any user code."
   (use-package spacemacs-centered-buffer-mode
     :defer t
     :init
-    (setq spacemacs-centered-buffer-mode-max-content-width 850
-          spacemacs-centered-buffer-mode-min-content-width 850
-          spacemacs-centered-buffer-mode-default-fringe-color "#6c7c87"
-          spacemacs-centered-buffer-mode-fringe-color "#6c7c87"))
+    (setq spacemacs-centered-buffer-mode-max-content-width 700
+          spacemacs-centered-buffer-mode-min-content-width 700
+          ;;spacemacs-centered-buffer-mode-default-fringe-color "#6c7c87"
+          ;;spacemacs-centered-buffer-mode-fringe-color "#6c7c87"
+          spacemacs-centered-buffer-mode-default-fringe-color "#bebcb4"
+          spacemacs-centered-buffer-mode-fringe-color "#bebcb4"))
 
   ;; Move point to the beginning of the line before opening a new line
   (advice-add 'open-line :before 'beginning-of-line)
@@ -1030,7 +1022,7 @@ layers configuration. You are free to put any user code."
   (use-package epa-file
     :init
     (epa-file-enable)
-    (setq epa-file-name-regexp "\\.gpg\\(~\\|\\.~[0-9]+~\\)?\\'\\|\\.gpgenc"
+    (setq epa-file-name-regexp "\\.\\(gpg\\|gpgenc\\)$"
           epa-armor t))
 
   ;; Newsticker
@@ -1057,9 +1049,7 @@ layers configuration. You are free to put any user code."
     (spacemacs/set-leader-keys
       "awc" 'weechat-connect
       "awm" 'weechat-monitor-buffer
-      "awq" 'weechat-disconnect)
-    :config
-    (add-hook 'weechat-mode-hook (lambda () (centered-cursor-mode -1))))
+      "awq" 'weechat-disconnect))
 
   ;; Custom key bindings: global
   (define-keys global-map
@@ -1086,8 +1076,6 @@ layers configuration. You are free to put any user code."
       ("M-[" beginning-of-defun)
       ("M-]" end-of-defun)
       ("M-g M-c" goto-char)
-      ("M-n" vi-style-c-e)
-      ("M-p" vi-style-c-y)
       ("RET" newline-and-indent)))
   ;; Custom key bindings: SPC shortcuts
   (spacemacs/set-leader-keys
