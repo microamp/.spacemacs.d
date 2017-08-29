@@ -193,7 +193,7 @@ values."
    ;; size to make separators look not too crappy.
    dotspacemacs-default-font '("Office Code Pro"
                                :size 11
-                               :weight light
+                               :weight normal
                                :width normal
                                :powerline-scale 1.0)
    ;; The leader key
@@ -445,11 +445,18 @@ layers configuration. You are free to put any user code."
       (lambda ()
         (when (not (memq major-mode
                          (list
+                          'Custom-mode
                           'eshell-mode
                           'eww-mode
                           'inferior-python-mode
+                          'magit-refs-mode
+                          'magit-status-mode
+                          'org-agenda-mode
+                          'org-mode
                           'shell-mode
                           'sql-interactive-mode
+                          'sql-mode
+                          'w3m-mode
                           'weechat-mode)))
           (centered-cursor-mode))))
     (my-global-centered-cursor-mode 1))
@@ -720,8 +727,8 @@ layers configuration. You are free to put any user code."
      mu4e-view-image-max-height 300
      mu4e-view-image-max-width 400
 
-     ;; Update every 5 minutes
-     mu4e-update-interval (* 60 5)
+     ;; Update every 30 mins
+     mu4e-update-interval (* 60 30)
 
 
      ;; SMTP settings
@@ -770,20 +777,36 @@ layers configuration. You are free to put any user code."
     :bind (:map org-mode-map
                 ("C-c i" . org-clock-in)
                 ("C-c o" . org-clock-out)
-                ("C-c l" . org-store-link)
-                ("C-c C-'" . org-todo)
-                ("C-c C-/" . org-sparse-tree)
-                ("M-p" . org-metaup)
-                ("M-n" . org-metadown))
+                ("C-c C-;" . org-todo)
+                ("M-n" . org-next-visible-heading)
+                ("M-p" . org-previous-visible-heading)
+                ("M-J" . org-metadown)
+                ("M-K" . org-metaup)
+                ("M-H" . org-metaleft)
+                ("M-L" . org-metaright))
     :init
-    (setq org-todo-keywords '("TODO" "WIP" "DONE")
+    (setq org-clock-into-drawer t
           org-clock-persist 'history
-          org-log-done t)
-    (add-hook 'org-after-todo-state-change-hook
-              (lambda ()
-                (when (string= org-state "WIP")
-                  (org-clock-in))))
-    (org-clock-persistence-insinuate))
+          org-log-done 'time
+          org-log-into-drawer t)
+    (progn
+      (defadvice org-clock-in (after sacha activate)
+        (org-todo "STARTED"))
+
+      (defun sacha/org-clock-in-if-starting ()
+        (when (and (string= state "STARTED")
+                   (not (string= last-state "STARTED")))
+          (org-clock-in)))
+
+      (defun sacha/org-clock-out-if-waiting ()
+        (when (and (string= state "WAITING")
+                   (not (string= last-state "WAITING")))
+          (org-clock-out)))
+
+      (add-hook 'org-after-todo-state-change-hook
+                'sacha/org-clock-in-if-starting)
+      (add-hook 'org-after-todo-state-change-hook
+                'sacha/org-clock-out-if-waiting)))
 
   (use-package org-agenda
     :defer t
@@ -1000,6 +1023,10 @@ layers configuration. You are free to put any user code."
           ;;spacemacs-centered-buffer-mode-fringe-color "#6c7c87"
           spacemacs-centered-buffer-mode-default-fringe-color "#bebcb4"
           spacemacs-centered-buffer-mode-fringe-color "#bebcb4"))
+
+  (use-package which-key
+    :init
+    (setq which-key-idle-delay 1.5))
 
   ;; Move point to the beginning of the line before opening a new line
   (advice-add 'open-line :before 'beginning-of-line)
