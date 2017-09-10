@@ -88,6 +88,7 @@ values."
                                       beacon
                                       bm
                                       browse-at-remote
+                                      browse-kill-ring
                                       centered-cursor-mode
                                       centered-window-mode
                                       cheat-sh
@@ -106,6 +107,11 @@ values."
                                       go-playground
                                       god-mode
                                       groovy-mode
+                                      avy
+                                      ivy
+                                      counsel
+                                      counsel-projectile
+                                      swiper
                                       helm-aws
                                       helm-emms
                                       helm-pt
@@ -114,6 +120,7 @@ values."
                                       julia-mode
                                       julia-shell
                                       know-your-http-well
+                                      olivetti
                                       org
                                       org-plus-contrib
                                       password-generator
@@ -379,6 +386,11 @@ layers configuration. You are free to put any user code."
   ;; Scroll margin
   (setq-default scroll-margin 0)
 
+  (use-package browse-at-remote
+    :ensure t
+    :defer t
+    :bind (("C-c m w" . browse-at-remote)))
+
   ;; Overwrite highlighted
   (use-package delete-selection-mode
     :defer t
@@ -456,7 +468,6 @@ layers configuration. You are free to put any user code."
                           'shell-mode
                           'sql-interactive-mode
                           'sql-mode
-                          'w3m-mode
                           'weechat-mode)))
           (centered-cursor-mode))))
     (my-global-centered-cursor-mode 1))
@@ -466,6 +477,7 @@ layers configuration. You are free to put any user code."
 
   (use-package ace-window
     :defer t
+    :bind ("C-x o" . ace-window)
     :init
     (setq aw-keys '(?a ?b ?c ?d ?e ?f ?g ?h)))
 
@@ -555,6 +567,9 @@ layers configuration. You are free to put any user code."
 
   (use-package w3m
     :defer t
+    :bind (:map w3m-mode-map
+                ("n" . next-line)
+                ("p" . previous-line))
     :init
     (setq w3m-session-crash-recovery nil)
     (global-set-key [remap w3m-copy-buffer] 'vi-style-c-e))
@@ -788,41 +803,39 @@ layers configuration. You are free to put any user code."
     (setq org-clock-into-drawer t
           org-clock-persist 'history
           org-log-done 'time
-          org-log-into-drawer t)
-    (progn
-      (defadvice org-clock-in (after sacha activate)
-        (org-todo "STARTED"))
-
-      (defun sacha/org-clock-in-if-starting ()
-        (when (and (string= state "STARTED")
-                   (not (string= last-state "STARTED")))
-          (org-clock-in)))
-
-      (defun sacha/org-clock-out-if-waiting ()
-        (when (and (string= state "WAITING")
-                   (not (string= last-state "WAITING")))
-          (org-clock-out)))
-
-      (add-hook 'org-after-todo-state-change-hook
-                'sacha/org-clock-in-if-starting)
-      (add-hook 'org-after-todo-state-change-hook
-                'sacha/org-clock-out-if-waiting)))
+          org-log-into-drawer t))
 
   (use-package org-agenda
     :defer t
     :after org
     :bind (:map org-mode-map
-                ("C-c n" . org-agenda)))
+                ("C-c a" . org-agenda))
+    :init
+    (setq org-agenda-start-with-follow-mode t)
+    ;;(define-key org-agenda-mode-map [(return)] (lambda (command &optional arg &rest ignore)
+    ;;                                             (interactive "p")
+    ;;                                             (org-agenda-switch-to t)))
+    )
 
+  ;; Project management at its best
   (use-package projectile
+    :ensure t
+    :after magit
     :defer t
+    :bind (("C-c p a" . projectile-add-known-project))
     :config
-    (setq projectile-switch-project-action
-          (lambda ()
-            (magit-show-refs-head)
-            (when (neo-global--window-exists-p)
-              (neotree-find)
-              (other-window 1)))))
+    (setq projectile-switch-project-action 'magit-show-refs-head))
+
+  ;; When Counsel meets Projectile
+  (use-package counsel-projectile
+    :ensure t
+    :after (counsel projectile)
+    :bind (("C-c p p" . counsel-projectile-switch-project)
+	         ("C-c p f" . counsel-projectile-find-file)
+	         ("C-c p d" . counsel-projectile-find-dir)
+	         ("C-c p s s" . counsel-projectile-ag))
+    :config
+    (counsel-projectile-on))
 
   (use-package python
     :defer t
@@ -907,6 +920,9 @@ layers configuration. You are free to put any user code."
 
   (use-package magit
     :defer t
+    :bind (("C-c m m" . magit-show-refs-head)
+           ("C-c m s" . magit-status)
+           ("C-c m l" . magit-log-head))
     :init
     (setq magit-log-arguments (quote ("-n256" "--graph" "--decorate" "--color")))
     (advice-add 'magit-log-all :after #'delete-other-windows)
@@ -990,9 +1006,13 @@ layers configuration. You are free to put any user code."
 
   (use-package dumb-jump
     :defer t
+    :bind (:map dumb-jump-mode-map
+                ("C-c C-," . dumb-jump-back)
+                ("C-c C-." . dumb-jump-go))
     :init
     ;; Recenter after jump to definition
-    (setq dumb-jump-prefer-searcher 'rg)
+    (setq dumb-jump-prefer-searcher 'rg
+          dumb-jump-selector 'ivy)
     (advice-add 'dumb-jump-go :after (lambda (&rest args) (recenter-top-bottom))))
 
   ;; Nyan nyan nyan
@@ -1002,7 +1022,7 @@ layers configuration. You are free to put any user code."
     :init
     (setq zone-programs '(zone-nyan))
     :config
-    (zone-when-idle (* 60 5)))
+    (zone-when-idle (* 60 10)))
 
   (use-package typescript-mode
     :mode "\\.ts\\'"
@@ -1023,6 +1043,27 @@ layers configuration. You are free to put any user code."
           ;;spacemacs-centered-buffer-mode-fringe-color "#6c7c87"
           spacemacs-centered-buffer-mode-default-fringe-color "#bebcb4"
           spacemacs-centered-buffer-mode-fringe-color "#bebcb4"))
+
+  ;; Now you're free of distraction
+  (use-package olivetti
+    :defer t
+    :bind (("C-c w c" . olivetti-mode))
+    :init
+    (setq olivetti-hide-mode-line t
+          olivetti-body-width 0.5))
+
+  ;; Use `browse-kill-ring' instead of `counsel-yank-pop'
+  (use-package browse-kill-ring
+    :defer t
+    :bind (("C-c r y" . browse-kill-ring)
+           :map browse-kill-ring-mode-map
+           ("C-g" . browse-kill-ring-quit))
+    :init
+    (setq browse-kill-ring-highlight-current-entry t
+          browse-kill-ring-highlight-inserted-item t
+          browse-kill-ring-display-duplicates nil
+          browse-kill-ring-resize-window '(25 . 25)
+          browse-kill-ring-show-preview nil))
 
   (use-package which-key
     :init
@@ -1057,11 +1098,75 @@ layers configuration. You are free to put any user code."
 
   ;; Hydra settings for eyebrowse-mode
   (use-package eyebrowse-mode
-    :init (defhydra hydra-eyebrowse ()
-            "eyebrowse-mode"
-            ("." eyebrowse-switch-to-window-config)
-            ("n" eyebrowse-next-window-config)
-            ("p" eyebrowse-prev-window-config)))
+    :init
+    (defhydra hydra-eyebrowse ()
+      "eyebrowse-mode"
+      ("." eyebrowse-switch-to-window-config)
+      ("n" eyebrowse-next-window-config)
+      ("p" eyebrowse-prev-window-config))
+    (setq eyebrowse-wrap-around t
+          eyebrowse-mode-line-style 'always)
+    (eyebrowse-mode t))
+
+  (use-package expand-region
+    :defer t
+    :bind (("C-=" . er/expand-region)))
+
+  (use-package helm
+    :defer t
+    :bind (("C-c h o" . helm-occur)
+           ("C-c h l" . helm-resume)))
+
+  (use-package helm-swoop
+    :defer t
+    :bind (("C-c h s" . helm-swoop)))
+
+  (use-package avy
+    :ensure t
+    :defer t
+    :bind (("C-'" . avy-goto-word-1))
+    :config
+    (avy-setup-default))
+
+  (use-package ivy
+    :defer t
+    :bind (("C-x b" . ivy-switch-buffer)
+           ("C-c r r" . ivy-resume))
+    :init
+    (setq enable-recursive-minibuffers t
+          ivy-display-style 'fancy
+          ivy-fixed-height-minibuffer t
+          ivy-height 25
+          ivy-use-virtual-buffers t
+          ivy-wrap t)
+    :config
+    (ivy-mode 1))
+
+  (use-package counsel
+    :defer t
+    :after ivy
+    :bind (("M-x" . counsel-M-x)
+           ("C-x C-f" . counsel-find-file)
+           ("C-h f" . counsel-describe-function)
+           ("C-h v" . counsel-describe-variable)
+           ("C-h M-f" . counsel-describe-face)
+           ("C-x r b" . counsel-bookmark)
+           ("C-c C-j" . counsel-imenu)))
+
+  (use-package multiple-cursors
+    :bind (("C-S-c C-S-c" . mc/edit-lines)
+           ("C->" . mc/mark-next-like-this)
+           ("C-<" . mc/mark-previous-like-this)
+           ("C-S-c C-S-a" . mc/mark-all-like-this)))
+
+  (use-package swiper
+    :defer t
+    :bind (("C-s" . swiper))
+    :after ivy
+    :config
+    (defun swiper-at-point ()
+      (interactive)
+      (swiper (thing-at-point 'symbol))))
 
   (use-package weechat
     :defer t
@@ -1111,7 +1216,6 @@ layers configuration. You are free to put any user code."
     "M-f" 'helm-mini
     "M-m" 'avy-goto-word-or-subword-1
     "M-v" 'er/expand-region
-    "M-w" 'ace-window
     "ab" 'sr-speedbar-toggle
     "aC" 'calendar
     "aD" 'dictionary

@@ -234,6 +234,7 @@
    `(show-paren-match ((,class (:bold t) :bacgkround ,base1 :foreground ,base2)))
    `(show-paren-match-face ((,class (:bold t :bacgkround ,base1 :foreground ,base2))))
    `(slime-repl-inputed-output-face ((,class (:foreground ,base2))))
+   `(ivy-current-match ((,class (:background ,base4 :foreground ,base1))))
    `(term ((,class (:foreground ,base2 :background ,base1))))
    `(term-color-black ((,class (:foreground ,base8 :background ,base8))))
    `(term-color-blue ((,class (:foreground ,base2 :background ,base2))))
